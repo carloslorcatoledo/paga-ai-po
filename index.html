@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Paga aí po!</title>
+  <meta name="description" content="Divide cuentas entre amigos por ítem, no por total." />
+  <!-- Seguridad: política de contenido estricta (solo recursos propios; sin scripts en línea). -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://mctvxmuqvlszmmefamfb.supabase.co wss://mctvxmuqvlszmmefamfb.supabase.co; manifest-src 'self'; worker-src 'self'; form-action 'none'" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#6d5efc" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Paga aí po!" />
+  <style>
+    :root {
+      --bg: #f3f4f7;
+      --surface: #ffffff;
+      --surface-2: #eef0f4;
+      --border: #e4e6ec;
+      --text: #15171c;
+      --muted: #6b7280;
+      --primary: #6d5efc;
+      --primary-700: #5a4ce0;
+      --on-primary: #ffffff;
+      --success: #12875a;
+      --success-bg: #d9f5e7;
+      --danger: #d13b43;
+      --danger-bg: #fde3e4;
+      --chip-bg: #eef0f4;
+      --shadow: 0 2px 8px rgba(20,23,33,.06), 0 8px 24px rgba(20,23,33,.06);
+      --radius: 16px;
+      color-scheme: light dark;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0b0f17;
+        --surface: #141a24;
+        --surface-2: #1b222e;
+        --border: #263040;
+        --text: #e6e8ec;
+        --muted: #94a0b2;
+        --primary: #7c6ffd;
+        --primary-700: #6d5efc;
+        --on-primary: #0b0f17;
+        --success: #4ade80;
+        --success-bg: #0f2f22;
+        --danger: #f98a8f;
+        --danger-bg: #371618;
+        --chip-bg: #1b222e;
+        --shadow: 0 2px 8px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #0b0f17;
+      --surface: #141a24;
+      --surface-2: #1b222e;
+      --border: #263040;
+      --text: #e6e8ec;
+      --muted: #94a0b2;
+      --primary: #7c6ffd;
+      --primary-700: #6d5efc;
+      --on-primary: #0b0f17;
+      --success: #4ade80;
+      --success-bg: #0f2f22;
+      --danger: #f98a8f;
+      --danger-bg: #371618;
+      --chip-bg: #1b222e;
+      --shadow: 0 2px 8px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      position: relative;
+    }
+
+    /* ---------- Header ---------- */
+    header {
+      position: sticky; top: 0; z-index: 20;
+      background: color-mix(in srgb, var(--bg) 86%, transparent);
+      backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: max(10px, env(safe-area-inset-top)) 14px 10px;
+    }
+    .head-row { display: flex; align-items: center; gap: 8px; }
+    .brand { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 1rem; letter-spacing: -.02em; white-space: nowrap; }
+    .brand .logo { width: 25px; height: 25px; border-radius: 7px; display: block; flex-shrink: 0; }
+    .head-spacer { flex: 1; }
+    .cur-pill {
+      -webkit-appearance: none; appearance: none; border: none; cursor: pointer;
+      background: var(--surface-2); color: var(--text); font-weight: 800; font-size: .82rem;
+      border-radius: 11px; height: 38px; padding: 0 10px; font-family: inherit;
+    }
+    .icon-btn {
+      width: 38px; height: 38px; border: none; border-radius: 11px;
+      background: var(--surface-2); color: var(--text);
+      font-size: 1.05rem; cursor: pointer; display: grid; place-items: center; flex-shrink: 0;
+    }
+    .icon-btn:active { transform: scale(.94); }
+    .event-input {
+      margin-top: 10px; width: 100%; border: none; background: transparent;
+      color: var(--text); font-size: 1.35rem; font-weight: 800; letter-spacing: -.02em;
+      padding: 2px 0;
+    }
+    .event-input::placeholder { color: var(--muted); font-weight: 700; }
+    .event-input:focus { outline: none; }
+
+    /* ---------- Main / views ---------- */
+    main { flex: 1; padding: 16px 16px 120px; }
+    .view { display: none; animation: fade .18s ease; }
+    .view.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: none; } }
+    .section-title { font-size: .82rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; margin: 4px 2px 10px; }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      border: none; border-radius: 12px; padding: 13px 16px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn-primary { background: var(--primary); color: var(--on-primary); }
+    .btn-ghost { background: var(--surface-2); color: var(--text); }
+    .btn-wa { background: #25d366; color: #05240f; }
+    .btn-block { width: 100%; }
+    .btn-sm { padding: 9px 12px; font-size: .9rem; border-radius: 10px; }
+
+    /* ---------- Personas ---------- */
+    .add-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .text-input {
+      flex: 1; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      border-radius: 12px; padding: 13px 14px; font-size: 1rem; font-family: inherit;
+    }
+    .text-input:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
+    .people-list { display: flex; flex-direction: column; gap: 8px; }
+    .person-chip {
+      display: flex; align-items: center; gap: 12px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px; box-shadow: var(--shadow);
+    }
+    .avatar {
+      width: 38px; height: 38px; border-radius: 50%; color: #fff; font-weight: 800; font-size: .95rem;
+      display: grid; place-items: center; flex-shrink: 0; letter-spacing: -.01em;
+    }
+    .avatar.sm { width: 30px; height: 30px; font-size: .8rem; }
+    .person-chip .pname { flex: 1; font-weight: 600; }
+    .remove-x {
+      border: none; background: transparent; color: var(--muted); font-size: 1.25rem;
+      cursor: pointer; width: 34px; height: 34px; border-radius: 9px;
+    }
+    .remove-x:active { background: var(--surface-2); }
+
+    /* ---------- Gastos ---------- */
+    .exp-list { display: flex; flex-direction: column; gap: 10px; }
+    .exp-card {
+      display: flex; align-items: center; gap: 12px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 14px; padding: 12px; box-shadow: var(--shadow); cursor: pointer;
+    }
+    .exp-card:active { transform: scale(.995); }
+    .exp-icon {
+      width: 42px; height: 42px; border-radius: 12px; background: var(--surface-2);
+      display: grid; place-items: center; font-size: 1.3rem; flex-shrink: 0;
+    }
+    .exp-main { flex: 1; min-width: 0; }
+    .exp-top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+    .exp-desc { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .exp-amt { font-weight: 800; white-space: nowrap; }
+    .exp-sub { color: var(--muted); font-size: .85rem; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ---------- Resumen ---------- */
+    .total-card {
+      background: var(--primary); color: var(--on-primary); border-radius: var(--radius);
+      padding: 18px; box-shadow: var(--shadow); margin-bottom: 18px;
+    }
+    .total-card .lbl { opacity: .85; font-size: .85rem; font-weight: 600; }
+    .total-card .amt { font-size: 2rem; font-weight: 800; letter-spacing: -.02em; }
+    .total-card .meta { opacity: .85; font-size: .82rem; margin-top: 2px; }
+
+    .person-card {
+      display: flex; align-items: center; gap: 12px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 14px; padding: 12px; box-shadow: var(--shadow); margin-bottom: 8px;
+    }
+    .pc-main { flex: 1; min-width: 0; }
+    .pc-name { font-weight: 700; }
+    .pc-sub { color: var(--muted); font-size: .82rem; margin-top: 1px; }
+    .pill { border-radius: 10px; padding: 6px 10px; text-align: right; font-weight: 800; font-size: .95rem; white-space: nowrap; }
+    .pill small { display: block; font-weight: 600; font-size: .68rem; opacity: .85; }
+    .pill-pos { background: var(--success-bg); color: var(--success); }
+    .pill-neg { background: var(--danger-bg); color: var(--danger); }
+    .pill-zero { background: var(--surface-2); color: var(--muted); }
+
+    .settle-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); margin-top: 6px; }
+    .transfer { display: flex; align-items: center; gap: 8px; padding: 10px 2px; border-bottom: 1px solid var(--border); font-size: .96rem; }
+    .transfer:last-child { border-bottom: none; }
+    .t-name { font-weight: 700; }
+    .t-mid { color: var(--muted); display: flex; align-items: center; gap: 6px; flex: 1; justify-content: center; }
+    .t-amt { color: var(--primary); font-weight: 800; }
+    .share-row { display: flex; gap: 8px; margin-top: 16px; }
+
+    /* ---------- Empty states ---------- */
+    .empty { text-align: center; color: var(--muted); padding: 36px 20px; }
+    .empty .big { font-size: 2.6rem; }
+    .empty p { margin: 10px 0 16px; }
+
+    /* ---------- FAB ---------- */
+    .fab {
+      position: fixed; right: max(16px, calc(50% - 240px + 16px)); bottom: calc(84px + env(safe-area-inset-bottom));
+      background: var(--primary); color: var(--on-primary); border: none; border-radius: 18px;
+      padding: 15px 20px; font-size: 1rem; font-weight: 800; box-shadow: 0 8px 24px rgba(109,94,252,.45);
+      cursor: pointer; display: none; align-items: center; gap: 8px; z-index: 30;
+    }
+    .fab:active { transform: scale(.96); }
+
+    /* ---------- Bottom nav ---------- */
+    nav {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      backdrop-filter: saturate(180%) blur(12px);
+      border-top: 1px solid var(--border);
+      display: flex; max-width: 480px; margin: 0 auto;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .tab {
+      flex: 1; border: none; background: transparent; color: var(--muted);
+      padding: 10px 4px; cursor: pointer; font-family: inherit; font-size: .72rem; font-weight: 700;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+    }
+    .tab .ico { font-size: 1.3rem; line-height: 1; }
+    .tab.active { color: var(--primary); }
+    .tab .badge { font-size: .62rem; background: var(--surface-2); border-radius: 20px; padding: 0 6px; margin-top: -2px; }
+
+    /* ---------- Modal / sheet ---------- */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(5,8,14,.5); z-index: 40;
+      display: none; align-items: flex-end; justify-content: center;
+    }
+    .overlay.open { display: flex; animation: fade .15s ease; }
+    .sheet {
+      background: var(--surface); width: 100%; max-width: 480px;
+      border-radius: 22px 22px 0 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
+      max-height: 92vh; overflow-y: auto; animation: slideup .22s cubic-bezier(.2,.8,.2,1);
+    }
+    @keyframes slideup { from { transform: translateY(100%); } to { transform: none; } }
+    .sheet h2 { margin: 2px 0 14px; font-size: 1.15rem; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: .8rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+    .amount-wrap { position: relative; }
+    .amount-wrap .cursign { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-weight: 700; }
+    .amount-wrap input { padding-left: 38px; font-size: 1.25rem; font-weight: 800; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      border: 1px solid var(--border); background: var(--chip-bg); color: var(--text);
+      border-radius: 999px; padding: 9px 13px; font-size: .92rem; font-weight: 600; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px; font-family: inherit;
+    }
+    .chip:active { transform: scale(.96); }
+    .chip.active { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+    .chip .av { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: .68rem; font-weight: 800; color: #fff; }
+    .chip.active .av { outline: 2px solid rgba(255,255,255,.6); }
+    .chips-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .mini-link { background: none; border: none; color: var(--primary); font-weight: 700; font-size: .82rem; cursor: pointer; font-family: inherit; }
+    .sheet-actions { display: flex; gap: 8px; margin-top: 18px; }
+    .danger-link { background: none; border: none; color: var(--danger); font-weight: 700; cursor: pointer; font-family: inherit; padding: 10px; width: 100%; margin-top: 6px; }
+    .err-msg { color: var(--danger); font-size: .85rem; margin-top: 8px; min-height: 1em; }
+    .switch-row { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--text); font-size: .95rem; cursor: pointer; margin: 0; }
+    .switch-row input { width: 20px; height: 20px; accent-color: var(--primary); flex-shrink: 0; }
+
+    /* ---------- Propina ---------- */
+    .tip-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); margin-bottom: 18px; }
+    .tip-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+    .tip-head .lbl { font-weight: 700; }
+    .tip-head .amt { font-weight: 800; color: var(--primary); }
+    .tip-custom { width: 74px; text-align: center; padding: 9px 8px; font-weight: 700; }
+    .total-card .sub { opacity: .85; font-size: .82rem; margin-top: 4px; }
+
+    /* menu sheet rows */
+    .menu-row { display: flex; align-items: center; gap: 12px; padding: 14px 6px; border-bottom: 1px solid var(--border); cursor: pointer; font-weight: 600; font-size: 1rem; }
+    .menu-row:last-child { border-bottom: none; }
+    .menu-row .mi { font-size: 1.2rem; width: 26px; text-align: center; }
+    .menu-row.danger { color: var(--danger); }
+    .hint { color: var(--muted); font-size: .82rem; margin: 2px 2px 14px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="head-row">
+        <span class="brand"><img class="logo" src="icon.svg" alt="" />Paga aí po!</span>
+        <span class="head-spacer"></span>
+        <select class="cur-pill" id="currencyHeader" aria-label="Moneda" title="Moneda"></select>
+        <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema" title="Tema">🌙</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Menú" title="Menú">⋯</button>
+      </div>
+      <input class="event-input" id="eventName" placeholder="Nombre de la salida…" autocomplete="off" maxlength="60" />
+    </header>
+
+    <main>
+      <!-- PERSONAS -->
+      <section class="view" id="view-personas">
+        <div class="section-title">¿Quiénes son?</div>
+        <form class="add-row" id="addPersonForm">
+          <input class="text-input" id="personName" placeholder="Nombre…" autocomplete="off" maxlength="40" />
+          <button class="btn btn-primary btn-sm" type="submit">Agregar</button>
+        </form>
+        <div class="people-list" id="peopleList"></div>
+      </section>
+
+      <!-- GASTOS -->
+      <section class="view" id="view-gastos">
+        <div class="section-title">Gastos</div>
+        <div class="exp-list" id="expList"></div>
+      </section>
+
+      <!-- RESUMEN -->
+      <section class="view" id="view-resumen">
+        <div id="summaryContent"></div>
+      </section>
+    </main>
+
+    <button class="fab" id="fab">＋ Gasto</button>
+
+    <nav>
+      <button class="tab" data-tab="personas"><span class="ico">👥</span>Personas<span class="badge" id="badgePeople">0</span></button>
+      <button class="tab" data-tab="gastos"><span class="ico">🧾</span>Gastos<span class="badge" id="badgeExp">0</span></button>
+      <button class="tab" data-tab="resumen"><span class="ico">📊</span>Resumen</button>
+    </nav>
+  </div>
+
+  <!-- MODAL GASTO -->
+  <div class="overlay" id="expOverlay">
+    <div class="sheet" role="dialog" aria-modal="true">
+      <h2 id="expTitle">Nuevo gasto</h2>
+      <form id="expForm">
+        <div class="field">
+          <label for="expDesc">¿Qué fue?</label>
+          <input class="text-input" id="expDesc" placeholder="Pizza, cervezas, taxi…" autocomplete="off" maxlength="60" />
+        </div>
+        <div class="field">
+          <label for="expAmount">Monto</label>
+          <div class="amount-wrap">
+            <span class="cursign" id="curSign">$</span>
+            <input class="text-input" id="expAmount" type="number" inputmode="decimal" min="0" placeholder="0" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Categoría</label>
+          <div class="chips" id="catChips"></div>
+        </div>
+        <div class="field">
+          <label>¿Quién pagó?</label>
+          <div class="chips" id="payerChips"></div>
+        </div>
+        <div class="field">
+          <div class="chips-head">
+            <label style="margin:0">¿Entre quiénes se divide?</label>
+            <div>
+              <button type="button" class="mini-link" id="selAll">Todos</button>
+              <button type="button" class="mini-link" id="selNone">Ninguno</button>
+            </div>
+          </div>
+          <div class="chips" id="splitChips"></div>
+        </div>
+        <div class="field">
+          <label class="switch-row"><input type="checkbox" id="expTip" checked /> <span>Incluir propina / servicio en este gasto</span></label>
+        </div>
+        <div class="err-msg" id="expErr"></div>
+        <div class="sheet-actions">
+          <button type="button" class="btn btn-ghost" id="expCancel" style="flex:1">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="flex:2">Guardar</button>
+        </div>
+        <button type="button" class="danger-link" id="expDelete" hidden>Eliminar gasto</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <div class="overlay" id="menuOverlay">
+    <div class="sheet" role="dialog" aria-modal="true">
+      <h2>Opciones</h2>
+      <div class="menu-row" id="menuAccount"><span class="mi">☁️</span><span id="accountLabel">Entrar a la nube</span></div>
+      <p class="hint">La moneda se cambia desde la barra de arriba. Al cambiarla, los montos se reescalan (no usa tipo de cambio).</p>
+      <div class="menu-row" id="menuExample"><span class="mi">✨</span>Cargar ejemplo</div>
+      <div class="menu-row danger" id="menuReset"><span class="mi">🗑️</span>Vaciar todo</div>
+      <div class="sheet-actions">
+        <button type="button" class="btn btn-ghost btn-block" id="menuClose">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHEET: CUENTA / NUBE -->
+  <div class="overlay" id="authOverlay">
+    <div class="sheet" role="dialog" aria-modal="true">
+      <h2>☁️ Cuenta / Nube</h2>
+      <div id="authLoggedOut">
+        <p class="hint">Entra con tu correo y una contraseña para guardar tus eventos en la nube y compartirlos.</p>
+        <div class="field">
+          <label for="authEmail">Correo</label>
+          <input class="text-input" id="authEmail" type="email" inputmode="email" placeholder="tu@correo.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="authPass">Contraseña</label>
+          <input class="text-input" id="authPass" type="password" placeholder="mínimo 6 caracteres" autocomplete="current-password" />
+        </div>
+        <div class="err-msg" id="authMsg"></div>
+        <div class="sheet-actions">
+          <button type="button" class="btn btn-ghost" id="authCancel" style="flex:1">Cerrar</button>
+          <button type="button" class="btn btn-primary" id="authSignIn" style="flex:1.4">Entrar</button>
+          <button type="button" class="btn btn-ghost" id="authSignUp" style="flex:1.4">Crear cuenta</button>
+        </div>
+      </div>
+      <div id="authLoggedIn" hidden>
+        <p class="hint">Conectado como <strong id="authEmailShown"></strong>.</p>
+        <button type="button" class="btn btn-primary btn-block" id="cloudSave">☁️ Guardar este evento en la nube</button>
+        <div class="hint" id="cloudSavedInfo" hidden></div>
+        <div class="menu-row" id="cloudList"><span class="mi">📂</span>Mis eventos (historial)</div>
+        <div class="menu-row" id="cloudNew"><span class="mi">➕</span>Nuevo evento (vaciar)</div>
+        <div class="field" style="margin-top:12px">
+          <label for="joinCode">Abrir un evento con código</label>
+          <div style="display:flex; gap:8px">
+            <input class="text-input" id="joinCode" placeholder="ABC123" maxlength="6" autocomplete="off" style="flex:1; text-transform:uppercase" />
+            <button type="button" class="btn btn-ghost" id="joinBtn">Abrir</button>
+          </div>
+        </div>
+        <div class="err-msg" id="cloudMsg"></div>
+        <div class="sheet-actions">
+          <button type="button" class="btn btn-ghost" id="authClose2" style="flex:1">Cerrar</button>
+          <button type="button" class="btn btn-ghost" id="authSignOut" style="flex:1">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHEET: MIS EVENTOS (historial) -->
+  <div class="overlay" id="eventsOverlay">
+    <div class="sheet" role="dialog" aria-modal="true">
+      <h2>📂 Mis eventos</h2>
+      <div id="eventsList"></div>
+      <div class="sheet-actions">
+        <button type="button" class="btn btn-ghost btn-block" id="eventsClose">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="calc.js"></script>
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="cloud.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

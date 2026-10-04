@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pruebas · Paga aí po!</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    body { margin: 0; padding: 24px; max-width: 760px; margin-inline: auto; line-height: 1.5; }
+    h1 { font-size: 1.3rem; }
+    .summary { font-weight: 700; padding: 12px 16px; border-radius: 10px; margin: 16px 0; }
+    .ok { background: #dcfce7; color: #166534; }
+    .fail { background: #fee2e2; color: #991b1b; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: .95rem; display: flex; gap: 8px; }
+    li.pass { background: rgba(34,197,94,.12); }
+    li.err { background: rgba(239,68,68,.12); }
+    .tag { font-weight: 700; }
+    .pass .tag { color: #16a34a; }
+    .err .tag { color: #dc2626; }
+    .msg { color: #b91c1c; font-family: ui-monospace, monospace; font-size: .85rem; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #0b0f17; color: #e5e7eb; }
+      .ok { background: #052e1a; color: #86efac; }
+      .fail { background: #3f1212; color: #fca5a5; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Pruebas de la lógica · Paga aí po!</h1>
+  <p>Estas son las mismas pruebas de <code>calc.test.js</code>, pero corriendo en el navegador (sin Node).</p>
+  <div id="summary" class="summary">Ejecutando…</div>
+  <ul id="results"></ul>
+
+  <script src="calc.js"></script>
+  <script>
+    (function () {
+      var R = window.Reparte;
+      var tests = [];
+      function test(name, fn) { tests.push({ name: name, fn: fn }); }
+
+      // --- assert mínimo ---
+      function eq(a, b, msg) {
+        var A = JSON.stringify(a), B = JSON.stringify(b);
+        if (A !== B) throw new Error((msg || 'eq') + ': esperado ' + B + ', obtuve ' + A);
+      }
+      function ok(cond, msg) { if (!cond) throw new Error(msg || 'se esperaba verdadero'); }
+      function sum(obj) { return Object.keys(obj).reduce(function (a, k) { return a + obj[k]; }, 0); }
+
+      // --- casos (espejo de calc.test.js) ---
+      test('splitExpense: división exacta', function () {
+        eq(R.splitExpense(20000, ['a','b','c','d','e']), { a:4000,b:4000,c:4000,d:4000,e:4000 });
+      });
+      test('splitExpense: reparte el residuo ($10.000 entre 3)', function () {
+        var r = R.splitExpense(10000, ['a','b','c']);
+        eq(r, { a:3334, b:3333, c:3333 });
+        eq(sum(r), 10000);
+      });
+      test('splitExpense: un solo participante', function () {
+        eq(R.splitExpense(7777, ['a']), { a: 7777 });
+      });
+      test('splitExpense: sin participantes devuelve vacío', function () {
+        eq(R.splitExpense(1000, []), {});
+      });
+      test('splitExpense: la suma siempre es exacta (muchos casos)', function () {
+        for (var amount = 0; amount < 500; amount++) {
+          for (var n = 1; n <= 7; n++) {
+            var ids = []; for (var k = 0; k < n; k++) ids.push('p' + k);
+            eq(sum(R.splitExpense(amount, ids)), amount, 'amount=' + amount + ' n=' + n);
+          }
+        }
+      });
+      test('computeBalances: escenario del plan (2 no beben)', function () {
+        var participants = [
+          { id:'ana', name:'Ana' }, { id:'beto', name:'Beto' }, { id:'caro', name:'Caro' },
+          { id:'dani', name:'Dani' }, { id:'eli', name:'Eli' },
+        ];
+        var expenses = [
+          { amount:20000, paidBy:'ana', participants:['ana','beto','caro','dani','eli'] },
+          { amount:15000, paidBy:'beto', participants:['ana','beto','caro'] },
+        ];
+        var b = R.computeBalances(participants, expenses);
+        var by = {}; b.forEach(function (x) { by[x.id] = x; });
+        eq(by.ana.owes, 9000); eq(by.beto.owes, 9000); eq(by.caro.owes, 9000);
+        eq(by.dani.owes, 4000); eq(by.eli.owes, 4000);
+        eq(by.ana.balance, 11000); eq(by.beto.balance, 6000);
+        eq(by.caro.balance, -9000); eq(by.dani.balance, -4000); eq(by.eli.balance, -4000);
+      });
+      test('computeBalances: los saldos siempre suman 0', function () {
+        var participants = [{id:'a',name:'A'},{id:'b',name:'B'},{id:'c',name:'C'}];
+        var expenses = [
+          { amount:10000, paidBy:'a', participants:['a','b','c'] },
+          { amount:7777, paidBy:'b', participants:['b','c'] },
+          { amount:3333, paidBy:'c', participants:['a','c'] },
+        ];
+        var total = R.computeBalances(participants, expenses).reduce(function (a,x){ return a + x.balance; }, 0);
+        eq(total, 0);
+      });
+      test('simplifyDebts: salda todo el escenario del plan', function () {
+        var balances = [
+          { id:'ana', name:'Ana', balance:11000 }, { id:'beto', name:'Beto', balance:6000 },
+          { id:'caro', name:'Caro', balance:-9000 }, { id:'dani', name:'Dani', balance:-4000 },
+          { id:'eli', name:'Eli', balance:-4000 },
+        ];
+        var t = R.simplifyDebts(balances);
+        var recibido = {}, pagado = {};
+        t.forEach(function (x) {
+          ok(x.amount > 0, 'monto > 0');
+          pagado[x.from] = (pagado[x.from]||0) + x.amount;
+          recibido[x.to] = (recibido[x.to]||0) + x.amount;
+        });
+        eq(recibido.ana, 11000); eq(recibido.beto, 6000);
+        eq(pagado.caro, 9000); eq(pagado.dani, 4000); eq(pagado.eli, 4000);
+        ok(t.length <= 4, 'a lo sumo n-1 transferencias');
+      });
+      test('simplifyDebts: deuda en cadena A->B->C se paga directo A->C', function () {
+        var t = R.simplifyDebts([
+          { id:'A', name:'A', balance:-100 },
+          { id:'B', name:'B', balance:0 },
+          { id:'C', name:'C', balance:100 },
+        ]);
+        eq(t.length, 1);
+        eq({ from:t[0].from, to:t[0].to, amount:t[0].amount }, { from:'A', to:'C', amount:100 });
+      });
+      test('integración: calcular y luego saldar deja todo en cero', function () {
+        var participants = [{id:'a',name:'A'},{id:'b',name:'B'},{id:'c',name:'C'},{id:'d',name:'D'}];
+        var expenses = [
+          { amount:23450, paidBy:'a', participants:['a','b','c','d'] },
+          { amount:9990, paidBy:'c', participants:['a','c'] },
+          { amount:4500, paidBy:'b', participants:['b','d'] },
+        ];
+        var balances = R.computeBalances(participants, expenses);
+        var transfers = R.simplifyDebts(balances);
+        var net = {}; balances.forEach(function (x){ net[x.id] = x.balance; });
+        transfers.forEach(function (t){ net[t.from] += t.amount; net[t.to] -= t.amount; });
+        Object.keys(net).forEach(function (k){ eq(net[k], 0, 'neto ' + k); });
+      });
+
+      // --- Propina / servicio ---
+      var EXPS = [
+        { amount: 20000, paidBy: 'ana', participants: ['ana','beto','caro','dani','eli'] },
+        { amount: 15000, paidBy: 'beto', participants: ['ana','beto','caro'] },
+        { amount: 6000, paidBy: 'dani', participants: ['dani','eli'] },
+      ];
+      var PARTS = [
+        { id:'ana', name:'Ana' }, { id:'beto', name:'Beto' }, { id:'caro', name:'Caro' },
+        { id:'dani', name:'Dani' }, { id:'eli', name:'Eli' },
+      ];
+      test('effectiveAmount: aplica la propina sobre el subtotal', function () {
+        eq(R.effectiveAmount({ amount: 5000 }, 10), 5500);
+        eq(R.effectiveAmount({ amount: 5000 }, 0), 5000);
+      });
+      test('effectiveAmount: tip:false exime el gasto (ej. taxi)', function () {
+        eq(R.effectiveAmount({ amount: 5000, tip: false }, 10), 5000);
+        eq(R.effectiveAmount({ amount: 5000, tip: true }, 10), 5500);
+      });
+      test('eventTotals: separa subtotal, propina y total', function () {
+        eq(R.eventTotals(EXPS, 0), { subtotal: 41000, tip: 0, total: 41000 });
+        eq(R.eventTotals(EXPS, 10), { subtotal: 41000, tip: 4100, total: 45100 });
+      });
+      test('computeBalances con propina 10%: valores y saldos en 0', function () {
+        var b = R.computeBalances(PARTS, EXPS, { tipPercent: 10 });
+        var by = {}; b.forEach(function (x) { by[x.id] = x; });
+        eq(by.ana.owes, 9900); eq(by.dani.owes, 7700);
+        eq(by.ana.balance, 12100); eq(by.beto.balance, 6600);
+        eq(by.caro.balance, -9900); eq(by.dani.balance, -1100); eq(by.eli.balance, -7700);
+        eq(b.reduce(function (a, x) { return a + x.balance; }, 0), 0);
+      });
+      test('la propina se reparte proporcional al consumo', function () {
+        var parts = [{ id:'A', name:'A' }, { id:'B', name:'B' }];
+        var exps = [
+          { amount:1000, paidBy:'A', participants:['A'] },
+          { amount:2000, paidBy:'B', participants:['B'] },
+        ];
+        var sin = R.computeBalances(parts, exps, { tipPercent: 0 });
+        var con = R.computeBalances(parts, exps, { tipPercent: 10 });
+        function owes(res, id) { for (var i=0;i<res.length;i++) if (res[i].id===id) return res[i].owes; }
+        var tipA = owes(con,'A') - owes(sin,'A');
+        var tipB = owes(con,'B') - owes(sin,'B');
+        eq(tipA, 100); eq(tipB, 200); eq(tipB, tipA * 2);
+      });
+
+      // --- ejecutar ---
+      var results = document.getElementById('results');
+      var passed = 0, failed = 0;
+      tests.forEach(function (t) {
+        var li = document.createElement('li');
+        try {
+          t.fn();
+          passed++;
+          li.className = 'pass';
+          li.innerHTML = '<span class="tag">PASA</span><span>' + t.name + '</span>';
+        } catch (e) {
+          failed++;
+          li.className = 'err';
+          li.innerHTML = '<span class="tag">FALLA</span><span>' + t.name +
+            '</span><span class="msg">' + (e && e.message ? e.message : e) + '</span>';
+        }
+        results.appendChild(li);
+      });
+      var s = document.getElementById('summary');
+      s.className = 'summary ' + (failed === 0 ? 'ok' : 'fail');
+      s.textContent = failed === 0
+        ? '✓ ' + passed + ' pruebas pasaron. La lógica funciona.'
+        : '✗ ' + failed + ' de ' + tests.length + ' pruebas fallaron.';
+      document.title = (failed === 0 ? '✓ ' : '✗ ') + passed + '/' + tests.length + ' · Pruebas';
+    })();
+  </script>
+</body>
+</html>

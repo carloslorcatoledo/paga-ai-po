@@ -1,0 +1,15 @@
+{
+  "name": "Paga aí po! — dividir cuentas",
+  "short_name": "Paga aí po!",
+  "description": "Divide cuentas entre amigos por ítem, no por total.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0f17",
+  "theme_color": "#6d5efc",
+  "icons": [
+    { "src": "icon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any maskable" }
+  ]
+}

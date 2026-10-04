@@ -1,0 +1,15 @@
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Nada de node aquí (proyecto estático), pero por si acaso:
+node_modules/
+
+# ⚠️ Archivos con secretos / contraseñas — NUNCA subir
+pajguors.txt
+*.secret
+*secrets*
+*.key
+.env
+.env.*
