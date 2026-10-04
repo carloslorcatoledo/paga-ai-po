@@ -9,15 +9,15 @@ celular, de noche, en 3 toques.
 | Archivo | Qué es |
 |---|---|
 | `index.html` | Estructura y estilos de la app. |
-| `app.js` | La interfaz (pantallas, guardado local, compartir). Script externo (ver Seguridad). |
+| `app.js` | La interfaz, calendario, estado local y sincronización en vivo. Script externo (ver Seguridad). |
 | `config.js` | URL + publishable key de Supabase (la publishable es pública). |
-| `cloud.js` | Capa de nube: login (correo+contraseña) y datos (guardar/historial/compartir). |
+| `cloud.js` | Login, guardado transaccional, historial, compartir por código y suscripciones Realtime. |
 | `calc.js` | El "corazón": la lógica de cálculo, pura y sin dependencias. |
 | `calc.test.js` | Pruebas de la lógica para `node --test`. |
 | `test.html` | Las mismas pruebas corriendo en el navegador (sin instalar nada). |
 | `manifest.json`, `sw.js`, `icon.svg` | Para instalarla como app y usarla sin internet. |
 | `plan-app-dividir-cuentas.md` | El plan de producto completo. |
-| `esquema-supabase.sql` | Esquema SQL (tablas + seguridad RLS + realtime) para la nube. |
+| `esquema-supabase.sql` | Tablas, RLS, Realtime y guardado atómico con control de versión. |
 | `guia-supabase.md` | Guía paso a paso para montar Supabase. |
 
 ## Monedas
@@ -72,21 +72,20 @@ Decisiones tomadas para que la app sea segura por defecto:
 - **Anti-XSS:** todo texto que escribe el usuario (nombres, descripciones) se
   **escapa** antes de mostrarse. Un nombre como `<script>` se muestra como texto,
   no se ejecuta.
-- **CSP (Content-Security-Policy) estricta:** el navegador solo carga recursos del
-  propio sitio; no se permiten scripts en línea ni dominios externos. Por eso el JS
-  vive en `app.js`/`calc.js` (archivos aparte) y no incrustado en el HTML.
-- **Datos solo en tu dispositivo:** todo se guarda en `localStorage`. Nada se envía
-  a ningún servidor. Lo único que "sale" es el texto que tú decides compartir por
-  WhatsApp.
+- **CSP (Content-Security-Policy) estricta:** no se permiten scripts en línea; los
+  scripts propios y Supabase se limitan a los orígenes declarados en la política.
+  Por eso el JS vive en `app.js`/`calc.js` (archivos aparte) y no en el HTML.
+- **Datos locales y nube:** el borrador se conserva en `localStorage`. Un evento se
+  guarda en Supabase solo cuando eliges "Guardar este evento en la nube"; sus
+  miembros pueden abrirlo con el código y recibir cambios guardados en tiempo real.
+  RLS limita el acceso a los miembros del evento.
 - **Enlaces externos seguros:** la ventana de WhatsApp se abre con `noopener` y la
   página no filtra su dirección (`referrer: no-referrer`).
 - **Validación de entrada:** montos siempre ≥ 0; límites de largo en nombres y
   descripciones.
 
-> Nota: como los datos son locales y sin cuentas, "seguridad" aquí es sobre todo no
-> ejecutar contenido malicioso y no filtrar datos. Cuando llegue la **Fase 4 (nube)**
-> habrá que sumar autenticación, reglas de acceso en la base de datos y validación
-> también en el servidor.
+> La publishable key de Supabase es pública por diseño; nunca pongas una `service_role`
+> key en el cliente. La seguridad de los eventos compartidos depende de RLS.
 
 ## Estado respecto al plan
 
@@ -97,15 +96,19 @@ Decisiones tomadas para que la app sea segura por defecto:
       deudas, instalable como PWA, **pasada de seguridad**.
 - [x] **Propina / servicio** (porcentaje repartido proporcional al consumo, con
       exclusión por gasto).
-- [ ] **Siguiente**: partes desiguales ("comí 2 porciones"), historial de eventos.
-- [~] **Fase 4 — Nube** (en marcha, con Supabase): login (correo+contraseña), guardar
-      eventos en la nube (= **historial**) y **compartir por código**. Falta: **tiempo real**.
+- [x] **Calendario**: fechas y consulta de eventos guardados.
+- [ ] **Pendiente**: partes desiguales ("comí 2 porciones").
+- [~] **Fase 4 — Nube**: login, historial, compartir por código, Realtime y guardado
+  transaccional con control de concurrencia ya implementados en el código.
+- [ ] **Antes de usar Realtime en producción**: ejecutar el esquema actualizado en
+  Supabase y probar un evento compartido con dos sesiones autenticadas.
+- [ ] **Versión 3**: OCR de boletas, datos de transferencia y recordatorios de deuda.
 
 ## Publicar gratis (cuando quieras)
 
-Al ser archivos estáticos, se publica en **GitHub Pages** subiendo la carpeta a un
-repo y activando Pages. (Para los eventos compartidos de la Fase 4 se agrega
-Supabase como backend.)
+La app está publicada en [GitHub Pages](https://carloslorcatoledo.github.io/paga-ai-po/).
+Para cambios futuros, haz commit y push a `main`. Antes de usar el guardado concurrente,
+ejecuta el esquema actualizado de [Supabase](guia-supabase.md) en el proyecto.
 
 ## Decisiones técnicas del prototipo
 
