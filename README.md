@@ -100,8 +100,10 @@ Decisiones tomadas para que la app sea segura por defecto:
 - [ ] **Pendiente**: partes desiguales ("comí 2 porciones").
 - [~] **Fase 4 — Nube**: login, historial, compartir por código, Realtime y guardado
   transaccional con control de concurrencia ya implementados en el código.
-- [ ] **Antes de usar Realtime en producción**: ejecutar el esquema actualizado en
-  Supabase y probar un evento compartido con dos sesiones autenticadas.
+- [x] **Supabase**: columna de versión, RPC de guardado transaccional y publicación
+  Realtime aplicadas en el proyecto.
+- [ ] **Verificación multiusuario**: probar un evento compartido con dos sesiones
+  autenticadas y forzar dos guardados simultáneos.
 - [ ] **Versión 3**: OCR de boletas, datos de transferencia y recordatorios de deuda.
 
 ## Publicar gratis (cuando quieras)
