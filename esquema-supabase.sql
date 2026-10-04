@@ -168,7 +168,108 @@ drop policy if exists gp_all on gasto_participante;
 create policy gp_all on gasto_participante for all using (es_miembro_gasto(gasto_id)) with check (es_miembro_gasto(gasto_id));
 
 -- ----------------------------------------------------------------------------
--- 4) REALTIME (para que los cambios de un amigo aparezcan en vivo)
+-- 4) GUARDADO ATÓMICO Y CONTROL DE CONCURRENCIA
+-- Ejecuta esta migración también en proyectos que ya tenían el esquema anterior.
+-- ----------------------------------------------------------------------------
+
+alter table evento add column if not exists version bigint not null default 0;
+
+create or replace function public.guardar_evento_snapshot(
+  _evento_id uuid,
+  _expected_version bigint,
+  _data jsonb
+)
+returns jsonb
+language plpgsql
+set search_path = public
+as $$
+declare
+  v_event evento%rowtype;
+  v_part jsonb;
+  v_expense jsonb;
+  v_participant_map jsonb := '{}'::jsonb;
+  v_local_participant_id text;
+  v_participant_id uuid;
+  v_payer_id uuid;
+  v_expense_id uuid;
+  v_participant_key text;
+begin
+  if _evento_id is null then
+    insert into evento (nombre, fecha, moneda, tip_percent, owner)
+    values (
+      coalesce(nullif(_data->>'nombre', ''), 'Salida'),
+      coalesce(nullif(_data->>'fecha', '')::date, current_date),
+      coalesce(nullif(_data->>'moneda', ''), 'CLP'),
+      coalesce(nullif(_data->>'tip_percent', '')::numeric, 0),
+      auth.uid()
+    ) returning * into v_event;
+  else
+    select * into v_event from evento where id = _evento_id for update;
+    if not found then
+      raise exception using errcode = '42501', message = 'EVENT_NOT_FOUND_OR_FORBIDDEN';
+    end if;
+    if _expected_version is null or v_event.version <> _expected_version then
+      raise exception using errcode = '40001', message = 'EVENT_CONFLICT';
+    end if;
+    update evento set
+      nombre = coalesce(nullif(_data->>'nombre', ''), 'Salida'),
+      fecha = coalesce(nullif(_data->>'fecha', '')::date, current_date),
+      moneda = coalesce(nullif(_data->>'moneda', ''), 'CLP'),
+      tip_percent = coalesce(nullif(_data->>'tip_percent', '')::numeric, 0),
+      version = evento.version + 1
+    where id = _evento_id
+    returning * into v_event;
+
+    delete from gasto where evento_id = _evento_id;
+    delete from participante where evento_id = _evento_id;
+  end if;
+
+  for v_part in
+    select value from jsonb_array_elements(coalesce(_data->'participantes', '[]'::jsonb)) as items(value)
+  loop
+    insert into participante (evento_id, nombre, color)
+    values (v_event.id, coalesce(nullif(v_part->>'nombre', ''), 'Participante'), nullif(v_part->>'color', ''))
+    returning id into v_participant_id;
+    v_local_participant_id := v_part->>'id';
+    if v_local_participant_id is not null then
+      v_participant_map := v_participant_map || jsonb_build_object(v_local_participant_id, v_participant_id);
+    end if;
+  end loop;
+
+  for v_expense in
+    select value from jsonb_array_elements(coalesce(_data->'gastos', '[]'::jsonb)) as items(value)
+  loop
+    v_payer_id := nullif(v_participant_map->>(v_expense->>'pagado_por'), '')::uuid;
+    insert into gasto (evento_id, descripcion, monto, categoria, pagado_por, aplica_propina)
+    values (
+      v_event.id,
+      nullif(v_expense->>'descripcion', ''),
+      coalesce(nullif(v_expense->>'monto', '')::bigint, 0),
+      coalesce(nullif(v_expense->>'categoria', ''), 'otros'),
+      v_payer_id,
+      coalesce(nullif(v_expense->>'aplica_propina', '')::boolean, true)
+    ) returning id into v_expense_id;
+
+    for v_participant_key in
+      select value from jsonb_array_elements_text(coalesce(v_expense->'participantes', '[]'::jsonb)) as ids(value)
+    loop
+      v_participant_id := nullif(v_participant_map->>v_participant_key, '')::uuid;
+      if v_participant_id is not null then
+        insert into gasto_participante (gasto_id, participante_id)
+        values (v_expense_id, v_participant_id);
+      end if;
+    end loop;
+  end loop;
+
+  return jsonb_build_object('id', v_event.id, 'codigo', v_event.codigo, 'version', v_event.version);
+end;
+$$;
+
+revoke all on function public.guardar_evento_snapshot(uuid, bigint, jsonb) from public;
+grant execute on function public.guardar_evento_snapshot(uuid, bigint, jsonb) to authenticated;
+
+-- ----------------------------------------------------------------------------
+-- 5) REALTIME (para que los cambios de un amigo aparezcan en vivo)
 -- ----------------------------------------------------------------------------
 do $$
 declare t text;

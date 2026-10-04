@@ -121,6 +121,12 @@
     }
     .event-input::placeholder { color: var(--muted); font-weight: 700; }
     .event-input:focus { outline: none; }
+    .event-date-row { display: flex; align-items: center; gap: 10px; margin-top: 5px; color: var(--muted); font-size: .78rem; font-weight: 700; }
+    .event-date { min-width: 0; border: 1px solid var(--border); border-radius: 9px; background: var(--surface); color: var(--text); padding: 6px 8px; font: inherit; }
+    .event-date:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
+    .sync-status { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 5px; color: var(--success); font-size: .75rem; }
+    .sync-status.conflict { color: var(--danger); }
+    .sync-status button { flex-shrink: 0; }
 
     /* ---------- Main / views ---------- */
     main { flex: 1; padding: 16px 16px 120px; }
@@ -243,6 +249,21 @@
     .tab .ico { font-size: 1.3rem; line-height: 1; }
     .tab.active { color: var(--primary); }
     .tab .badge { font-size: .62rem; background: var(--surface-2); border-radius: 20px; padding: 0 6px; margin-top: -2px; }
+    .calendar-toolbar { display: flex; align-items: center; gap: 8px; margin: 12px 0; }
+    .calendar-toolbar h2 { flex: 1; margin: 0; text-align: center; font-size: 1rem; text-transform: capitalize; }
+    .calendar-toolbar .icon-btn { width: 36px; height: 36px; }
+    .calendar-today { padding: 8px; }
+    .calendar-weekdays, .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+    .calendar-weekday { text-align: center; color: var(--muted); font-size: .68rem; font-weight: 700; padding: 6px 0; }
+    .calendar-day { position: relative; aspect-ratio: 1; min-width: 0; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--text); font: inherit; font-size: .86rem; cursor: pointer; }
+    .calendar-day:hover { background: var(--surface-2); }
+    .calendar-day.today { border-color: var(--primary); }
+    .calendar-day.selected { background: var(--primary); color: var(--on-primary); }
+    .calendar-day.has-events::after { content: ''; position: absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--success); left: calc(50% - 2px); bottom: 4px; }
+    .calendar-day.selected.has-events::after { background: currentColor; }
+    .calendar-day.blank { pointer-events: none; }
+    .calendar-events { display: flex; flex-direction: column; gap: 8px; }
+    .calendar-event { width: 100%; text-align: left; }
 
     /* ---------- Modal / sheet ---------- */
     .overlay {
@@ -307,6 +328,11 @@
         <button class="icon-btn" id="menuBtn" aria-label="Menú" title="Menú">⋯</button>
       </div>
       <input class="event-input" id="eventName" placeholder="Nombre de la salida…" autocomplete="off" maxlength="60" />
+      <label class="event-date-row" for="eventDate">Fecha del evento <input class="event-date" id="eventDate" type="date" /></label>
+      <div class="sync-status" id="syncStatus" role="status" aria-live="polite" hidden>
+        <span id="syncStatusText"></span>
+        <button class="mini-link" id="syncReload" type="button" hidden>Recargar</button>
+      </div>
     </header>
 
     <main>
@@ -330,6 +356,23 @@
       <section class="view" id="view-resumen">
         <div id="summaryContent"></div>
       </section>
+
+      <!-- CALENDARIO -->
+      <section class="view" id="view-calendario">
+        <div class="section-title">Eventos guardados</div>
+        <div class="calendar-toolbar">
+          <button class="icon-btn" id="calendarPrev" type="button" aria-label="Mes anterior" title="Mes anterior">‹</button>
+          <h2 id="calendarMonth"></h2>
+          <button class="icon-btn" id="calendarNext" type="button" aria-label="Mes siguiente" title="Mes siguiente">›</button>
+          <button class="mini-link calendar-today" id="calendarToday" type="button">Hoy</button>
+        </div>
+        <div class="calendar-weekdays" aria-hidden="true">
+          <span class="calendar-weekday">L</span><span class="calendar-weekday">M</span><span class="calendar-weekday">X</span><span class="calendar-weekday">J</span><span class="calendar-weekday">V</span><span class="calendar-weekday">S</span><span class="calendar-weekday">D</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid" role="group" aria-label="Días del mes"></div>
+        <div class="section-title" id="calendarSelectedTitle" style="margin-top:22px"></div>
+        <div class="calendar-events" id="calendarEvents" aria-live="polite"></div>
+      </section>
     </main>
 
     <button class="fab" id="fab">＋ Gasto</button>
@@ -338,6 +381,7 @@
       <button class="tab" data-tab="personas"><span class="ico">👥</span>Personas<span class="badge" id="badgePeople">0</span></button>
       <button class="tab" data-tab="gastos"><span class="ico">🧾</span>Gastos<span class="badge" id="badgeExp">0</span></button>
       <button class="tab" data-tab="resumen"><span class="ico">📊</span>Resumen</button>
+      <button class="tab" data-tab="calendario"><span class="ico">📅</span>Calendario</button>
     </nav>
   </div>
 

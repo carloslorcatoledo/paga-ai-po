@@ -33,12 +33,22 @@
 
   // ---------- State ----------
   var state = {
-    eventName: '', currency: 'CLP', theme: 'system', tab: 'personas',
+    eventName: '', eventDate: localDate(new Date()), currency: 'CLP', theme: 'system', tab: 'personas',
     tipPercent: 0, participants: [], expenses: [],
-    cloudId: null, codigo: null
+    cloudId: null, cloudVersion: null, cloudBaseline: null, codigo: null
   };
   var TIP_PRESETS = [0, 5, 10, 15];
   var editingId = null;
+  var calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  var calendarSelectedDate = localDate(new Date());
+  var calendarEvents = [];
+  var calendarLoading = false;
+  var calendarMessage = '';
+  var calendarRequest = 0;
+  var syncBaseline = null;
+  var liveRefreshTimer = null;
+  var cloudSaveInProgress = false;
+  var remoteConflict = false;
 
   function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} }
   function load() {
@@ -47,6 +57,7 @@
       if (raw) {
         var s = JSON.parse(raw);
         state.eventName = typeof s.eventName === 'string' ? s.eventName : '';
+        state.eventDate = validDate(s.eventDate) ? s.eventDate : localDate(new Date());
         state.currency = CURRENCIES[s.currency] ? s.currency : 'CLP';
         state.theme = s.theme || 'system';
         state.tab = s.tab || 'personas';
@@ -54,6 +65,8 @@
         state.participants = Array.isArray(s.participants) ? s.participants : [];
         state.expenses = Array.isArray(s.expenses) ? s.expenses : [];
         state.cloudId = s.cloudId || null;
+        state.cloudVersion = Number.isInteger(s.cloudVersion) ? s.cloudVersion : null;
+        state.cloudBaseline = typeof s.cloudBaseline === 'string' ? s.cloudBaseline : null;
         state.codigo = s.codigo || null;
       }
     } catch (e) {}
@@ -62,6 +75,84 @@
   // ---------- Helpers ----------
   function $(id) { return document.getElementById(id); }
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function localDate(date) {
+    return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
+  }
+  function validDate(value) {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    var parts = value.split('-').map(Number);
+    var date = new Date(parts[0], parts[1] - 1, parts[2]);
+    return date.getFullYear() === parts[0] && date.getMonth() === parts[1] - 1 && date.getDate() === parts[2];
+  }
+  function eventSnapshot() {
+    return JSON.stringify({
+      eventName: state.eventName, eventDate: state.eventDate, currency: state.currency,
+      tipPercent: state.tipPercent, participants: state.participants, expenses: state.expenses
+    });
+  }
+  function setSyncStatus(message, conflict, canReload) {
+    var box = $('syncStatus');
+    box.hidden = !message;
+    box.classList.toggle('conflict', !!conflict);
+    $('syncStatusText').textContent = message;
+    $('syncReload').hidden = !canReload;
+  }
+  function stopCloudSync() {
+    if (liveRefreshTimer) clearTimeout(liveRefreshTimer);
+    liveRefreshTimer = null; syncBaseline = null; remoteConflict = false;
+    if (window.Cloud && window.Cloud.unsubscribeEvent) window.Cloud.unsubscribeEvent();
+    setSyncStatus('', false);
+  }
+  function startCloudSync() {
+    if (!state.cloudId) return;
+    syncBaseline = state.cloudBaseline;
+    remoteConflict = !syncBaseline || eventSnapshot() !== syncBaseline;
+    if (remoteConflict) setSyncStatus('Hay cambios locales sin guardar. Recarga el evento para sincronizarlo.', true, true);
+    subscribeCurrentEvent();
+  }
+  function subscribeCurrentEvent() {
+    if (!cloudReady() || !state.cloudId || !window.Cloud.subscribeEvent) return;
+    window.Cloud.subscribeEvent(state.cloudId, function () {
+      if (liveRefreshTimer) clearTimeout(liveRefreshTimer);
+      liveRefreshTimer = setTimeout(refreshFromCloud, 1200);
+    }, function (status) {
+      if (remoteConflict) return;
+      if (status === 'SUBSCRIBED') setSyncStatus('Conectado en vivo', false);
+      else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setSyncStatus('Conexión en vivo interrumpida', true, true);
+    });
+  }
+  function refreshFromCloud() {
+    if (!state.cloudId) return;
+    if (cloudSaveInProgress) { liveRefreshTimer = setTimeout(refreshFromCloud, 500); return; }
+    var id = state.cloudId;
+    var before = eventSnapshot();
+    if (syncBaseline === null || before !== syncBaseline) {
+      remoteConflict = true;
+      setSyncStatus('Hay cambios remotos; tus cambios sin guardar están protegidos.', true, true);
+      return;
+    }
+    window.Cloud.loadEvent(id).then(function (res) {
+      if (state.cloudId !== id) return;
+      if (eventSnapshot() !== before) {
+        remoteConflict = true;
+        setSyncStatus('Cambiaste datos durante la sincronización; revisa antes de guardar.', true, true);
+        return;
+      }
+      if (res.error) { setSyncStatus('No se pudo actualizar desde la nube.', true, true); return; }
+      applyLoadedEvent(res.data);
+      setSyncStatus('Actualizado en vivo', false);
+    }).catch(function () { setSyncStatus('No se pudo actualizar desde la nube.', true, true); });
+  }
+  function reloadCurrentEvent() {
+    if (!state.cloudId || !window.Cloud) return;
+    if (!confirm('¿Descartar los cambios locales sin guardar y cargar la versión de la nube?')) return;
+    var id = state.cloudId;
+    window.Cloud.loadEvent(id).then(function (res) {
+      if (res.error) { setSyncStatus('No se pudo cargar la versión de la nube.', true, true); return; }
+      applyLoadedEvent(res.data);
+      setSyncStatus('Actualizado desde la nube', false);
+    }).catch(function () { setSyncStatus('No se pudo cargar la versión de la nube.', true, true); });
+  }
   function cur() { return CURRENCIES[state.currency] || CURRENCIES.CLP; }
   function factor() { return Math.pow(10, cur().decimals); }
   function fmt(minor) {
@@ -95,6 +186,7 @@
   // ---------- Render ----------
   function render() {
     $('eventName').value = state.eventName;
+    $('eventDate').value = state.eventDate || localDate(new Date());
     $('currencyHeader').value = state.currency;
     $('badgePeople').textContent = state.participants.length;
     $('badgeExp').textContent = state.expenses.length;
@@ -105,6 +197,7 @@
     renderPeople();
     renderExpenses();
     if (state.tab === 'resumen') renderSummary();
+    if (state.tab === 'calendario') renderCalendar();
   }
 
   function renderPeople() {
@@ -366,10 +459,13 @@
 
   // ---------- Example ----------
   function loadExample() {
+    stopCloudSync();
     state.eventName = 'Asado del viernes';
     state.currency = 'CLP';
     state.tipPercent = 0;
     state.cloudId = null;
+    state.cloudVersion = null;
+    state.cloudBaseline = null;
     state.codigo = null;
     state.participants = [];
     var ids = {};
@@ -387,8 +483,11 @@
   }
   function resetAll() {
     if (!confirm('Esto borra personas y gastos de esta salida. ¿Continuar?')) return;
+    stopCloudSync();
     state.eventName = ''; state.tipPercent = 0; state.participants = []; state.expenses = []; state.tab = 'personas';
     state.cloudId = null; state.codigo = null;
+    state.cloudVersion = null;
+    state.cloudBaseline = null;
     save(); render();
   }
 
@@ -477,8 +576,10 @@
   function applyLoadedEvent(d) {
     var ev = d.evento;
     state.cloudId = ev.id;
+    state.cloudVersion = Number(ev.version) || 0;
     state.codigo = ev.codigo;
     state.eventName = ev.nombre || '';
+    state.eventDate = validDate(ev.fecha) ? ev.fecha : localDate(new Date());
     state.currency = CURRENCIES[ev.moneda] ? ev.moneda : 'CLP';
     state.tipPercent = Number(ev.tip_percent) || 0;
     state.participants = assignColors((d.participantes || []).map(function (p) {
@@ -498,25 +599,42 @@
       };
     });
     state.tab = 'resumen';
+    syncBaseline = eventSnapshot(); state.cloudBaseline = syncBaseline; remoteConflict = false;
     save(); render();
+    subscribeCurrentEvent();
   }
   function cloudSave() {
     if (!cloudReady()) return;
+    if (remoteConflict) {
+      $('cloudMsg').textContent = 'Hay cambios de otra persona. Recarga la versión de la nube antes de guardar.';
+      return;
+    }
     var btn = $('cloudSave');
     $('cloudMsg').textContent = '';
-    btn.disabled = true; var orig = btn.textContent; btn.textContent = 'Guardando…';
+    btn.disabled = true; cloudSaveInProgress = true; var orig = btn.textContent; btn.textContent = 'Guardando…';
     window.Cloud.saveEvent({
-      cloudId: state.cloudId, codigo: state.codigo,
-      eventName: state.eventName, currency: state.currency, tipPercent: state.tipPercent,
+      cloudId: state.cloudId, cloudVersion: state.cloudVersion, codigo: state.codigo,
+      eventName: state.eventName, eventDate: state.eventDate, currency: state.currency, tipPercent: state.tipPercent,
       participants: state.participants, expenses: state.expenses
     }).then(function (res) {
+      cloudSaveInProgress = false;
       btn.disabled = false; btn.textContent = orig;
-      if (res.error) { $('cloudMsg').textContent = 'No se pudo guardar: ' + res.error.message; return; }
-      state.cloudId = res.data.id; state.codigo = res.data.codigo; save();
+      if (res.error) {
+        if (res.error.message.indexOf('EVENT_CONFLICT') !== -1 || res.error.code === '40001') {
+          remoteConflict = true;
+          setSyncStatus('Otra persona guardó primero. Recarga para continuar con la versión más reciente.', true, true);
+          $('cloudMsg').textContent = 'Conflicto: otra persona guardó cambios antes que tú. Recarga la versión de la nube antes de volver a guardar.';
+        } else { $('cloudMsg').textContent = 'No se pudo guardar: ' + res.error.message; }
+        return;
+      }
+      state.cloudId = res.data.id; state.cloudVersion = Number(res.data.version) || 0; state.codigo = res.data.codigo;
+      syncBaseline = eventSnapshot(); state.cloudBaseline = syncBaseline; remoteConflict = false; save(); subscribeCurrentEvent();
+      setSyncStatus('Guardado y conectado en vivo', false);
+      if (state.tab === 'calendario') loadCalendarEvents();
       var info = $('cloudSavedInfo');
       info.hidden = false;
       info.innerHTML = 'Guardado ✓ · Código para compartir: <strong>' + esc(state.codigo || '') + '</strong>';
-    }).catch(function (e) { btn.disabled = false; btn.textContent = orig; $('cloudMsg').textContent = 'Error: ' + e.message; });
+    }).catch(function (e) { cloudSaveInProgress = false; btn.disabled = false; btn.textContent = orig; $('cloudMsg').textContent = 'Error: ' + e.message; });
   }
   function openEventsList() {
     if (!cloudReady()) return;
@@ -537,6 +655,74 @@
       }).join('');
     }).catch(function (e) { list.innerHTML = '<div class="err-msg">Error: ' + esc(e.message) + '</div>'; });
   }
+  function changeCalendarMonth(offset) {
+    calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + offset, 1);
+    var selected = new Date(calendarSelectedDate + 'T00:00:00');
+    var maxDay = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
+    calendarSelectedDate = localDate(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), Math.min(selected.getDate(), maxDay)));
+    renderCalendar();
+  }
+  function loadCalendarEvents() {
+    var request = ++calendarRequest;
+    calendarLoading = true; calendarMessage = ''; renderCalendar();
+    if (!cloudReady()) {
+      calendarLoading = false; calendarMessage = 'La nube no está disponible en este dispositivo.'; renderCalendar(); return;
+    }
+    window.Cloud.getSession().then(function (res) {
+      if (!(res && res.data && res.data.session)) {
+        calendarEvents = []; calendarMessage = 'Inicia sesión para ver y guardar eventos en el calendario.'; return null;
+      }
+      return window.Cloud.listEvents();
+    }).then(function (res) {
+      if (request !== calendarRequest) return;
+      calendarLoading = false;
+      if (!res) { renderCalendar(); return; }
+      if (res.error) { calendarEvents = []; calendarMessage = 'No se pudo cargar el calendario: ' + res.error.message; }
+      else { calendarEvents = res.data || []; calendarMessage = ''; }
+      renderCalendar();
+    }).catch(function (error) {
+      if (request !== calendarRequest) return;
+      calendarLoading = false; calendarEvents = [];
+      calendarMessage = 'No se pudo cargar el calendario: ' + error.message; renderCalendar();
+    });
+  }
+  function renderCalendar() {
+    var year = calendarMonth.getFullYear();
+    var month = calendarMonth.getMonth();
+    $('calendarMonth').textContent = calendarMonth.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+    var eventCounts = {};
+    calendarEvents.forEach(function (event) {
+      if (validDate(event.fecha)) eventCounts[event.fecha] = (eventCounts[event.fecha] || 0) + 1;
+    });
+    var offset = (new Date(year, month, 1).getDay() + 6) % 7;
+    var days = new Date(year, month + 1, 0).getDate();
+    var today = localDate(new Date());
+    var html = '';
+    for (var blank = 0; blank < offset; blank++) html += '<span class="calendar-day blank" aria-hidden="true"></span>';
+    for (var day = 1; day <= days; day++) {
+      var date = localDate(new Date(year, month, day));
+      var classes = 'calendar-day' + (date === today ? ' today' : '') + (date === calendarSelectedDate ? ' selected' : '') + (eventCounts[date] ? ' has-events' : '');
+      var label = new Date(year, month, day).toLocaleDateString('es-CL', { day: 'numeric', month: 'long' });
+      html += '<button type="button" class="' + classes + '" data-day="' + date + '" aria-label="' + esc(label + (eventCounts[date] ? ', ' + eventCounts[date] + ' eventos' : '')) + '" aria-pressed="' + (date === calendarSelectedDate) + '">' + day + '</button>';
+    }
+    $('calendarGrid').innerHTML = html;
+    var selected = new Date(calendarSelectedDate + 'T00:00:00');
+    $('calendarSelectedTitle').textContent = selected.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' });
+    var box = $('calendarEvents');
+    if (calendarLoading) { box.innerHTML = '<div class="hint">Cargando eventos…</div>'; return; }
+    if (calendarMessage) {
+      box.innerHTML = '<div class="hint">' + esc(calendarMessage) + '</div>' + (calendarMessage.indexOf('Inicia sesión') === 0 ? '<button type="button" class="btn btn-primary btn-block" data-calendar-login>Entrar a la nube</button>' : '');
+      return;
+    }
+    var selectedEvents = calendarEvents.filter(function (event) { return event.fecha === calendarSelectedDate; });
+    if (!selectedEvents.length) { box.innerHTML = '<div class="hint">No hay eventos guardados para este día.</div>'; return; }
+    box.innerHTML = selectedEvents.map(function (event) {
+      return '<button type="button" class="exp-card calendar-event" data-open="' + esc(event.id) + '">' +
+        '<span class="exp-icon">📅</span><span class="exp-main"><span class="exp-top"><span class="exp-desc">' + esc(event.nombre || 'Salida') + '</span>' +
+        '<span class="exp-amt" style="font-size:.78rem;color:var(--muted)">' + esc(event.moneda || '') + '</span></span>' +
+        '<span class="exp-sub">Código ' + esc(event.codigo || '') + '</span></span></button>';
+    }).join('');
+  }
   function closeEventsList() { $('eventsOverlay').classList.remove('open'); }
   function openCloudEvent(id) {
     if (!cloudReady()) return;
@@ -547,8 +733,9 @@
     }).catch(function (e) { alert('Error: ' + e.message); });
   }
   function newCloudEvent() {
-    state.eventName = ''; state.tipPercent = 0; state.participants = []; state.expenses = [];
-    state.cloudId = null; state.codigo = null; state.tab = 'personas';
+    stopCloudSync();
+    state.eventName = ''; state.eventDate = localDate(new Date()); state.tipPercent = 0; state.participants = []; state.expenses = [];
+    state.cloudId = null; state.cloudVersion = null; state.cloudBaseline = null; state.codigo = null; state.tab = 'personas';
     $('cloudSavedInfo').hidden = true;
     save(); render(); closeAuth();
   }
@@ -573,9 +760,14 @@
   }
   function bind() {
     document.querySelectorAll('.tab').forEach(function (t) {
-      t.addEventListener('click', function () { state.tab = t.dataset.tab; save(); render(); });
+      t.addEventListener('click', function () {
+        state.tab = t.dataset.tab; save(); render();
+        if (state.tab === 'calendario') loadCalendarEvents();
+      });
     });
     $('eventName').addEventListener('input', function () { state.eventName = this.value; save(); });
+    $('eventDate').addEventListener('change', function () { if (validDate(this.value)) { state.eventDate = this.value; save(); } });
+    $('syncReload').addEventListener('click', reloadCurrentEvent);
     $('currencyHeader').addEventListener('change', function () { changeCurrency(this.value); });
     $('addPersonForm').addEventListener('submit', function (e) { e.preventDefault(); addPerson($('personName').value); $('personName').value = ''; $('personName').focus(); });
     $('peopleList').addEventListener('click', function (e) { var b = e.target.closest('[data-remove]'); if (b) removePerson(b.dataset.remove); });
@@ -614,6 +806,22 @@
     $('eventsClose').addEventListener('click', closeEventsList);
     $('eventsList').addEventListener('click', function (e) { var c = e.target.closest('[data-open]'); if (c) openCloudEvent(c.dataset.open); });
     $('eventsOverlay').addEventListener('click', function (e) { if (e.target === this) closeEventsList(); });
+    $('calendarPrev').addEventListener('click', function () { changeCalendarMonth(-1); });
+    $('calendarNext').addEventListener('click', function () { changeCalendarMonth(1); });
+    $('calendarToday').addEventListener('click', function () {
+      var today = new Date(); calendarMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      calendarSelectedDate = localDate(today); renderCalendar();
+    });
+    $('calendarGrid').addEventListener('click', function (e) {
+      var day = e.target.closest('[data-day]');
+      if (day) { calendarSelectedDate = day.dataset.day; renderCalendar(); }
+    });
+    $('calendarEvents').addEventListener('click', function (e) {
+      var event = e.target.closest('[data-open]');
+      if (event) openCloudEvent(event.dataset.open);
+      var login = e.target.closest('[data-calendar-login]');
+      if (login) openAuth();
+    });
 
     [['expOverlay', closeExpense], ['menuOverlay', closeMenu]].forEach(function (pair) {
       $(pair[0]).addEventListener('click', function (e) { if (e.target === this) pair[1](); });
@@ -640,8 +848,15 @@
   if (cloudReady()) {
     window.Cloud.getSession().then(function (res) {
       refreshAccountUI(res && res.data ? res.data.session : null);
+      if (state.tab === 'calendario') loadCalendarEvents();
+      if (state.cloudId && res && res.data && res.data.session) startCloudSync();
     }).catch(function () {});
-    window.Cloud.onAuth(function (session) { refreshAccountUI(session); });
+    window.Cloud.onAuth(function (session) {
+      refreshAccountUI(session);
+      if (state.tab === 'calendario') loadCalendarEvents();
+      if (session && state.cloudId) startCloudSync();
+      else if (!session) stopCloudSync();
+    });
   } else {
     refreshAccountUI(null);
   }

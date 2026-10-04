@@ -26,6 +26,8 @@ Tiempo estimado: ~15 minutos. No se necesita tarjeta de crédito.
 3. Presiona **Run** (o Ctrl/Cmd + Enter).
 4. Debe decir *Success*. Esto crea las 4 tablas del plan + `evento_miembro`, la seguridad (RLS), el realtime y la función para unirse por código.
 
+Si el proyecto Supabase ya estaba creado, vuelve a ejecutar el esquema actualizado antes de publicar la nueva app. La migración agrega `evento.version` y la función `guardar_evento_snapshot`, que hace el guardado en una transacción y rechaza snapshots basados en una versión antigua.
+
 ## Paso 3 — Verificar
 1. **Table Editor**: deberías ver `evento`, `evento_miembro`, `participante`, `gasto`, `gasto_participante`.
 2. **Authentication** → **Providers**: confirma que **Email** está habilitado (viene por defecto).
