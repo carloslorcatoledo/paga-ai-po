@@ -482,11 +482,25 @@
           <label for="authPass" data-i18n="authPassword">Contraseña</label>
           <input class="text-input" id="authPass" type="password" placeholder="mínimo 6 caracteres" data-i18n-placeholder="passwordPlaceholder" autocomplete="current-password" />
         </div>
+        <button type="button" class="mini-link" id="authForgotPassword" data-i18n="forgotPassword">Olvidé mi contraseña</button>
         <div class="err-msg" id="authMsg"></div>
         <div class="sheet-actions">
           <button type="button" class="btn btn-ghost" id="authCancel" style="flex:1" data-i18n="close">Cerrar</button>
           <button type="button" class="btn btn-primary" id="authSignIn" style="flex:1.4" data-i18n="enter">Entrar</button>
           <button type="button" class="btn btn-ghost" id="authSignUp" style="flex:1.4" data-i18n="createAccount">Crear cuenta</button>
+        </div>
+      </div>
+      <div id="authResetPassword" hidden>
+        <h3 data-i18n="resetTitle">Crear una contraseña nueva</h3>
+        <p class="hint" data-i18n="resetIntro">Elige una contraseña nueva para tu cuenta.</p>
+        <div class="field">
+          <label for="authNewPassword" data-i18n="newPasswordLabel">Nueva contraseña</label>
+          <input class="text-input" id="authNewPassword" type="password" minlength="6" autocomplete="new-password" placeholder="Al menos 6 caracteres" data-i18n-placeholder="newPasswordPlaceholder" />
+        </div>
+        <div class="err-msg" id="authResetMsg"></div>
+        <div class="sheet-actions">
+          <button type="button" class="btn btn-ghost" id="authResetCancel" style="flex:1" data-i18n="cancelRecovery">Volver a entrar</button>
+          <button type="button" class="btn btn-primary" id="authResetSubmit" style="flex:1.4" data-i18n="updatePassword">Guardar contraseña nueva</button>
         </div>
       </div>
       <div id="authLoggedIn" hidden>
@@ -522,10 +536,10 @@
     </div>
   </div>
 
-  <script src="calc.js?v=14"></script>
-  <script src="config.js?v=14"></script>
+  <script src="calc.js?v=15"></script>
+  <script src="config.js?v=15"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="cloud.js?v=14"></script>
-  <script src="app.js?v=14"></script>
+  <script src="cloud.js?v=15"></script>
+  <script src="app.js?v=15"></script>
 </body>
 </html>

@@ -33,6 +33,7 @@ Si el proyecto Supabase ya estaba creado, vuelve a ejecutar el esquema actualiza
 2. **Authentication** → **Providers**: confirma que **Email** está habilitado (viene por defecto).
    - Para probar rápido, en **Authentication → Providers → Email**, puedes desactivar "Confirm email" (así no tienes que confirmar el correo al registrarte en pruebas). En producción, déjalo activado.
 3. Una persona puede probar la app sin sesión; sus salidas quedan locales. Para las funciones de nube debe entrar con su cuenta. Después del login, la app crea o repara su propio perfil; una dirección de correo por sí sola no concede acceso.
+4. En **Authentication → URL Configuration**, agrega a **Redirect URLs** la URL publicada `https://carloslorcatoledo.github.io/paga-ai-po/`. Para desarrollo local, agrega también `http://localhost:8123/**`. El enlace de recuperación vuelve a esa URL para permitir elegir la contraseña nueva.
 
 ## Paso 4 — Copiar tus llaves
 1. **Project Settings** (engranaje) → **API**.
@@ -46,6 +47,7 @@ Guarda la **Project URL** y la **publishable/anon key** en `config.js` localment
 - Probar cálculos, historial local y compartir resúmenes sin iniciar sesión.
 - Entrar con correo y contraseña para usar funciones de nube; el nombre se solicita al crear la cuenta.
 - Crear o reparar el perfil propio después de autenticar, mediante `asegurar_perfil_usuario()`.
+- Recuperar la contraseña por correo; requiere tener autorizada la URL de retorno en **Authentication → URL Configuration**.
 - Guardar/leer eventos, participantes y gastos en la nube.
 - Ver eventos propios y compartidos donde la cuenta es miembro.
 - Auditar altas, accesos, cierres de sesión y membresías en `registro_actividad`.

@@ -39,6 +39,12 @@
     signIn: function (email, password) {
       return client.auth.signInWithPassword({ email: email, password: password });
     },
+    requestPasswordReset: function (email, redirectTo) {
+      return client.auth.resetPasswordForEmail(email, { redirectTo: redirectTo });
+    },
+    updatePassword: function (password) {
+      return client.auth.updateUser({ password: password });
+    },
     signOut: function () { return client.auth.signOut(); },
     getSession: function () { return client.auth.getSession(); },
     ensureProfile: function () { return client.rpc('asegurar_perfil_usuario'); },
@@ -46,7 +52,7 @@
       return client.rpc('registrar_actividad_usuario', { _accion: action, _evento_id: eventId || null });
     },
     onAuth: function (cb) {
-      return client.auth.onAuthStateChange(function (_event, session) { cb(session); });
+      return client.auth.onAuthStateChange(function (event, session) { cb(session, event); });
     },
     subscribeEvent: function (eventId, onChange, onStatus) {
       if (activeEventChannel && activeEventId === eventId) return activeEventChannel;

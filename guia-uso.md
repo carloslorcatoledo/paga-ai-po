@@ -36,6 +36,11 @@ Para guardar eventos en la nube, abrir la lista de eventos o unirse con un códi
 se requiere una cuenta. Si solo quieres probar la app, puedes cerrar la ventana de
 cuenta y continuar como invitado.
 
+Si olvidaste la contraseña, abre **Cuenta / Nube**, escribe el correo de tu cuenta
+y pulsa **Olvidé mi contraseña**. Sigue el enlace que llegue por correo y define
+una contraseña nueva. Si el enlace no vuelve a la app, el administrador debe
+autorizar la URL publicada en **Supabase → Authentication → URL Configuration**.
+
 1. Abre **Menú** → **Cuenta / Nube**.
 2. Crea una cuenta con correo y contraseña, o entra con una cuenta existente.
 3. Vuelve a la salida y pulsa **Guardar este evento en la nube** desde **Cuenta / Nube**. La app mostrará un código para compartir.

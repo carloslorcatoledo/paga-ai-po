@@ -94,6 +94,9 @@ Decisiones tomadas para que la app sea segura por defecto:
 - **Perfil autenticado:** después del login, `asegurar_perfil_usuario()` repara el
   perfil propio a partir de la sesión de Supabase. No se concede identidad ni acceso
   cloud por buscar un correo o por conocer su dirección.
+- **Recuperación de contraseña:** Supabase Auth envía un enlace de un solo uso; la
+  app no guarda contraseñas. Configura la URL de GitHub Pages en **Authentication →
+  URL Configuration → Redirect URLs** para que el enlace pueda volver a la app.
 - **Auditoría de cuenta:** `perfil_usuario` conserva nombre y correo, y
   `registro_actividad` registra altas, inicios/cierres de sesión y membresías. El
   esquema SQL debe aplicarse en Supabase para activar estas funciones.

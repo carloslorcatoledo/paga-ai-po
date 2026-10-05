@@ -26,6 +26,7 @@
       guestIntro: 'Puedes probar la app sin cuenta. Inicia sesión o crea una cuenta para guardar y abrir eventos en la nube.',
       cloudLoginRequired: 'Inicia sesión para usar esta función en la nube. Puedes seguir probando la app localmente.',
       profileRepairFailed: 'No se pudo crear o actualizar tu perfil. Comprueba que el esquema de Supabase esté actualizado y vuelve a intentarlo.',
+      forgotPassword: 'Olvidé mi contraseña', resetEmailRequired: 'Escribe el correo de tu cuenta.', sendingResetLink: 'Enviando enlace…', resetLinkSent: 'Si existe una cuenta con ese correo, recibirás un enlace para cambiar la contraseña.', resetLinkFailed: 'No se pudo enviar el enlace. Intenta nuevamente.', resetHttpRequired: 'Abre la app desde su sitio web para solicitar el enlace.', resetTitle: 'Crear una contraseña nueva', resetIntro: 'Elige una contraseña nueva para tu cuenta.', newPasswordLabel: 'Nueva contraseña', newPasswordPlaceholder: 'Al menos 6 caracteres', updatePassword: 'Guardar contraseña nueva', cancelRecovery: 'Volver a entrar', passwordUpdated: 'Contraseña actualizada. Ya puedes entrar.', resetPasswordFailed: 'No se pudo actualizar la contraseña. Solicita un enlace nuevo.',
       languageLabel: 'Idioma', currencyLabel: 'Moneda', appDescription: 'Divide cuentas entre amigos por ítem y calcula cuánto debe pagar cada persona.', eventNamePlaceholder: 'Nombre de la salida…', eventDate: 'Fecha del evento',
       peopleTab: 'Personas', expensesTab: 'Gastos', summaryTab: 'Resumen', calendarTab: 'Calendario', fabExpense: 'Gasto', peopleHeading: '¿Quiénes son?', personPlaceholder: 'Nombre…', addPerson: 'Agregar', removePerson: 'Quitar', peopleEmptyTitle: 'Agrega a quienes salieron', peopleEmptyBody: 'Escribe un nombre arriba. Luego podrás crear gastos.',
       expensesHeading: 'Gastos', expensesEmptyTitle: 'Aún no hay gastos', addFirstExpense: 'Toca “＋ Gasto” para agregar el primero.', addPeopleFirst: 'Primero agrega personas, luego gastos.', summaryEmptyTitle: 'Nada que calcular todavía', summaryEmptyBody: 'Agrega gastos para ver quién debe a quién.', totalTitle: 'Total de la salida', expenseCount: '{count} gasto(s)', peopleCount: '{count} persona(s)', subtotal: 'Subtotal', tip: 'Propina / servicio', noTip: 'Sin propina', otherTip: 'Otro %', balances: 'Saldo de cada uno', paid: 'Pagó', owes: 'le toca', receives: 'le deben', owesVerb: 'debe', upToDate: 'al día', settle: 'Cómo saldar (menos transferencias)', allSettled: 'Todos están al día ✓',
@@ -52,6 +53,7 @@
       guestIntro: 'Você pode testar o app sem conta. Entre ou crie uma conta para salvar e abrir eventos na nuvem.',
       cloudLoginRequired: 'Entre para usar esta função na nuvem. Você pode continuar testando o app localmente.',
       profileRepairFailed: 'Não foi possível criar ou atualizar seu perfil. Confira se o esquema do Supabase está atualizado e tente novamente.',
+      forgotPassword: 'Esqueci minha senha', resetEmailRequired: 'Digite o e-mail da sua conta.', sendingResetLink: 'Enviando link…', resetLinkSent: 'Se houver uma conta com esse e-mail, você receberá um link para alterar a senha.', resetLinkFailed: 'Não foi possível enviar o link. Tente novamente.', resetHttpRequired: 'Abra o app pelo site para solicitar o link.', resetTitle: 'Criar uma nova senha', resetIntro: 'Escolha uma nova senha para sua conta.', newPasswordLabel: 'Nova senha', newPasswordPlaceholder: 'Pelo menos 6 caracteres', updatePassword: 'Salvar nova senha', cancelRecovery: 'Voltar para entrar', passwordUpdated: 'Senha atualizada. Você já pode entrar.', resetPasswordFailed: 'Não foi possível atualizar a senha. Solicite um novo link.',
       languageLabel: 'Idioma', currencyLabel: 'Moeda', appDescription: 'Divida a conta entre amigos por item e calcule quanto cada pessoa deve pagar.', eventNamePlaceholder: 'Nome do evento…', eventDate: 'Data do evento',
       peopleTab: 'Pessoas', expensesTab: 'Despesas', summaryTab: 'Resumo', calendarTab: 'Calendário', fabExpense: 'Despesa', peopleHeading: 'Quem participou?', personPlaceholder: 'Nome…', addPerson: 'Adicionar', removePerson: 'Remover', peopleEmptyTitle: 'Adicione quem saiu', peopleEmptyBody: 'Digite um nome acima. Depois, você poderá criar despesas.',
       expensesHeading: 'Despesas', expensesEmptyTitle: 'Ainda não há despesas', addFirstExpense: 'Toque em “＋ Despesa” para adicionar a primeira.', addPeopleFirst: 'Adicione pessoas primeiro e depois as despesas.', summaryEmptyTitle: 'Nada para calcular ainda', summaryEmptyBody: 'Adicione despesas para ver quem deve a quem.', totalTitle: 'Total do evento', expenseCount: '{count} despesa(s)', peopleCount: '{count} pessoa(s)', subtotal: 'Subtotal', tip: 'Gorjeta / serviço', noTip: 'Sem gorjeta', otherTip: 'Outra %', balances: 'Saldo de cada pessoa', paid: 'Pagou', owes: 'deve pagar', receives: 'tem a receber', owesVerb: 'deve', upToDate: 'em dia', settle: 'Como acertar (menos transferências)', allSettled: 'Todos estão em dia ✓',
@@ -78,6 +80,7 @@
       guestIntro: 'Try the app without an account. Sign in or create an account to save and open cloud events.',
       cloudLoginRequired: 'Sign in to use this cloud feature. You can keep trying the app locally.',
       profileRepairFailed: 'Could not create or update your profile. Make sure the Supabase schema is up to date and try again.',
+      forgotPassword: 'Forgot password?', resetEmailRequired: 'Enter your account email.', sendingResetLink: 'Sending link…', resetLinkSent: 'If an account exists for that email, you will receive a password reset link.', resetLinkFailed: 'Could not send the link. Try again.', resetHttpRequired: 'Open the app from its website to request a recovery link.', resetTitle: 'Create a new password', resetIntro: 'Choose a new password for your account.', newPasswordLabel: 'New password', newPasswordPlaceholder: 'At least 6 characters', updatePassword: 'Save new password', cancelRecovery: 'Back to sign in', passwordUpdated: 'Password updated. You can sign in now.', resetPasswordFailed: 'Could not update the password. Request a new link.',
       languageLabel: 'Language', currencyLabel: 'Currency', appDescription: 'Split bills by item with friends and calculate how much each person owes.', eventNamePlaceholder: 'Event name…', eventDate: 'Event date',
       peopleTab: 'People', expensesTab: 'Expenses', summaryTab: 'Summary', calendarTab: 'Calendar', fabExpense: 'Expense', peopleHeading: 'Who joined?', personPlaceholder: 'Name…', addPerson: 'Add', removePerson: 'Remove', peopleEmptyTitle: 'Add the people who joined', peopleEmptyBody: 'Enter a name above. Then you can add expenses.',
       expensesHeading: 'Expenses', expensesEmptyTitle: 'No expenses yet', addFirstExpense: 'Tap “＋ Expense” to add the first one.', addPeopleFirst: 'Add people first, then add expenses.', summaryEmptyTitle: 'Nothing to calculate yet', summaryEmptyBody: 'Add expenses to see who owes whom.', totalTitle: 'Event total', expenseCount: '{count} expense(s)', peopleCount: '{count} person(s)', subtotal: 'Subtotal', tip: 'Tip / service', noTip: 'No tip', otherTip: 'Other %', balances: 'Balances', paid: 'Paid', owes: 'owes', receives: 'is owed', owesVerb: 'owes', upToDate: 'settled', settle: 'Suggested settlement', allSettled: 'Everyone is settled ✓',
@@ -134,6 +137,7 @@
   var remoteConflict = false;
   var currentSession = null;
   var profileReady = false;
+  var passwordRecoveryMode = false;
 
   function save() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
@@ -713,6 +717,12 @@
     });
   }
   function refreshAccountUI(session) {
+    if (passwordRecoveryMode) {
+      $('authLoggedOut').hidden = true;
+      $('authLoggedIn').hidden = true;
+      $('authResetPassword').hidden = false;
+      return;
+    }
     var user = profileReady && session && session.user;
     var email = user ? user.email : null;
     if (email) {
@@ -737,6 +747,11 @@
     $('authMsg').textContent = '';
     $('authCancel').hidden = false;
     if (!cloudReady()) $('authMsg').textContent = t('authUnavailable');
+    if (passwordRecoveryMode) {
+      $('authLoggedOut').hidden = true;
+      $('authLoggedIn').hidden = true;
+      $('authResetPassword').hidden = false;
+    }
     $('authOverlay').classList.add('open');
   }
   function closeAuth() {
@@ -797,6 +812,57 @@
         $('authMsg').textContent = t('confirmEmail');
       }
     }).catch(function (e) { $('authMsg').textContent = t('generalError', { error: e.message }); });
+  }
+  function authRequestPasswordReset() {
+    if (!cloudReady()) { $('authMsg').textContent = t('authUnavailable'); return; }
+    var email = $('authEmail').value.trim();
+    if (!email) { $('authMsg').textContent = t('resetEmailRequired'); return; }
+    if (window.location.protocol !== 'http:' && window.location.protocol !== 'https:') {
+      $('authMsg').textContent = t('resetHttpRequired'); return;
+    }
+    var button = $('authForgotPassword');
+    button.disabled = true;
+    $('authMsg').textContent = t('sendingResetLink');
+    var redirectTo = window.location.origin + window.location.pathname;
+    window.Cloud.requestPasswordReset(email, redirectTo).then(function (res) {
+      if (res.error) { $('authMsg').textContent = t('resetLinkFailed'); return; }
+      $('authMsg').textContent = t('resetLinkSent');
+    }).catch(function () {
+      $('authMsg').textContent = t('resetLinkFailed');
+    }).then(function () { button.disabled = false; });
+  }
+  function authUpdatePassword() {
+    if (!cloudReady() || !passwordRecoveryMode) return;
+    var password = $('authNewPassword').value;
+    if (password.length < 6) { $('authResetMsg').textContent = t('passwordLength'); return; }
+    var button = $('authResetSubmit');
+    button.disabled = true;
+    $('authResetMsg').textContent = '';
+    window.Cloud.updatePassword(password).then(function (res) {
+      if (res.error) { $('authResetMsg').textContent = t('resetPasswordFailed'); return; }
+      ensureProfileForSession().then(function () {
+        passwordRecoveryMode = false;
+        $('authResetPassword').hidden = true;
+        $('authNewPassword').value = '';
+        refreshAccountUI(currentSession);
+        $('cloudMsg').textContent = t('passwordUpdated');
+        closeAuth();
+      }).catch(function () {
+        $('authResetMsg').textContent = t('profileRepairFailed');
+      });
+    }).catch(function () {
+      $('authResetMsg').textContent = t('resetPasswordFailed');
+    }).then(function () { button.disabled = false; });
+  }
+  function cancelPasswordRecovery() {
+    passwordRecoveryMode = false;
+    currentSession = null;
+    profileReady = false;
+    $('authResetPassword').hidden = true;
+    $('authNewPassword').value = '';
+    refreshAccountUI(null);
+    closeAuth();
+    if (cloudReady()) window.Cloud.signOut().catch(function () {});
   }
   function authSignOut() {
     if (!cloudReady()) return;
@@ -1110,6 +1176,9 @@
     $('authClose2').addEventListener('click', closeAuth);
     $('authSignIn').addEventListener('click', authSignIn);
     $('authSignUp').addEventListener('click', authSignUp);
+    $('authForgotPassword').addEventListener('click', authRequestPasswordReset);
+    $('authResetSubmit').addEventListener('click', authUpdatePassword);
+    $('authResetCancel').addEventListener('click', cancelPasswordRecovery);
     $('authSignOut').addEventListener('click', authSignOut);
     $('authOverlay').addEventListener('click', function (e) { if (e.target === this) closeAuth(); });
 
@@ -1190,13 +1259,22 @@
       refreshAccountUI(null);
       setSyncStatus(t('authVerifyFailed'), true);
     });
-    window.Cloud.onAuth(function (session) {
+    window.Cloud.onAuth(function (session, event) {
+      if (event === 'PASSWORD_RECOVERY') {
+        passwordRecoveryMode = true;
+        currentSession = session || null;
+        profileReady = false;
+        $('authResetMsg').textContent = '';
+        refreshAccountUI(null);
+        $('authOverlay').classList.add('open');
+        return;
+      }
       var hadSession = !!currentSession;
       var sameReadyUser = !!(profileReady && currentSession && session && currentSession.user && session.user && currentSession.user.id === session.user.id);
       currentSession = session || null;
       profileReady = sameReadyUser;
       refreshAccountUI(profileReady ? session : null);
-      if (session && profileReady && $('authOverlay').classList.contains('open')) closeAuth();
+      if (session && profileReady && !passwordRecoveryMode && $('authOverlay').classList.contains('open')) closeAuth();
       if (state.tab === 'calendario') loadCalendarEvents();
       if (session && profileReady && state.cloudId) startCloudSync();
       else if (session && !profileReady) stopCloudSync();
