@@ -17,17 +17,17 @@ celular, de noche, en 3 toques.
 | `test.html` | Las mismas pruebas corriendo en el navegador (sin instalar nada). |
 | `manifest.json`, `sw.js`, `icon.svg` | Para instalarla como app y usarla sin internet. |
 | `plan-app-dividir-cuentas.md` | El plan de producto completo. |
-| `esquema-supabase.sql` | Tablas, RLS, Realtime y guardado atómico con control de versión. |
+| `esquema-supabase.sql` | Tablas, RLS, Realtime, guardado atómico y pagos confirmados por evento. |
 | `stack-tecnologico.md` | Tecnologías, servicios y herramientas de prueba del proyecto. |
 | `guia-supabase.md` | Guía paso a paso para montar Supabase. |
-| `guia-uso.md` | Instrucciones para crear salidas, calcular saldos y compartir eventos. |
+| `guia-uso.md` | Instrucciones para crear eventos, calcular saldos y compartirlos. |
 
 ## Monedas
 
 Se cambian desde el **selector en la barra superior**: **CLP** (peso chileno, sin
-decimales), **USD** (dólar) y **BRL** (real brasileño). Las salidas nuevas parten
-en BRL; las salidas existentes conservan su moneda. Al cambiar de moneda, los
-montos de la salida actual se **reescalan** manteniendo el número que escribiste
+decimales), **USD** (dólar) y **BRL** (real brasileño). Los eventos nuevos parten
+en BRL; los eventos existentes conservan su moneda. Al cambiar de moneda, los
+montos del evento actual se **reescalan** manteniendo el número que escribiste
 (ej. `20.000` CLP → `20,000.00` USD); **no** es una conversión por tipo de cambio.
 
 ## Idioma
@@ -35,7 +35,7 @@ montos de la salida actual se **reescalan** manteniendo el número que escribist
 El selector junto a la moneda permite elegir **español (ES)**, **portugués (PT)**
 o **inglés (EN)**. La app parte en español y guarda el idioma elegido en el
 navegador. También adapta los formatos de fecha y número al idioma; esto no
-cambia la moneda ni los importes de la salida.
+cambia la moneda ni los importes del evento.
 
 ## Propina / servicio
 
@@ -45,6 +45,15 @@ incluida en el monto efectivo de cada gasto), así que quien consumió más, apo
 más propina. Cada gasto puede **excluirse** de la propina con el interruptor
 "Incluir propina / servicio" en su formulario (útil para un taxi o el super). Los
 saldos siempre siguen sumando 0.
+
+## Confirmar transferencias
+
+En los eventos guardados en la nube, el creador autenticado puede marcar cada
+transferencia sugerida como pendiente o pagada, o registrar un monto abonado
+acumulado. Los demás miembros solo consultan el estado. Si cambian los importes,
+participantes, propina o gastos que determinan las deudas, los pagos se reinician;
+los cambios de nombre y descripción no los afectan. Los eventos cloud existentes
+comienzan pendientes al aplicar la migración de Supabase.
 
 ## Cómo probarla
 
@@ -92,6 +101,9 @@ Decisiones tomadas para que la app sea segura por defecto:
   ese dispositivo y no se sincronizan automáticamente. RLS limita el acceso cloud a
   miembros autenticados del evento. El menú de cuenta permite entrar con correo y
   contraseña; el registro pide nombre y la lista muestra eventos donde participa.
+- **Pagos confirmados:** solo el creador puede modificar transferencias mediante
+  una RPC protegida; los miembros consultan el estado. Aplica la migración de
+  `esquema-supabase.sql` en Supabase antes de publicar esta versión.
 - **Perfil autenticado:** después del login, `asegurar_perfil_usuario()` repara el
   perfil propio a partir de la sesión de Supabase. No se concede identidad ni acceso
   cloud por buscar un correo o por conocer su dirección.

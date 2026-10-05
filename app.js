@@ -27,17 +27,17 @@
       cloudLoginRequired: 'Inicia sesión para usar esta función en la nube. Puedes seguir probando la app localmente.',
       profileRepairFailed: 'No se pudo crear o actualizar tu perfil. Comprueba que el esquema de Supabase esté actualizado y vuelve a intentarlo.',
       forgotPassword: 'Olvidé mi contraseña', resetEmailRequired: 'Escribe el correo de tu cuenta.', sendingResetLink: 'Enviando enlace…', resetLinkSent: 'Si existe una cuenta con ese correo, recibirás un enlace para cambiar la contraseña.', resetLinkFailed: 'No se pudo enviar el enlace. Intenta nuevamente.', resetHttpRequired: 'Abre la app desde su sitio web para solicitar el enlace.', resetTitle: 'Crear una contraseña nueva', resetIntro: 'Elige una contraseña nueva para tu cuenta.', newPasswordLabel: 'Nueva contraseña', newPasswordPlaceholder: 'Al menos 6 caracteres', updatePassword: 'Guardar contraseña nueva', cancelRecovery: 'Volver a entrar', passwordUpdated: 'Contraseña actualizada. Ya puedes entrar.', resetPasswordFailed: 'No se pudo actualizar la contraseña. Solicita un enlace nuevo.',
-      languageLabel: 'Idioma', currencyLabel: 'Moneda', appDescription: 'Divide cuentas entre amigos por ítem y calcula cuánto debe pagar cada persona.', eventNamePlaceholder: 'Nombre de la salida…', eventDate: 'Fecha del evento',
-      peopleTab: 'Personas', expensesTab: 'Gastos', summaryTab: 'Resumen', calendarTab: 'Calendario', fabExpense: 'Gasto', peopleHeading: '¿Quiénes son?', personPlaceholder: 'Nombre…', addPerson: 'Agregar', removePerson: 'Quitar', peopleEmptyTitle: 'Agrega a quienes salieron', peopleEmptyBody: 'Escribe un nombre arriba. Luego podrás crear gastos.',
-      expensesHeading: 'Gastos', expensesEmptyTitle: 'Aún no hay gastos', addFirstExpense: 'Toca “＋ Gasto” para agregar el primero.', addPeopleFirst: 'Primero agrega personas, luego gastos.', summaryEmptyTitle: 'Nada que calcular todavía', summaryEmptyBody: 'Agrega gastos para ver quién debe a quién.', totalTitle: 'Total de la salida', expenseCount: '{count} gasto(s)', peopleCount: '{count} persona(s)', subtotal: 'Subtotal', tip: 'Propina / servicio', noTip: 'Sin propina', otherTip: 'Otro %', balances: 'Saldo de cada uno', paid: 'Pagó', owes: 'le toca', receives: 'le deben', owesVerb: 'debe', upToDate: 'al día', settle: 'Cómo saldar (menos transferencias)', allSettled: 'Todos están al día ✓',
-      shareWhatsApp: 'Compartir por WhatsApp', copy: 'Copiar', copied: '¡Copiado!', copyFailed: 'No se pudo copiar', shareHeading: 'Paga aí po! · Resumen', shareEvent: 'Salida', sharePeople: '{people} personas · {expenses} gastos', shareTotal: 'Total', shareTip: 'Incluye propina ({percent}%): {amount}', shareBalances: 'Saldo por persona', receive: 'Recibe', oweShare: 'Debe', shareTransfers: 'Transferencias sugeridas', paysTo: 'paga {amount} a', allSettledText: 'Todos están al día.', calculatedWith: 'Calculado con Paga aí po!',
+      languageLabel: 'Idioma', currencyLabel: 'Moneda', appDescription: 'Divide cuentas entre amigos por ítem y calcula cuánto debe pagar cada persona.', eventNamePlaceholder: 'Nombre del evento…', eventDate: 'Fecha del evento',
+      peopleTab: 'Personas', expensesTab: 'Gastos', summaryTab: 'Resumen', calendarTab: 'Calendario', fabExpense: 'Gasto', peopleHeading: '¿Quiénes son?', personPlaceholder: 'Nombre…', addPerson: 'Agregar', removePerson: 'Quitar', peopleEmptyTitle: 'Agrega a quienes participan', peopleEmptyBody: 'Escribe un nombre arriba. Luego podrás crear gastos.',
+      expensesHeading: 'Gastos', expensesEmptyTitle: 'Aún no hay gastos', addFirstExpense: 'Toca “＋ Gasto” para agregar el primero.', addPeopleFirst: 'Primero agrega personas, luego gastos.', summaryEmptyTitle: 'Nada que calcular todavía', summaryEmptyBody: 'Agrega gastos para ver quién debe a quién.', totalTitle: 'Total del evento', expenseCount: '{count} gasto(s)', peopleCount: '{count} persona(s)', subtotal: 'Subtotal', tip: 'Propina / servicio', noTip: 'Sin propina', otherTip: 'Otro %', balances: 'Saldo de cada uno', paid: 'Pagó', owes: 'le toca', receives: 'le deben', owesVerb: 'debe', upToDate: 'al día', settle: 'Cómo saldar (menos transferencias)', allSettled: 'Todos están al día ✓',
+      shareWhatsApp: 'Compartir por WhatsApp', copy: 'Copiar', copied: '¡Copiado!', copyFailed: 'No se pudo copiar', shareHeading: 'Paga aí po! · Resumen', shareEvent: 'Evento', sharePeople: '{people} personas · {expenses} gastos', shareTotal: 'Total', shareTip: 'Incluye propina ({percent}%): {amount}', shareBalances: 'Saldo por persona', receive: 'Recibe', oweShare: 'Debe', shareTransfers: 'Transferencias sugeridas', paysTo: 'paga {amount} a', allSettledText: 'Todos están al día.', calculatedWith: 'Calculado con Paga aí po!',
       newExpense: 'Nuevo gasto', editExpense: 'Editar gasto', whatWasIt: '¿Qué fue?', amount: 'Monto', category: 'Categoría', whoPaid: '¿Quién pagó?', splitBetween: '¿Entre quiénes se divide?', all: 'Todos', none: 'Ninguno', includeTip: 'Incluir propina / servicio en este gasto', cancel: 'Cancelar', save: 'Guardar', delete: 'Eliminar gasto', amountError: 'Ingresa un monto mayor a 0.', payerError: 'Elige quién pagó.', splitError: 'Elige al menos una persona para dividir.',
       calendarTitle: 'Eventos guardados', previousMonth: 'Mes anterior', nextMonth: 'Mes siguiente', today: 'Hoy', monthDays: 'Días del mes', loading: 'Cargando…', loadingEvents: 'Cargando eventos…', noEventsToday: 'No hay eventos guardados para este día.', calendarAttendees: 'Asistentes', calendarOpenEvent: 'Abrir evento',
-      options: 'Opciones', currencyHint: 'Al cambiar la moneda, los montos se reescalan; no se aplica tipo de cambio.', clearNew: 'Limpiar y crear salida', confirmNew: '¿Limpiar los datos ingresados y crear una nueva salida? La salida actual se conservará en el historial.', loadExample: 'Cargar ejemplo', resetAll: 'Vaciar todo', confirmReset: 'Esto borra personas y gastos de esta salida. ¿Continuar?', close: 'Cerrar',
+      options: 'Opciones', currencyHint: 'Al cambiar la moneda, los montos se reescalan; no se aplica tipo de cambio.', clearNew: 'Limpiar y crear evento', confirmNew: '¿Limpiar los datos ingresados y crear un evento nuevo? El evento actual se conservará en el historial.', loadExample: 'Cargar ejemplo', resetAll: 'Vaciar todo', confirmReset: 'Esto borra personas y gastos de este evento. ¿Continuar?', close: 'Cerrar',
       accountTitle: 'Cuenta / Nube', authIntro: 'Inicia sesión para continuar. Al crear una cuenta, registra tu nombre y correo para ver los eventos donde participas.', authName: 'Nombre (para crear cuenta)', namePlaceholder: 'Tu nombre', authEmail: 'Correo', emailPlaceholder: 'tu@correo.com', authPassword: 'Contraseña', passwordPlaceholder: 'mínimo 6 caracteres', expensePlaceholder: 'Pizza, cervezas, taxi…', enter: 'Entrar', createAccount: 'Crear cuenta', connectedAs: 'Conectado como', cloudSave: 'Guardar este evento en la nube', myEvents: 'Eventos en los que participo', cloudNew: 'Nuevo evento (vaciar)', joinLabel: 'Abrir un evento con código', join: 'Abrir', signOut: 'Cerrar sesión',
       nameRequired: 'Escribe tu nombre para crear la cuenta.', credentialsRequired: 'Escribe correo y contraseña.', passwordLength: 'La contraseña debe tener al menos 6 caracteres.', creatingAccount: 'Creando cuenta…', signingIn: 'Entrando…', accountCreated: '✓ ¡Cuenta creada!', confirmEmail: 'Cuenta creada. Confírmala desde tu correo, o apaga “Confirm email” en Supabase para entrar al instante.', sessionStarted: 'Sesión iniciada.', activityError: 'Sesión iniciada, pero no se registró la actividad. Aplica la migración SQL de Supabase.',
       categoryFood: 'Comida', categoryAlcohol: 'Alcohol', categoryDrinks: 'Bebidas', categoryTransport: 'Transporte', categoryOther: 'Otros',
-      syncLocal: 'Hay cambios locales sin guardar. Recarga el evento para sincronizarlo.', syncConnected: 'Conectado en vivo', syncInterrupted: 'Conexión en vivo interrumpida', cloudUnavailable: 'La nube no está disponible. Se muestran los eventos guardados en este dispositivo.', loginForCloud: 'Inicia sesión para ver también los eventos de la nube. Los eventos locales seguirán visibles.', loginButton: 'Entrar a la nube', noCloudEvents: 'Aún no participas en eventos', noCloudEventsHint: 'Guarda una salida o ábrela con su código para que aparezca aquí.', codeInvalid: 'Escribe un código.',
+      syncLocal: 'Hay cambios locales sin guardar. Recarga el evento para sincronizarlo.', syncConnected: 'Conectado en vivo', syncInterrupted: 'Conexión en vivo interrumpida', cloudUnavailable: 'La nube no está disponible. Se muestran los eventos guardados en este dispositivo.', loginForCloud: 'Inicia sesión para ver también los eventos de la nube. Los eventos locales seguirán visibles.', loginButton: 'Entrar a la nube', noCloudEvents: 'Aún no participas en eventos', noCloudEventsHint: 'Guarda un evento o ábrelo con su código para que aparezca aquí.', codeInvalid: 'Escribe un código.',
       eventCountAria: '{count} eventos', calendarLoginHint: 'Inicia sesión para ver y guardar eventos en el calendario.', reload: 'Recargar', weekdayMon: 'L', weekdayTue: 'M', weekdayWed: 'X', weekdayThu: 'J', weekdayFri: 'V', weekdaySat: 'S', weekdaySun: 'D',
       exampleEvent: 'Asado del viernes', exampleFood: 'Carne y pan', exampleBeer: 'Cervezas', exampleDrinks: 'Bebidas', themeToggle: 'Cambiar tema', menuLabel: 'Menú',
       among: 'entre', noTipSuffix: 'sin propina', expensePaidBy: 'Pagó {name} · entre {count}: {people}{noTip}',
@@ -104,6 +104,37 @@
       categoryFood: 'Food', categoryAlcohol: 'Alcohol', categoryDrinks: 'Drinks', categoryTransport: 'Transport', categoryOther: 'Other'
     }
   };
+  Object.assign(TEXT.es, {
+    paymentUnpaid: 'Pendiente', paymentPartial: 'Pago parcial', paymentPaid: 'Pagado',
+    paymentAmountLabel: 'Abonado', paymentRemaining: 'Restante', paymentSave: 'Guardar monto',
+    paymentMarkPaid: 'Marcar como pagado', paymentMarkUnpaid: 'Marcar como pendiente',
+    paymentAmountInvalid: 'El monto debe estar entre 0 y {amount}.',
+    paymentSaveEventFirst: 'Guarda los cambios del evento antes de actualizar pagos.',
+    paymentSaveFailed: 'No se pudo actualizar el pago: {error}',
+    paymentSchemaMissing: 'Aplica el esquema actualizado de Supabase para activar el seguimiento de pagos.',
+    paymentStale: 'Cambió el evento. Recarga su versión actual antes de modificar pagos.'
+  });
+  Object.assign(TEXT.pt, {
+    peopleEmptyTitle: 'Adicione quem participou',
+    paymentUnpaid: 'Pendente', paymentPartial: 'Pagamento parcial', paymentPaid: 'Pago',
+    paymentAmountLabel: 'Pago', paymentRemaining: 'Restante', paymentSave: 'Salvar valor',
+    paymentMarkPaid: 'Marcar como pago', paymentMarkUnpaid: 'Marcar como pendente',
+    paymentAmountInvalid: 'O valor deve estar entre 0 e {amount}.',
+    paymentSaveEventFirst: 'Salve as alterações do evento antes de atualizar pagamentos.',
+    paymentSaveFailed: 'Não foi possível atualizar o pagamento: {error}',
+    paymentSchemaMissing: 'Aplique o esquema atualizado do Supabase para ativar o controle de pagamentos.',
+    paymentStale: 'O evento mudou. Recarregue a versão atual antes de alterar pagamentos.'
+  });
+  Object.assign(TEXT.en, {
+    paymentUnpaid: 'Unpaid', paymentPartial: 'Partially paid', paymentPaid: 'Paid',
+    paymentAmountLabel: 'Paid', paymentRemaining: 'Remaining', paymentSave: 'Save amount',
+    paymentMarkPaid: 'Mark as paid', paymentMarkUnpaid: 'Mark as unpaid',
+    paymentAmountInvalid: 'Amount must be between 0 and {amount}.',
+    paymentSaveEventFirst: 'Save event changes before updating payments.',
+    paymentSaveFailed: 'Could not update payment: {error}',
+    paymentSchemaMissing: 'Apply the updated Supabase schema to enable payment tracking.',
+    paymentStale: 'The event changed. Reload its latest version before updating payments.'
+  });
   var CATEGORIES = [
     { id: 'comida', label: 'Comida', key: 'categoryFood', icon: '🍕' },
     { id: 'alcohol', label: 'Alcohol', key: 'categoryAlcohol', icon: '🍺' },
@@ -120,7 +151,8 @@
   var state = {
     eventName: '', eventDate: localDate(new Date()), currency: 'BRL', language: 'es', theme: 'system', tab: 'personas',
     tipPercent: 0, participants: [], expenses: [],
-    cloudId: null, cloudVersion: null, cloudBaseline: null, codigo: null, historyId: null
+    cloudId: null, cloudVersion: null, cloudBaseline: null, cloudOwnerId: null, financialFingerprint: null,
+    paymentSchemaAvailable: false, transferPayments: {}, codigo: null, historyId: null
   };
   var TIP_PRESETS = [0, 5, 10, 15];
   var editingId = null;
@@ -198,6 +230,10 @@
         state.cloudId = s.cloudId || null;
         state.cloudVersion = Number.isInteger(s.cloudVersion) ? s.cloudVersion : null;
         state.cloudBaseline = typeof s.cloudBaseline === 'string' ? s.cloudBaseline : null;
+        state.cloudOwnerId = typeof s.cloudOwnerId === 'string' ? s.cloudOwnerId : null;
+        state.financialFingerprint = typeof s.financialFingerprint === 'string' ? s.financialFingerprint : null;
+        state.paymentSchemaAvailable = s.paymentSchemaAvailable === true;
+        state.transferPayments = s.transferPayments && typeof s.transferPayments === 'object' ? s.transferPayments : {};
         state.codigo = s.codigo || null;
         state.historyId = typeof s.historyId === 'string' ? s.historyId : uid();
       }
@@ -239,6 +275,11 @@
       tipPercent: state.tipPercent, participants: state.participants, expenses: state.expenses
     });
   }
+  function transferPaymentKey(payerKey, receiverKey) { return JSON.stringify([payerKey, receiverKey]); }
+  function resetCloudPaymentState() {
+    state.cloudOwnerId = null; state.financialFingerprint = null;
+    state.paymentSchemaAvailable = false; state.transferPayments = {};
+  }
   function setSyncStatus(message, conflict, canReload) {
     var box = $('syncStatus');
     box.hidden = !message;
@@ -268,7 +309,7 @@
       if (remoteConflict) return;
       if (status === 'SUBSCRIBED') setSyncStatus(t('syncConnected'), false);
       else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setSyncStatus(t('syncInterrupted'), true, true);
-    });
+    }, state.paymentSchemaAvailable);
   }
   function refreshFromCloud() {
     if (!currentSession || !profileReady || !state.cloudId) return;
@@ -402,6 +443,41 @@
     save(); renderSummary();
   }
 
+  function renderTransferPayment(transfer) {
+    var key = transferPaymentKey(transfer.from, transfer.to);
+    var saved = state.transferPayments[key];
+    var paid = saved && Number(saved.monto_deuda) === transfer.amount ? Number(saved.monto_pagado) || 0 : 0;
+    paid = Math.max(0, Math.min(transfer.amount, paid));
+    var remaining = transfer.amount - paid;
+    var status = paid === 0 ? 'payment-unpaid' : remaining === 0 ? 'payment-paid' : 'payment-partial';
+    var statusText = paid === 0 ? t('paymentUnpaid') : remaining === 0 ? t('paymentPaid') : t('paymentPartial');
+    var trackPayments = !!state.cloudId && state.paymentSchemaAvailable;
+    var html = '<div class="transfer-payment-row"><div class="transfer"><span class="t-name">' + esc(transfer.fromName) + '</span>' +
+      '<span class="t-mid">→ <span class="t-amt">' + esc(fmt(transfer.amount)) + '</span> →</span>' +
+      '<span class="t-name">' + esc(transfer.toName) + '</span></div>';
+    if (trackPayments) {
+      html += '<div class="transfer-payment-status"><strong class="' + status + '">' + statusText + '</strong><span>' +
+        t('paymentAmountLabel') + ': ' + esc(fmt(paid)) + ' · ' + t('paymentRemaining') + ': ' + esc(fmt(remaining)) + '</span></div>';
+    }
+    if (paymentsEditable()) {
+      var inputValue = (paid / factor()).toFixed(cur().decimals);
+      var step = cur().decimals ? '0.01' : '1';
+      html += '<form class="transfer-payment-controls" data-transfer-payment-form data-payer-key="' + esc(transfer.from) + '" data-receiver-key="' + esc(transfer.to) + '" data-due-amount="' + transfer.amount + '">' +
+        '<button type="button" class="icon-btn payment-action" data-payment-action="paid" aria-label="' + esc(t('paymentMarkPaid')) + '" title="' + esc(t('paymentMarkPaid')) + '">✓</button>' +
+        '<button type="button" class="icon-btn payment-action" data-payment-action="unpaid" aria-label="' + esc(t('paymentMarkUnpaid')) + '" title="' + esc(t('paymentMarkUnpaid')) + '">×</button>' +
+        '<label class="payment-input-label">' + t('paymentAmountLabel') + '<input class="text-input payment-amount" type="number" inputmode="decimal" min="0" max="' + (transfer.amount / factor()) + '" step="' + step + '" value="' + inputValue + '" aria-label="' + esc(t('paymentAmountLabel')) + '" /></label>' +
+        '<button type="submit" class="btn btn-ghost btn-sm">' + t('paymentSave') + '</button><span class="payment-feedback" data-payment-feedback role="status"></span></form>';
+    } else if (isCloudOwner() && state.paymentSchemaAvailable) {
+      html += '<div class="hint payment-editor-hint">' + esc(t('paymentSaveEventFirst')) + '</div>';
+    }
+    return html + '</div>';
+  }
+
+  function paymentsEditable() {
+    return isCloudOwner() && state.paymentSchemaAvailable && !remoteConflict &&
+      !!state.cloudBaseline && eventSnapshot() === state.cloudBaseline;
+  }
+
   function renderSummary() {
     var box = $('summaryContent');
     if (!state.expenses.length) {
@@ -447,13 +523,9 @@
     if (!transfers.length) {
       html += '<div class="settle-card" style="text-align:center;color:var(--muted)">' + t('allSettled') + '</div>';
     } else {
-      html += '<div class="settle-card">' + transfers.map(function (t) {
-        return '<div class="transfer">' +
-          '<span class="t-name">' + esc(t.fromName) + '</span>' +
-          '<span class="t-mid">→ <span class="t-amt">' + esc(fmt(t.amount)) + '</span> →</span>' +
-          '<span class="t-name">' + esc(t.toName) + '</span></div>';
-      }).join('') + '</div>';
+      html += '<div class="settle-card">' + transfers.map(renderTransferPayment).join('') + '</div>';
     }
+    if (state.cloudId && !state.paymentSchemaAvailable) html += '<div class="hint payment-schema-hint">' + esc(t('paymentSchemaMissing')) + '</div>';
 
     html += '<div class="share-row">' +
       '<button class="btn btn-wa" id="shareWa" style="flex:2">📲 ' + t('shareWhatsApp') + '</button>' +
@@ -466,6 +538,43 @@
     $('tipCustom').addEventListener('change', function () { setTip(parseFloat(this.value)); });
     $('shareWa').addEventListener('click', shareWhatsApp);
     $('copySum').addEventListener('click', copySummary);
+  }
+
+  function saveTransferPayment(payerKey, receiverKey, dueAmount, paidAmount, form) {
+    var feedback = form.querySelector('[data-payment-feedback]');
+    var eventId = state.cloudId;
+    var fingerprint = state.financialFingerprint;
+    if (!paymentsEditable() || !fingerprint || !Number.isSafeInteger(dueAmount) || dueAmount <= 0 ||
+      !Number.isSafeInteger(paidAmount) || paidAmount < 0 || paidAmount > dueAmount) {
+      feedback.textContent = t('paymentAmountInvalid', { amount: fmt(dueAmount) });
+      return;
+    }
+    form.querySelectorAll('button, input').forEach(function (control) { control.disabled = true; });
+    window.Cloud.updateTransferPayment({
+      eventId: eventId, payerKey: payerKey, receiverKey: receiverKey,
+      dueAmount: dueAmount, paidAmount: paidAmount, financialFingerprint: fingerprint
+    }).then(function (res) {
+      if (state.cloudId !== eventId || state.financialFingerprint !== fingerprint) return;
+      if (res.error) {
+        if (res.error.message.indexOf('PAYMENT_EVENT_CHANGED') !== -1 || res.error.code === '40001') {
+          setSyncStatus(t('paymentStale'), true, true);
+          feedback.textContent = t('paymentStale');
+        } else feedback.textContent = t('paymentSaveFailed', { error: res.error.message });
+        form.querySelectorAll('button, input').forEach(function (control) { control.disabled = false; });
+        return;
+      }
+      var key = transferPaymentKey(payerKey, receiverKey);
+      if (paidAmount === 0) delete state.transferPayments[key];
+      else state.transferPayments[key] = {
+        pagador_key: payerKey, receptor_key: receiverKey,
+        monto_deuda: dueAmount, monto_pagado: paidAmount,
+        financial_fingerprint: fingerprint, updated_at: new Date().toISOString()
+      };
+      save(); renderSummary();
+    }).catch(function (error) {
+      if (state.cloudId === eventId) feedback.textContent = t('paymentSaveFailed', { error: error.message });
+      form.querySelectorAll('button, input').forEach(function (control) { control.disabled = false; });
+    });
   }
 
   function emptyHTML(icon, title, text) {
@@ -666,6 +775,7 @@
     state.currency = 'BRL';
     state.tipPercent = 0;
     state.cloudId = null;
+    resetCloudPaymentState();
     state.cloudVersion = null;
     state.cloudBaseline = null;
     state.codigo = null;
@@ -690,6 +800,7 @@
     state.currency = 'BRL';
     state.eventDate = localDate(new Date()); state.historyId = uid();
     state.cloudId = null; state.codigo = null;
+    resetCloudPaymentState();
     state.cloudVersion = null;
     state.cloudBaseline = null;
     save(); render();
@@ -716,6 +827,10 @@
 
   // ---------- Cuenta / Nube (Supabase) ----------
   function cloudReady() { return !!(window.Cloud && window.Cloud.available); }
+  function isCloudOwner() {
+    return !!(state.cloudId && state.paymentSchemaAvailable && currentSession && profileReady &&
+      state.cloudOwnerId && currentSession.user && currentSession.user.id === state.cloudOwnerId);
+  }
   function requireCloudSession() {
     if (currentSession && currentSession.user && profileReady) return true;
     openAuth();
@@ -895,14 +1010,24 @@
     var localRecord = localHistory.filter(function (item) { return item.cloudId === ev.id; })[0];
     state.cloudId = ev.id;
     state.cloudVersion = Number(ev.version) || 0;
+    state.cloudOwnerId = ev.owner || null;
+    state.financialFingerprint = ev.financial_fingerprint || null;
+    state.paymentSchemaAvailable = d.paymentSchemaAvailable !== false;
+    state.transferPayments = {};
+    (d.transferencia_pagos || []).forEach(function (payment) {
+      state.transferPayments[transferPaymentKey(payment.pagador_key, payment.receptor_key)] = payment;
+    });
     state.codigo = ev.codigo;
     state.historyId = localRecord ? localRecord.historyId : 'cloud-' + ev.id;
     state.eventName = ev.nombre || '';
     state.eventDate = validDate(ev.fecha) ? ev.fecha : localDate(new Date());
     state.currency = CURRENCIES[ev.moneda] ? ev.moneda : 'BRL';
     state.tipPercent = Number(ev.tip_percent) || 0;
+    var participantKeys = {};
     state.participants = assignColors((d.participantes || []).map(function (p) {
-      return { id: p.id, name: p.nombre, color: p.color };
+      var key = p.client_key || p.id;
+      participantKeys[p.id] = key;
+      return { id: key, name: p.nombre, color: p.color };
     }));
     state.expenses = (d.gastos || []).map(function (g) {
       return {
@@ -910,11 +1035,11 @@
         description: g.descripcion || '',
         amount: Number(g.monto) || 0,
         category: g.categoria || 'otros',
-        paidBy: g.pagado_por,
+        paidBy: participantKeys[g.pagado_por] || g.pagado_por,
         tip: g.aplica_propina !== false,
         participants: (d.gasto_participante || [])
           .filter(function (x) { return x.gasto_id === g.id; })
-          .map(function (x) { return x.participante_id; })
+          .map(function (x) { return participantKeys[x.participante_id] || x.participante_id; })
       };
     });
     state.tab = 'resumen';
@@ -929,6 +1054,8 @@
       return;
     }
     var btn = $('cloudSave');
+    var previousCloudId = state.cloudId;
+    var previousFinancialFingerprint = state.financialFingerprint;
     $('cloudMsg').textContent = '';
     btn.disabled = true; cloudSaveInProgress = true; var orig = btn.textContent; btn.textContent = t('saveCloudButton');
     window.Cloud.saveEvent({
@@ -947,7 +1074,12 @@
         return;
       }
       state.cloudId = res.data.id; state.cloudVersion = Number(res.data.version) || 0; state.codigo = res.data.codigo;
+      state.cloudOwnerId = res.data.owner || (previousCloudId ? state.cloudOwnerId : currentSession.user.id);
+      state.financialFingerprint = res.data.financial_fingerprint || null;
+      state.paymentSchemaAvailable = !!state.financialFingerprint;
+      if (state.financialFingerprint !== previousFinancialFingerprint) state.transferPayments = {};
       syncBaseline = eventSnapshot(); state.cloudBaseline = syncBaseline; remoteConflict = false; save(); subscribeCurrentEvent();
+      if (state.tab === 'resumen') renderSummary();
       setSyncStatus(t('savedCloud'), false);
       if (state.tab === 'calendario') loadCalendarEvents();
       var info = $('cloudSavedInfo');
@@ -1087,18 +1219,22 @@
         } else {
           var data = res.data;
           var event = data.evento;
+          var participantKeys = {};
+          (data.participantes || []).forEach(function (person) { participantKeys[person.id] = person.client_key || person.id; });
           calendarDetail = {
             eventName: event.nombre, eventDate: event.fecha, currency: event.moneda,
             codigo: event.codigo, tipPercent: Number(event.tip_percent) || 0, historyId: historyId || null, cloudId: cloudId,
+            paymentSchemaAvailable: data.paymentSchemaAvailable !== false,
+            transferPayments: data.transferencia_pagos || [],
             participants: (data.participantes || []).map(function (person) {
-              return { id: person.id, name: person.nombre, color: person.color };
+              return { id: participantKeys[person.id], name: person.nombre, color: person.color };
             }),
             expenses: (data.gastos || []).map(function (expense) {
               return {
                 id: expense.id, description: expense.descripcion || '', amount: Number(expense.monto) || 0,
-                category: expense.categoria || 'otros', paidBy: expense.pagado_por, tip: expense.aplica_propina !== false,
+                category: expense.categoria || 'otros', paidBy: participantKeys[expense.pagado_por] || expense.pagado_por, tip: expense.aplica_propina !== false,
                 participants: (data.gasto_participante || []).filter(function (split) { return split.gasto_id === expense.id; })
-                  .map(function (split) { return split.participante_id; })
+                  .map(function (split) { return participantKeys[split.participante_id] || split.participante_id; })
               };
             })
           };
@@ -1167,9 +1303,23 @@
       return '<div class="person-card"><div class="avatar" style="background:' + esc(color) + '">' + esc(initials(balance.name)) + '</div><div class="pc-main"><div class="pc-name">' + esc(balance.name) + '</div><div class="pc-sub">' + t('paid') + ' ' + esc(fmtForCurrency(balance.paid, currency)) + ' · ' + t('owes') + ' ' + esc(fmtForCurrency(balance.owes, currency)) + '</div></div><div class="pill ' + pill + '">' + esc(amount) + '<small>' + label + '</small></div></div>';
     }).join('');
     var transfers = R.simplifyDebts(balances);
+    var transferPayments = {};
+    (event.transferPayments || []).forEach(function (payment) {
+      transferPayments[transferPaymentKey(payment.pagador_key, payment.receptor_key)] = payment;
+    });
     html += '<div class="section-title calendar-detail-title">' + t('settle') + '</div>';
     html += transfers.length ? '<div class="settle-card">' + transfers.map(function (transfer) {
-      return '<div class="transfer"><span class="t-name">' + esc(transfer.fromName) + '</span><span class="t-mid">→ <span class="t-amt">' + esc(fmtForCurrency(transfer.amount, currency)) + '</span> →</span><span class="t-name">' + esc(transfer.toName) + '</span></div>';
+      var row = '<div class="transfer-payment-row"><div class="transfer"><span class="t-name">' + esc(transfer.fromName) + '</span><span class="t-mid">→ <span class="t-amt">' + esc(fmtForCurrency(transfer.amount, currency)) + '</span> →</span><span class="t-name">' + esc(transfer.toName) + '</span></div>';
+      if (event.cloudId && event.paymentSchemaAvailable) {
+        var payment = transferPayments[transferPaymentKey(transfer.from, transfer.to)];
+        var paid = payment && Number(payment.monto_deuda) === transfer.amount ? Number(payment.monto_pagado) || 0 : 0;
+        paid = Math.max(0, Math.min(transfer.amount, paid));
+        var remaining = transfer.amount - paid;
+        var statusClass = paid === 0 ? 'payment-unpaid' : remaining === 0 ? 'payment-paid' : 'payment-partial';
+        var statusText = paid === 0 ? t('paymentUnpaid') : remaining === 0 ? t('paymentPaid') : t('paymentPartial');
+        row += '<div class="transfer-payment-status"><strong class="' + statusClass + '">' + statusText + '</strong><span>' + t('paymentAmountLabel') + ': ' + esc(fmtForCurrency(paid, currency)) + ' · ' + t('paymentRemaining') + ': ' + esc(fmtForCurrency(remaining, currency)) + '</span></div>';
+      }
+      return row + '</div>';
     }).join('') + '</div>' : '<div class="settle-card" style="text-align:center;color:var(--muted)">' + t('allSettled') + '</div>';
     var openAttrs = event.cloudId ? 'data-calendar-open-cloud="' + esc(event.cloudId) + '"' : 'data-calendar-open-history="' + esc(event.historyId || '') + '"';
     html += '<button type="button" class="btn btn-primary btn-block calendar-detail-open" ' + openAttrs + '>' + t('calendarOpenEvent') + '</button>';
@@ -1180,6 +1330,7 @@
     stopCloudSync();
     state.historyId = event.historyId;
     state.cloudId = event.cloudId || null;
+    resetCloudPaymentState();
     state.cloudVersion = Number.isInteger(event.cloudVersion) ? event.cloudVersion : null;
     state.cloudBaseline = event.cloudBaseline || null;
     state.codigo = event.codigo || null;
@@ -1233,6 +1384,7 @@
     state.currency = 'BRL';
     state.historyId = uid();
     state.cloudId = null; state.cloudVersion = null; state.cloudBaseline = null; state.codigo = null; state.tab = 'personas';
+    resetCloudPaymentState();
     $('cloudSavedInfo').hidden = true;
     save(); render(); closeAuth();
   }
@@ -1278,6 +1430,27 @@
     $('fab').addEventListener('click', function () { openExpense(null); });
 
     $('expForm').addEventListener('submit', saveExpense);
+    $('summaryContent').addEventListener('click', function (e) {
+      var action = e.target.closest('[data-payment-action]');
+      if (!action) return;
+      var form = action.closest('[data-transfer-payment-form]');
+      if (!form) return;
+      var amount = action.dataset.paymentAction === 'paid' ? Number(form.dataset.dueAmount) : 0;
+      saveTransferPayment(form.dataset.payerKey, form.dataset.receiverKey, Number(form.dataset.dueAmount), amount, form);
+    });
+    $('summaryContent').addEventListener('submit', function (e) {
+      var form = e.target.closest('[data-transfer-payment-form]');
+      if (!form) return;
+      e.preventDefault();
+      var input = form.querySelector('.payment-amount');
+      var parsed = input.value.trim() === '' ? NaN : Number(input.value.replace(',', '.'));
+      var amount = isFinite(parsed) ? Math.round(parsed * factor()) : NaN;
+      if (!Number.isSafeInteger(amount) || amount < 0 || amount > Number(form.dataset.dueAmount)) {
+        form.querySelector('[data-payment-feedback]').textContent = t('paymentAmountInvalid', { amount: fmt(Number(form.dataset.dueAmount)) });
+        return;
+      }
+      saveTransferPayment(form.dataset.payerKey, form.dataset.receiverKey, Number(form.dataset.dueAmount), amount, form);
+    });
     $('expCancel').addEventListener('click', closeExpense);
     $('expDelete').addEventListener('click', deleteExpense);
     $('catChips').addEventListener('click', function (e) { var c = e.target.closest('[data-cat]'); if (c) singleSelect('#catChips', c); });

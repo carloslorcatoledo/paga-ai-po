@@ -217,6 +217,18 @@
     .settle-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); margin-top: 6px; }
     .transfer { display: flex; align-items: center; gap: 8px; padding: 10px 2px; border-bottom: 1px solid var(--border); font-size: .96rem; }
     .transfer:last-child { border-bottom: none; }
+    .transfer-payment-row:not(:last-child) { border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+    .transfer-payment-row .transfer { border-bottom: 0; padding-bottom: 6px; }
+    .transfer-payment-status { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 10px; color: var(--muted); font-size: .78rem; padding: 0 2px 8px; }
+    .payment-unpaid { color: var(--muted); }
+    .payment-partial { color: #b7791f; }
+    .payment-paid { color: var(--success); }
+    .transfer-payment-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 0 2px 10px; }
+    .payment-action { width: 34px; height: 34px; }
+    .payment-input-label { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: .76rem; }
+    .payment-amount { width: 104px; min-height: 36px; padding: 7px 8px; font-size: .88rem; }
+    .payment-feedback { flex: 1 1 100%; color: var(--danger); font-size: .78rem; }
+    .payment-schema-hint { margin-top: 10px; }
     .t-name { font-weight: 700; }
     .t-mid { color: var(--muted); display: flex; align-items: center; gap: 6px; flex: 1; justify-content: center; }
     .t-amt { color: var(--primary); font-weight: 800; }
@@ -361,7 +373,7 @@
         <button class="icon-btn" id="menuBtn" aria-label="Menú" title="Menú" data-i18n-title="menuLabel">⋯</button>
       </div>
       <p class="app-description" id="appDescription" data-i18n="appDescription" hidden>Divide cuentas entre amigos por ítem y calcula cuánto debe pagar cada persona.</p>
-      <input class="event-input" id="eventName" placeholder="Nombre de la salida…" data-i18n-placeholder="eventNamePlaceholder" autocomplete="off" maxlength="60" />
+      <input class="event-input" id="eventName" placeholder="Nombre del evento…" data-i18n-placeholder="eventNamePlaceholder" autocomplete="off" maxlength="60" />
       <label class="event-date-row" for="eventDate"><span data-i18n="eventDate">Fecha del evento</span> <input class="event-date" id="eventDate" type="date" /></label>
       <div class="sync-status" id="syncStatus" role="status" aria-live="polite" hidden>
         <span id="syncStatusText"></span>
@@ -473,7 +485,7 @@
       <h2 data-i18n="options">Opciones</h2>
       <div class="menu-row" id="menuAccount"><span class="mi">☁️</span><span id="accountLabel">Entrar a la nube</span></div>
       <p class="hint" data-i18n="currencyHint">Al cambiar la moneda, los montos se reescalan; no se aplica tipo de cambio.</p>
-      <div class="menu-row" id="menuNewEvent"><span class="mi">🆕</span><span data-i18n="clearNew">Limpiar y crear salida</span></div>
+      <div class="menu-row" id="menuNewEvent"><span class="mi">🆕</span><span data-i18n="clearNew">Limpiar y crear evento</span></div>
       <div class="menu-row" id="menuExample"><span class="mi">✨</span><span data-i18n="loadExample">Cargar ejemplo</span></div>
       <div class="menu-row danger" id="menuReset"><span class="mi">🗑️</span><span data-i18n="resetAll">Vaciar todo</span></div>
       <div class="sheet-actions">
@@ -554,10 +566,10 @@
     </div>
   </div>
 
-  <script src="calc.js?v=16"></script>
-  <script src="config.js?v=16"></script>
+  <script src="calc.js?v=19"></script>
+  <script src="config.js?v=19"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="cloud.js?v=16"></script>
-  <script src="app.js?v=16"></script>
+  <script src="cloud.js?v=19"></script>
+  <script src="app.js?v=19"></script>
 </body>
 </html>

@@ -15,6 +15,7 @@
   var client = null;
   var activeEventChannel = null;
   var activeEventId = null;
+  var activeEventPaymentsEnabled = false;
 
   if (cfg && cfg.url && cfg.publishableKey && lib && lib.createClient) {
     try {
@@ -54,21 +55,26 @@
     onAuth: function (cb) {
       return client.auth.onAuthStateChange(function (event, session) { cb(session, event); });
     },
-    subscribeEvent: function (eventId, onChange, onStatus) {
-      if (activeEventChannel && activeEventId === eventId) return activeEventChannel;
+    subscribeEvent: function (eventId, onChange, onStatus, includePayments) {
+      includePayments = !!includePayments;
+      if (activeEventChannel && activeEventId === eventId && activeEventPaymentsEnabled === includePayments) return activeEventChannel;
       if (activeEventChannel) client.removeChannel(activeEventChannel);
       activeEventId = eventId;
-      activeEventChannel = client.channel('evento-' + eventId)
+      activeEventPaymentsEnabled = includePayments;
+      var channel = client.channel('evento-' + eventId)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'evento', filter: 'id=eq.' + eventId }, onChange)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'participante', filter: 'evento_id=eq.' + eventId }, onChange)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'gasto', filter: 'evento_id=eq.' + eventId }, onChange)
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'gasto_participante' }, onChange)
-        .subscribe(function (status) { if (onStatus) onStatus(status); });
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'gasto_participante' }, onChange);
+      if (includePayments) {
+        channel = channel.on('postgres_changes', { event: '*', schema: 'public', table: 'transferencia_pago', filter: 'evento_id=eq.' + eventId }, onChange);
+      }
+      activeEventChannel = channel.subscribe(function (status) { if (onStatus) onStatus(status); });
       return activeEventChannel;
     },
     unsubscribeEvent: function () {
       if (activeEventChannel) client.removeChannel(activeEventChannel);
-      activeEventChannel = null; activeEventId = null;
+      activeEventChannel = null; activeEventId = null; activeEventPaymentsEnabled = false;
     },
 
     // --- Datos (requiere sesión; la RLS filtra por miembro) ---
@@ -82,17 +88,22 @@
     loadEvent: async function (id) {
       var ev = await client.from('evento').select('*').eq('id', id).single();
       if (ev.error) return { error: ev.error };
-      var parts = await client.from('participante').select('*').eq('evento_id', id);
+      var parts = await client.from('participante').select('*').eq('evento_id', id).order('orden');
+      if (parts.error && parts.error.code === '42703') parts = await client.from('participante').select('*').eq('evento_id', id);
       if (parts.error) return { error: parts.error };
-      var gastos = await client.from('gasto').select('*').eq('evento_id', id);
+      var gastos = await client.from('gasto').select('*').eq('evento_id', id).order('orden');
+      if (gastos.error && gastos.error.code === '42703') gastos = await client.from('gasto').select('*').eq('evento_id', id);
       if (gastos.error) return { error: gastos.error };
       var gp = { data: [] };
       var gids = (gastos.data || []).map(function (g) { return g.id; });
       if (gids.length) {
-        gp = await client.from('gasto_participante').select('*').in('gasto_id', gids);
+        gp = await client.from('gasto_participante').select('*').in('gasto_id', gids).order('orden');
+        if (gp.error && gp.error.code === '42703') gp = await client.from('gasto_participante').select('*').in('gasto_id', gids);
         if (gp.error) return { error: gp.error };
       }
-      return { data: { evento: ev.data, participantes: parts.data || [], gastos: gastos.data || [], gasto_participante: gp.data || [] } };
+      var payments = await client.rpc('obtener_pagos_transferencia', { _evento_id: id });
+      if (payments.error && payments.error.code !== 'PGRST202') return { error: payments.error };
+      return { data: { evento: ev.data, participantes: parts.data || [], gastos: gastos.data || [], gasto_participante: gp.data || [], transferencia_pagos: payments.data || [], paymentSchemaAvailable: !payments.error } };
     },
 
     // Guarda el snapshot completo en una transacción con control de versión.
@@ -103,7 +114,7 @@
         _evento_id: s.cloudId || null,
         _expected_version: s.cloudId ? s.cloudVersion : null,
         _data: {
-          nombre: s.eventName || 'Salida', fecha: date, moneda: s.currency || 'CLP', tip_percent: s.tipPercent || 0,
+          nombre: s.eventName || 'Evento', fecha: date, moneda: s.currency || 'CLP', tip_percent: s.tipPercent || 0,
           participantes: (s.participants || []).map(function (p) { return { id: p.id, nombre: p.name, color: p.color || null }; }),
           gastos: (s.expenses || []).map(function (e) {
             return {
@@ -115,6 +126,17 @@
       });
       if (result.error) return { error: result.error };
       return { data: result.data };
+    },
+
+    updateTransferPayment: function (payment) {
+      return client.rpc('actualizar_pago_transferencia', {
+        _evento_id: payment.eventId,
+        _pagador_key: payment.payerKey,
+        _receptor_key: payment.receiverKey,
+        _monto_deuda: payment.dueAmount,
+        _monto_pagado: payment.paidAmount,
+        _financial_fingerprint: payment.financialFingerprint
+      });
     },
 
     // Unirse a un evento con su código (devuelve el id del evento).

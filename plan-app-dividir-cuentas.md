@@ -12,7 +12,7 @@ Ejemplo: 5 amigos, 2 no beben.
 ## 2. Funcionalidades (por prioridad)
 
 **MVP (lo mínimo para que sea útil)**
-- Crear un "evento" o salida y agregar participantes (solo nombres, sin registro)
+- Crear un evento y agregar participantes (solo nombres, sin registro)
 - Agregar gastos: nombre, monto, quién pagó, **quiénes participaron en ese ítem**
 - Categorías rápidas con íconos (comida, alcohol, bebidas, transporte, otros)
 - Resumen final: cuánto debe cada persona y a quién
