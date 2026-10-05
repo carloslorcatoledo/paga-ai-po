@@ -26,12 +26,13 @@ Tiempo estimado: ~15 minutos. No se necesita tarjeta de crédito.
 3. Presiona **Run** (o Ctrl/Cmd + Enter).
 4. Debe decir *Success*. Esto crea las tablas de eventos, perfiles y actividad, las políticas RLS, el realtime y las funciones para guardar y compartir eventos.
 
-Si el proyecto Supabase ya estaba creado, vuelve a ejecutar el esquema actualizado antes de publicar la nueva app. El script es idempotente: agrega el perfil con nombre y correo, crea el log de actividad y completa perfiles de usuarios existentes. También configura el registro automático de altas, inicios y cierres de sesión, y eventos a los que se une o pertenece el usuario.
+Si el proyecto Supabase ya estaba creado, vuelve a ejecutar el esquema actualizado antes de publicar la nueva app. El script es idempotente: agrega el perfil con nombre y correo, crea el log de actividad, completa perfiles de usuarios existentes y define `asegurar_perfil_usuario()`. Esta RPC solo puede ejecutarse con una sesión autenticada y repara únicamente el perfil asociado a `auth.uid()`. También configura el registro automático de altas, inicios y cierres de sesión, y eventos a los que se une o pertenece el usuario.
 
 ## Paso 3 — Verificar
 1. **Table Editor**: deberías ver `evento`, `evento_miembro`, `participante`, `gasto`, `gasto_participante`, `perfil_usuario` y `registro_actividad`.
 2. **Authentication** → **Providers**: confirma que **Email** está habilitado (viene por defecto).
    - Para probar rápido, en **Authentication → Providers → Email**, puedes desactivar "Confirm email" (así no tienes que confirmar el correo al registrarte en pruebas). En producción, déjalo activado.
+3. Una persona puede probar la app sin sesión; sus salidas quedan locales. Para las funciones de nube debe entrar con su cuenta. Después del login, la app crea o repara su propio perfil; una dirección de correo por sí sola no concede acceso.
 
 ## Paso 4 — Copiar tus llaves
 1. **Project Settings** (engranaje) → **API**.
@@ -40,14 +41,19 @@ Si el proyecto Supabase ya estaba creado, vuelve a ejecutar el esquema actualiza
    - **anon public** (Project API Keys) → una cadena larga que empieza con `eyJ...`
 3. Estas dos **sí** van en el código del cliente. La **anon key es pública a propósito**; la seguridad la hace la RLS. (La llave **`service_role` es secreta: NO la uses en el front.**)
 
-## Paso 5 — Avísame
-Pásame la **Project URL** y la **anon key** (o pégalas en un archivo `config.js`) y cableo la app:
-- Inicio obligatorio con correo y contraseña; el nombre se solicita al crear la cuenta.
+## Paso 5 — Configurar y verificar la app
+Guarda la **Project URL** y la **publishable/anon key** en `config.js` localmente. No compartas la llave `service_role` ni la incluyas en el cliente. La app permite:
+- Probar cálculos, historial local y compartir resúmenes sin iniciar sesión.
+- Entrar con correo y contraseña para usar funciones de nube; el nombre se solicita al crear la cuenta.
+- Crear o reparar el perfil propio después de autenticar, mediante `asegurar_perfil_usuario()`.
 - Guardar/leer eventos, participantes y gastos en la nube.
 - Ver eventos propios y compartidos donde la cuenta es miembro.
 - Auditar altas, accesos, cierres de sesión y membresías en `registro_actividad`.
 - **Realtime**: cuando un amigo agrega un gasto, aparece en tu pantalla al instante.
 - Compartir evento por **código** (función `unirse_a_evento` ya creada).
+
+Antes de publicar una versión que use `asegurar_perfil_usuario()`, ejecuta el
+esquema actualizado en SQL Editor y confirma que terminó con *Success*.
 
 ---
 

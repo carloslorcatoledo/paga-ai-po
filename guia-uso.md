@@ -12,6 +12,10 @@ una tasa de cambio.
 
 ## Crear una salida
 
+Puedes usar la app como invitado, sin crear una cuenta ni iniciar sesión. Las
+salidas, el historial y el resumen compartido desde el navegador quedan en este
+dispositivo; no se suben automáticamente a Supabase.
+
 1. Escribe el nombre de la salida en la parte superior y elige su fecha.
 2. En **Personas**, agrega a cada integrante. No necesitan tener cuenta para aparecer en los gastos.
 3. En **Gastos**, toca **＋ Gasto**.
@@ -28,13 +32,20 @@ Usa **Compartir por WhatsApp** o **Copiar** para enviar el resumen. Cambiar de m
 
 ## Guardar y compartir en la nube
 
+Para guardar eventos en la nube, abrir la lista de eventos o unirse con un código,
+se requiere una cuenta. Si solo quieres probar la app, puedes cerrar la ventana de
+cuenta y continuar como invitado.
+
 1. Abre **Menú** → **Cuenta / Nube**.
 2. Crea una cuenta con correo y contraseña, o entra con una cuenta existente.
 3. Vuelve a la salida y pulsa **Guardar este evento en la nube** desde **Cuenta / Nube**. La app mostrará un código para compartir.
 4. La otra persona debe entrar o crear su propia cuenta, escribir el código en **Abrir un evento con código** y tocar **Abrir**.
 5. Para enviar nuevos cambios a los demás, pulsa de nuevo **Guardar este evento en la nube**.
 
-El borrador se guarda automáticamente en el navegador de cada dispositivo, pero no se comparte hasta guardarlo en la nube. Cuando una persona guarda, los demás integrantes que tengan el evento abierto reciben los cambios en vivo.
+El borrador se guarda automáticamente en el navegador de cada dispositivo, pero
+no se comparte hasta guardarlo explícitamente en la nube. Iniciar sesión no sube
+ni asocia automáticamente las salidas locales. Cuando una persona guarda, los
+demás integrantes que tengan el evento abierto reciben los cambios en vivo.
 
 Si aparece un aviso de conflicto, otra persona guardó primero. **Recargar** reemplaza tu borrador local con la versión de la nube y descarta los cambios locales sin guardar. Anota o conserva esos cambios antes de recargar; después podrás volver a aplicarlos y guardar.
 

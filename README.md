@@ -87,9 +87,13 @@ Decisiones tomadas para que la app sea segura por defecto:
 - **Datos locales y nube:** el borrador se conserva en `localStorage`. Un evento se
   guarda en Supabase solo cuando eliges "Guardar este evento en la nube"; sus
   miembros pueden abrirlo con el código y recibir cambios guardados en tiempo real.
-  RLS limita el acceso a los miembros del evento. Con Supabase configurado, la app
-  solicita iniciar sesión con correo; el registro pide nombre y la lista de cuenta
-  muestra los eventos propios y compartidos donde participa el usuario.
+  La app se puede probar sin iniciar sesión: los datos y el historial permanecen en
+  ese dispositivo y no se sincronizan automáticamente. RLS limita el acceso cloud a
+  miembros autenticados del evento. El menú de cuenta permite entrar con correo y
+  contraseña; el registro pide nombre y la lista muestra eventos donde participa.
+- **Perfil autenticado:** después del login, `asegurar_perfil_usuario()` repara el
+  perfil propio a partir de la sesión de Supabase. No se concede identidad ni acceso
+  cloud por buscar un correo o por conocer su dirección.
 - **Auditoría de cuenta:** `perfil_usuario` conserva nombre y correo, y
   `registro_actividad` registra altas, inicios/cierres de sesión y membresías. El
   esquema SQL debe aplicarse en Supabase para activar estas funciones.

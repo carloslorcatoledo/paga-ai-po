@@ -129,6 +129,45 @@ on conflict (user_id) do update set
   nombre = coalesce(nullif(left(btrim((select u.raw_user_meta_data->>'full_name' from auth.users u where u.id = excluded.user_id)), 80), ''), perfil_usuario.nombre),
   updated_at = now();
 
+-- Repara solo el perfil del usuario autenticado; el correo nunca se usa como identidad.
+create or replace function public.asegurar_perfil_usuario()
+returns void
+language plpgsql
+security definer
+set search_path = pg_catalog, public, auth
+as $$
+declare
+  v_user_id uuid := auth.uid();
+  v_email text;
+  v_auth_name text;
+  v_name text;
+begin
+  if v_user_id is null then
+    raise exception 'Se requiere una sesión';
+  end if;
+
+  select u.email, nullif(left(btrim(u.raw_user_meta_data->>'full_name'), 80), '')
+  into v_email, v_auth_name
+  from auth.users u
+  where u.id = v_user_id;
+
+  if not found then
+    raise exception 'No se encontró el usuario autenticado en Auth';
+  end if;
+
+  v_name := coalesce(v_auth_name, nullif(split_part(coalesce(v_email, ''), '@', 1), ''), 'Usuario');
+  insert into public.perfil_usuario (user_id, nombre, correo, updated_at)
+  values (v_user_id, v_name, coalesce(v_email, ''), now())
+  on conflict (user_id) do update set
+    nombre = coalesce(v_auth_name, public.perfil_usuario.nombre, excluded.nombre),
+    correo = excluded.correo,
+    updated_at = now();
+end;
+$$;
+
+revoke all on function public.asegurar_perfil_usuario() from public, anon, authenticated;
+grant execute on function public.asegurar_perfil_usuario() to authenticated;
+
 -- ----------------------------------------------------------------------------
 -- 2) FUNCIONES DE APOYO (SECURITY DEFINER = evitan recursión en las políticas)
 -- ----------------------------------------------------------------------------

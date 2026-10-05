@@ -23,6 +23,9 @@
   };
   var TEXT = {
     es: {
+      guestIntro: 'Puedes probar la app sin cuenta. Inicia sesión o crea una cuenta para guardar y abrir eventos en la nube.',
+      cloudLoginRequired: 'Inicia sesión para usar esta función en la nube. Puedes seguir probando la app localmente.',
+      profileRepairFailed: 'No se pudo crear o actualizar tu perfil. Comprueba que el esquema de Supabase esté actualizado y vuelve a intentarlo.',
       languageLabel: 'Idioma', currencyLabel: 'Moneda', appDescription: 'Divide cuentas entre amigos por ítem y calcula cuánto debe pagar cada persona.', eventNamePlaceholder: 'Nombre de la salida…', eventDate: 'Fecha del evento',
       peopleTab: 'Personas', expensesTab: 'Gastos', summaryTab: 'Resumen', calendarTab: 'Calendario', fabExpense: 'Gasto', peopleHeading: '¿Quiénes son?', personPlaceholder: 'Nombre…', addPerson: 'Agregar', removePerson: 'Quitar', peopleEmptyTitle: 'Agrega a quienes salieron', peopleEmptyBody: 'Escribe un nombre arriba. Luego podrás crear gastos.',
       expensesHeading: 'Gastos', expensesEmptyTitle: 'Aún no hay gastos', addFirstExpense: 'Toca “＋ Gasto” para agregar el primero.', addPeopleFirst: 'Primero agrega personas, luego gastos.', summaryEmptyTitle: 'Nada que calcular todavía', summaryEmptyBody: 'Agrega gastos para ver quién debe a quién.', totalTitle: 'Total de la salida', expenseCount: '{count} gasto(s)', peopleCount: '{count} persona(s)', subtotal: 'Subtotal', tip: 'Propina / servicio', noTip: 'Sin propina', otherTip: 'Otro %', balances: 'Saldo de cada uno', paid: 'Pagó', owes: 'le toca', receives: 'le deben', owesVerb: 'debe', upToDate: 'al día', settle: 'Cómo saldar (menos transferencias)', allSettled: 'Todos están al día ✓',
@@ -46,6 +49,9 @@
       categoryFood: 'Comida', categoryAlcohol: 'Alcohol', categoryDrinks: 'Bebidas', categoryTransport: 'Transporte', categoryOther: 'Otros'
     },
     pt: {
+      guestIntro: 'Você pode testar o app sem conta. Entre ou crie uma conta para salvar e abrir eventos na nuvem.',
+      cloudLoginRequired: 'Entre para usar esta função na nuvem. Você pode continuar testando o app localmente.',
+      profileRepairFailed: 'Não foi possível criar ou atualizar seu perfil. Confira se o esquema do Supabase está atualizado e tente novamente.',
       languageLabel: 'Idioma', currencyLabel: 'Moeda', appDescription: 'Divida a conta entre amigos por item e calcule quanto cada pessoa deve pagar.', eventNamePlaceholder: 'Nome do evento…', eventDate: 'Data do evento',
       peopleTab: 'Pessoas', expensesTab: 'Despesas', summaryTab: 'Resumo', calendarTab: 'Calendário', fabExpense: 'Despesa', peopleHeading: 'Quem participou?', personPlaceholder: 'Nome…', addPerson: 'Adicionar', removePerson: 'Remover', peopleEmptyTitle: 'Adicione quem saiu', peopleEmptyBody: 'Digite um nome acima. Depois, você poderá criar despesas.',
       expensesHeading: 'Despesas', expensesEmptyTitle: 'Ainda não há despesas', addFirstExpense: 'Toque em “＋ Despesa” para adicionar a primeira.', addPeopleFirst: 'Adicione pessoas primeiro e depois as despesas.', summaryEmptyTitle: 'Nada para calcular ainda', summaryEmptyBody: 'Adicione despesas para ver quem deve a quem.', totalTitle: 'Total do evento', expenseCount: '{count} despesa(s)', peopleCount: '{count} pessoa(s)', subtotal: 'Subtotal', tip: 'Gorjeta / serviço', noTip: 'Sem gorjeta', otherTip: 'Outra %', balances: 'Saldo de cada pessoa', paid: 'Pagou', owes: 'deve pagar', receives: 'tem a receber', owesVerb: 'deve', upToDate: 'em dia', settle: 'Como acertar (menos transferências)', allSettled: 'Todos estão em dia ✓',
@@ -69,6 +75,9 @@
       categoryFood: 'Comida', categoryAlcohol: 'Álcool', categoryDrinks: 'Bebidas', categoryTransport: 'Transporte', categoryOther: 'Outros'
     },
     en: {
+      guestIntro: 'Try the app without an account. Sign in or create an account to save and open cloud events.',
+      cloudLoginRequired: 'Sign in to use this cloud feature. You can keep trying the app locally.',
+      profileRepairFailed: 'Could not create or update your profile. Make sure the Supabase schema is up to date and try again.',
       languageLabel: 'Language', currencyLabel: 'Currency', appDescription: 'Split bills by item with friends and calculate how much each person owes.', eventNamePlaceholder: 'Event name…', eventDate: 'Event date',
       peopleTab: 'People', expensesTab: 'Expenses', summaryTab: 'Summary', calendarTab: 'Calendar', fabExpense: 'Expense', peopleHeading: 'Who joined?', personPlaceholder: 'Name…', addPerson: 'Add', removePerson: 'Remove', peopleEmptyTitle: 'Add the people who joined', peopleEmptyBody: 'Enter a name above. Then you can add expenses.',
       expensesHeading: 'Expenses', expensesEmptyTitle: 'No expenses yet', addFirstExpense: 'Tap “＋ Expense” to add the first one.', addPeopleFirst: 'Add people first, then add expenses.', summaryEmptyTitle: 'Nothing to calculate yet', summaryEmptyBody: 'Add expenses to see who owes whom.', totalTitle: 'Event total', expenseCount: '{count} expense(s)', peopleCount: '{count} person(s)', subtotal: 'Subtotal', tip: 'Tip / service', noTip: 'No tip', otherTip: 'Other %', balances: 'Balances', paid: 'Paid', owes: 'owes', receives: 'is owed', owesVerb: 'owes', upToDate: 'settled', settle: 'Suggested settlement', allSettled: 'Everyone is settled ✓',
@@ -123,7 +132,8 @@
   var liveRefreshTimer = null;
   var cloudSaveInProgress = false;
   var remoteConflict = false;
-  var authRequired = false;
+  var currentSession = null;
+  var profileReady = false;
 
   function save() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
@@ -234,14 +244,14 @@
     setSyncStatus('', false);
   }
   function startCloudSync() {
-    if (!state.cloudId) return;
+    if (!currentSession || !profileReady || !state.cloudId) return;
     syncBaseline = state.cloudBaseline;
     remoteConflict = !syncBaseline || eventSnapshot() !== syncBaseline;
     if (remoteConflict) setSyncStatus(t('syncLocal'), true, true);
     subscribeCurrentEvent();
   }
   function subscribeCurrentEvent() {
-    if (!cloudReady() || !state.cloudId || !window.Cloud.subscribeEvent) return;
+    if (!cloudReady() || !currentSession || !profileReady || !state.cloudId || !window.Cloud.subscribeEvent) return;
     window.Cloud.subscribeEvent(state.cloudId, function () {
       if (liveRefreshTimer) clearTimeout(liveRefreshTimer);
       liveRefreshTimer = setTimeout(refreshFromCloud, 1200);
@@ -252,7 +262,7 @@
     });
   }
   function refreshFromCloud() {
-    if (!state.cloudId) return;
+    if (!currentSession || !profileReady || !state.cloudId) return;
     if (cloudSaveInProgress) { liveRefreshTimer = setTimeout(refreshFromCloud, 500); return; }
     var id = state.cloudId;
     var before = eventSnapshot();
@@ -274,7 +284,7 @@
     }).catch(function () { setSyncStatus(t('syncLoadFailed'), true, true); });
   }
   function reloadCurrentEvent() {
-    if (!state.cloudId || !window.Cloud) return;
+    if (!currentSession || !profileReady || !state.cloudId || !window.Cloud) return;
     if (!confirm(t('syncReloadConfirm'))) return;
     var id = state.cloudId;
     window.Cloud.loadEvent(id).then(function (res) {
@@ -688,8 +698,22 @@
 
   // ---------- Cuenta / Nube (Supabase) ----------
   function cloudReady() { return !!(window.Cloud && window.Cloud.available); }
+  function requireCloudSession() {
+    if (currentSession && currentSession.user && profileReady) return true;
+    openAuth();
+    $('authMsg').textContent = !cloudReady() ? t('authUnavailable') : (currentSession ? t('profileRepairFailed') : t('cloudLoginRequired'));
+    return false;
+  }
+  function ensureProfileForSession() {
+    return window.Cloud.ensureProfile().then(function (res) {
+      if (res.error) throw res.error;
+      profileReady = true;
+      if (currentSession) refreshAccountUI(currentSession);
+      return res;
+    });
+  }
   function refreshAccountUI(session) {
-    var user = session && session.user;
+    var user = profileReady && session && session.user;
     var email = user ? user.email : null;
     if (email) {
       var name = user.user_metadata && user.user_metadata.full_name;
@@ -708,16 +732,14 @@
       $('authLoggedIn').hidden = true;
     }
   }
-  function openAuth(required) {
+  function openAuth() {
     closeMenu();
-    if (required) authRequired = true;
     $('authMsg').textContent = '';
-    $('authCancel').hidden = authRequired;
+    $('authCancel').hidden = false;
     if (!cloudReady()) $('authMsg').textContent = t('authUnavailable');
     $('authOverlay').classList.add('open');
   }
   function closeAuth() {
-    if (authRequired) return;
     $('authOverlay').classList.remove('open');
   }
   function authCreds() { return { email: $('authEmail').value.trim(), pass: $('authPass').value }; }
@@ -728,13 +750,21 @@
     $('authMsg').textContent = t('signingIn');
     window.Cloud.signIn(c.email, c.pass).then(function (res) {
       if (res.error) { $('authMsg').textContent = t('signInFailed', { error: res.error.message }); return; }
-      authRequired = false;
+      currentSession = res.data && res.data.session ? res.data.session : currentSession;
+      profileReady = false;
+      refreshAccountUI(null);
       $('authCancel').hidden = false;
-      $('cloudMsg').textContent = t('sessionStarted');
-      window.Cloud.logActivity('inicio_sesion').then(function (log) {
-        if (log.error) $('cloudMsg').textContent = t('activityError');
+      ensureProfileForSession().then(function () {
+        closeAuth();
+        if (state.cloudId) startCloudSync();
+        $('cloudMsg').textContent = t('sessionStarted');
+        window.Cloud.logActivity('inicio_sesion').then(function (log) {
+          if (log.error) $('cloudMsg').textContent = t('activityError');
+        }).catch(function () { $('cloudMsg').textContent = t('activityError'); });
       }).catch(function () {
-        $('cloudMsg').textContent = t('activityError');
+        profileReady = false;
+        refreshAccountUI(null);
+        $('authMsg').textContent = t('profileRepairFailed');
       });
       $('authPass').value = ''; // onAuth refresca la UI
     }).catch(function (e) { $('authMsg').textContent = t('generalError', { error: e.message }); });
@@ -750,10 +780,19 @@
     window.Cloud.signUp(c.email, c.pass, name).then(function (res) {
       if (res.error) { $('authMsg').textContent = t('createFailed', { error: res.error.message }); return; }
       if (res.data && res.data.session) {
-        authRequired = false;
+        currentSession = res.data.session;
+        profileReady = false;
+        refreshAccountUI(null);
         $('authCancel').hidden = false;
-        $('authMsg').textContent = t('accountCreated');
         $('authPass').value = '';
+        ensureProfileForSession().then(function () {
+          $('cloudMsg').textContent = t('accountCreated');
+          closeAuth();
+        }).catch(function () {
+          profileReady = false;
+          refreshAccountUI(null);
+          $('authMsg').textContent = t('profileRepairFailed');
+        });
       } else {
         $('authMsg').textContent = t('confirmEmail');
       }
@@ -804,7 +843,7 @@
     subscribeCurrentEvent();
   }
   function cloudSave() {
-    if (!cloudReady()) return;
+    if (!cloudReady() || !requireCloudSession()) return;
     if (remoteConflict) {
       $('cloudMsg').textContent = t('saveConflict');
       return;
@@ -837,7 +876,7 @@
     }).catch(function (e) { cloudSaveInProgress = false; btn.disabled = false; btn.textContent = orig; $('cloudMsg').textContent = t('generalError', { error: e.message }); });
   }
   function openEventsList() {
-    if (!cloudReady()) return;
+    if (!cloudReady() || !requireCloudSession()) return;
     closeAuth();
     var list = $('eventsList');
     list.innerHTML = '<div class="hint">' + t('loading') + '</div>';
@@ -976,6 +1015,10 @@
       if (fallbackHistoryId) openLocalHistoryEventOffline(fallbackHistoryId);
       return;
     }
+    if (!requireCloudSession()) {
+      if (fallbackHistoryId) openLocalHistoryEventOffline(fallbackHistoryId);
+      return;
+    }
     window.Cloud.loadEvent(id).then(function (res) {
       if (res.error) {
         if (fallbackHistoryId) { openLocalHistoryEventOffline(fallbackHistoryId); return; }
@@ -1002,7 +1045,7 @@
     save(); render(); closeAuth();
   }
   function joinByCodeUI() {
-    if (!cloudReady()) return;
+    if (!cloudReady() || !requireCloudSession()) return;
     var code = $('joinCode').value.trim().toUpperCase();
     if (!code) { $('cloudMsg').textContent = t('noCode'); return; }
     $('cloudMsg').textContent = t('searchingCode');
@@ -1127,28 +1170,40 @@
   // Nube: estado de sesión (si está configurada)
   if (cloudReady()) {
     window.Cloud.getSession().then(function (res) {
+      if (res.error) throw res.error;
       var session = res && res.data ? res.data.session : null;
+      currentSession = session;
+      profileReady = false;
       refreshAccountUI(session);
-      if (!session) openAuth(true);
-      if (state.tab === 'calendario') loadCalendarEvents();
-      if (state.cloudId && session) startCloudSync();
-    }).catch(function () {
-      authRequired = true;
-      openAuth(true);
-      $('authMsg').textContent = t('authVerifyFailed');
-    });
-    window.Cloud.onAuth(function (session) {
-      refreshAccountUI(session);
-      if (session && authRequired) {
-        authRequired = false;
-        $('authCancel').hidden = false;
-        closeAuth();
+      if (session) {
+        ensureProfileForSession().then(function () {
+          if (state.cloudId) startCloudSync();
+        }).catch(function () {
+          refreshAccountUI(null);
+          setSyncStatus(t('profileRepairFailed'), true);
+        });
       }
       if (state.tab === 'calendario') loadCalendarEvents();
-      if (session && state.cloudId) startCloudSync();
+    }).catch(function () {
+      currentSession = null;
+      profileReady = false;
+      refreshAccountUI(null);
+      setSyncStatus(t('authVerifyFailed'), true);
+    });
+    window.Cloud.onAuth(function (session) {
+      var hadSession = !!currentSession;
+      var sameReadyUser = !!(profileReady && currentSession && session && currentSession.user && session.user && currentSession.user.id === session.user.id);
+      currentSession = session || null;
+      profileReady = sameReadyUser;
+      refreshAccountUI(profileReady ? session : null);
+      if (session && profileReady && $('authOverlay').classList.contains('open')) closeAuth();
+      if (state.tab === 'calendario') loadCalendarEvents();
+      if (session && profileReady && state.cloudId) startCloudSync();
+      else if (session && !profileReady) stopCloudSync();
       else if (!session) {
+        profileReady = false;
         stopCloudSync();
-        openAuth(true);
+        if (hadSession) closeAuth();
       }
     });
   } else {
