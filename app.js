@@ -32,7 +32,7 @@
       expensesHeading: 'Gastos', expensesEmptyTitle: 'Aún no hay gastos', addFirstExpense: 'Toca “＋ Gasto” para agregar el primero.', addPeopleFirst: 'Primero agrega personas, luego gastos.', summaryEmptyTitle: 'Nada que calcular todavía', summaryEmptyBody: 'Agrega gastos para ver quién debe a quién.', totalTitle: 'Total de la salida', expenseCount: '{count} gasto(s)', peopleCount: '{count} persona(s)', subtotal: 'Subtotal', tip: 'Propina / servicio', noTip: 'Sin propina', otherTip: 'Otro %', balances: 'Saldo de cada uno', paid: 'Pagó', owes: 'le toca', receives: 'le deben', owesVerb: 'debe', upToDate: 'al día', settle: 'Cómo saldar (menos transferencias)', allSettled: 'Todos están al día ✓',
       shareWhatsApp: 'Compartir por WhatsApp', copy: 'Copiar', copied: '¡Copiado!', copyFailed: 'No se pudo copiar', shareHeading: 'Paga aí po! · Resumen', shareEvent: 'Salida', sharePeople: '{people} personas · {expenses} gastos', shareTotal: 'Total', shareTip: 'Incluye propina ({percent}%): {amount}', shareBalances: 'Saldo por persona', receive: 'Recibe', oweShare: 'Debe', shareTransfers: 'Transferencias sugeridas', paysTo: 'paga {amount} a', allSettledText: 'Todos están al día.', calculatedWith: 'Calculado con Paga aí po!',
       newExpense: 'Nuevo gasto', editExpense: 'Editar gasto', whatWasIt: '¿Qué fue?', amount: 'Monto', category: 'Categoría', whoPaid: '¿Quién pagó?', splitBetween: '¿Entre quiénes se divide?', all: 'Todos', none: 'Ninguno', includeTip: 'Incluir propina / servicio en este gasto', cancel: 'Cancelar', save: 'Guardar', delete: 'Eliminar gasto', amountError: 'Ingresa un monto mayor a 0.', payerError: 'Elige quién pagó.', splitError: 'Elige al menos una persona para dividir.',
-      calendarTitle: 'Eventos guardados', previousMonth: 'Mes anterior', nextMonth: 'Mes siguiente', today: 'Hoy', monthDays: 'Días del mes', loading: 'Cargando…', loadingEvents: 'Cargando eventos…', noEventsToday: 'No hay eventos guardados para este día.',
+      calendarTitle: 'Eventos guardados', previousMonth: 'Mes anterior', nextMonth: 'Mes siguiente', today: 'Hoy', monthDays: 'Días del mes', loading: 'Cargando…', loadingEvents: 'Cargando eventos…', noEventsToday: 'No hay eventos guardados para este día.', calendarAttendees: 'Asistentes', calendarOpenEvent: 'Abrir evento',
       options: 'Opciones', currencyHint: 'Al cambiar la moneda, los montos se reescalan; no se aplica tipo de cambio.', clearNew: 'Limpiar y crear salida', confirmNew: '¿Limpiar los datos ingresados y crear una nueva salida? La salida actual se conservará en el historial.', loadExample: 'Cargar ejemplo', resetAll: 'Vaciar todo', confirmReset: 'Esto borra personas y gastos de esta salida. ¿Continuar?', close: 'Cerrar',
       accountTitle: 'Cuenta / Nube', authIntro: 'Inicia sesión para continuar. Al crear una cuenta, registra tu nombre y correo para ver los eventos donde participas.', authName: 'Nombre (para crear cuenta)', namePlaceholder: 'Tu nombre', authEmail: 'Correo', emailPlaceholder: 'tu@correo.com', authPassword: 'Contraseña', passwordPlaceholder: 'mínimo 6 caracteres', expensePlaceholder: 'Pizza, cervezas, taxi…', enter: 'Entrar', createAccount: 'Crear cuenta', connectedAs: 'Conectado como', cloudSave: 'Guardar este evento en la nube', myEvents: 'Eventos en los que participo', cloudNew: 'Nuevo evento (vaciar)', joinLabel: 'Abrir un evento con código', join: 'Abrir', signOut: 'Cerrar sesión',
       nameRequired: 'Escribe tu nombre para crear la cuenta.', credentialsRequired: 'Escribe correo y contraseña.', passwordLength: 'La contraseña debe tener al menos 6 caracteres.', creatingAccount: 'Creando cuenta…', signingIn: 'Entrando…', accountCreated: '✓ ¡Cuenta creada!', confirmEmail: 'Cuenta creada. Confírmala desde tu correo, o apaga “Confirm email” en Supabase para entrar al instante.', sessionStarted: 'Sesión iniciada.', activityError: 'Sesión iniciada, pero no se registró la actividad. Aplica la migración SQL de Supabase.',
@@ -59,7 +59,7 @@
       expensesHeading: 'Despesas', expensesEmptyTitle: 'Ainda não há despesas', addFirstExpense: 'Toque em “＋ Despesa” para adicionar a primeira.', addPeopleFirst: 'Adicione pessoas primeiro e depois as despesas.', summaryEmptyTitle: 'Nada para calcular ainda', summaryEmptyBody: 'Adicione despesas para ver quem deve a quem.', totalTitle: 'Total do evento', expenseCount: '{count} despesa(s)', peopleCount: '{count} pessoa(s)', subtotal: 'Subtotal', tip: 'Gorjeta / serviço', noTip: 'Sem gorjeta', otherTip: 'Outra %', balances: 'Saldo de cada pessoa', paid: 'Pagou', owes: 'deve pagar', receives: 'tem a receber', owesVerb: 'deve', upToDate: 'em dia', settle: 'Como acertar (menos transferências)', allSettled: 'Todos estão em dia ✓',
       shareWhatsApp: 'Compartilhar no WhatsApp', copy: 'Copiar', copied: 'Copiado!', copyFailed: 'Não foi possível copiar', shareHeading: 'Paga aí po! · Resumo', shareEvent: 'Evento', sharePeople: '{people} pessoas · {expenses} despesas', shareTotal: 'Total', shareTip: 'Inclui gorjeta ({percent}%): {amount}', shareBalances: 'Saldo por pessoa', receive: 'Recebe', oweShare: 'Deve', shareTransfers: 'Transferências sugeridas', paysTo: 'paga {amount} para', allSettledText: 'Todos estão em dia.', calculatedWith: 'Calculado com Paga aí po!',
       newExpense: 'Nova despesa', editExpense: 'Editar despesa', whatWasIt: 'O que foi?', amount: 'Valor', category: 'Categoria', whoPaid: 'Quem pagou?', splitBetween: 'Entre quem será dividido?', all: 'Todos', none: 'Ninguém', includeTip: 'Incluir gorjeta / serviço nesta despesa', cancel: 'Cancelar', save: 'Salvar', delete: 'Excluir despesa', amountError: 'Digite um valor maior que 0.', payerError: 'Escolha quem pagou.', splitError: 'Escolha pelo menos uma pessoa para dividir.',
-      calendarTitle: 'Eventos salvos', previousMonth: 'Mês anterior', nextMonth: 'Próximo mês', today: 'Hoje', monthDays: 'Dias do mês', loading: 'Carregando…', loadingEvents: 'Carregando eventos…', noEventsToday: 'Não há eventos salvos neste dia.',
+      calendarTitle: 'Eventos salvos', previousMonth: 'Mês anterior', nextMonth: 'Próximo mês', today: 'Hoje', monthDays: 'Dias do mês', loading: 'Carregando…', loadingEvents: 'Carregando eventos…', noEventsToday: 'Não há eventos salvos neste dia.', calendarAttendees: 'Participantes', calendarOpenEvent: 'Abrir evento',
       options: 'Opções', currencyHint: 'Ao trocar a moeda, os valores são reescalados; não há conversão cambial.', clearNew: 'Limpar e criar evento', confirmNew: 'Limpar os dados e criar um novo evento? O evento atual ficará salvo no histórico.', loadExample: 'Carregar exemplo', resetAll: 'Limpar tudo', confirmReset: 'Isso apaga pessoas e despesas deste evento. Continuar?', close: 'Fechar',
       accountTitle: 'Conta / Nuvem', authIntro: 'Entre para continuar. Ao criar uma conta, informe seu nome e e-mail para ver os eventos dos quais participa.', authName: 'Nome (para criar conta)', namePlaceholder: 'Seu nome', authEmail: 'E-mail', emailPlaceholder: 'voce@exemplo.com', authPassword: 'Senha', passwordPlaceholder: 'mínimo de 6 caracteres', expensePlaceholder: 'Pizza, cerveja, táxi…', enter: 'Entrar', createAccount: 'Criar conta', connectedAs: 'Conectado como', cloudSave: 'Salvar este evento na nuvem', myEvents: 'Eventos dos quais participo', cloudNew: 'Novo evento (limpar)', joinLabel: 'Abrir evento com código', join: 'Abrir', signOut: 'Sair da conta',
       nameRequired: 'Digite seu nome para criar a conta.', credentialsRequired: 'Digite e-mail e senha.', passwordLength: 'A senha deve ter pelo menos 6 caracteres.', creatingAccount: 'Criando conta…', signingIn: 'Entrando…', accountCreated: '✓ Conta criada!', confirmEmail: 'Conta criada. Confirme pelo e-mail ou desative “Confirm email” no Supabase para entrar agora.', sessionStarted: 'Sessão iniciada.', activityError: 'Sessão iniciada, mas a atividade não foi registrada. Aplique a migração SQL do Supabase.',
@@ -86,7 +86,7 @@
       expensesHeading: 'Expenses', expensesEmptyTitle: 'No expenses yet', addFirstExpense: 'Tap “＋ Expense” to add the first one.', addPeopleFirst: 'Add people first, then add expenses.', summaryEmptyTitle: 'Nothing to calculate yet', summaryEmptyBody: 'Add expenses to see who owes whom.', totalTitle: 'Event total', expenseCount: '{count} expense(s)', peopleCount: '{count} person(s)', subtotal: 'Subtotal', tip: 'Tip / service', noTip: 'No tip', otherTip: 'Other %', balances: 'Balances', paid: 'Paid', owes: 'owes', receives: 'is owed', owesVerb: 'owes', upToDate: 'settled', settle: 'Suggested settlement', allSettled: 'Everyone is settled ✓',
       shareWhatsApp: 'Share on WhatsApp', copy: 'Copy', copied: 'Copied!', copyFailed: 'Could not copy', shareHeading: 'Paga aí po! · Summary', shareEvent: 'Event', sharePeople: '{people} people · {expenses} expenses', shareTotal: 'Total', shareTip: 'Includes tip ({percent}%): {amount}', shareBalances: 'Balance by person', receive: 'Receives', oweShare: 'Owes', shareTransfers: 'Suggested transfers', paysTo: 'pays {amount} to', allSettledText: 'Everyone is settled.', calculatedWith: 'Calculated with Paga aí po!',
       newExpense: 'New expense', editExpense: 'Edit expense', whatWasIt: 'What was it?', amount: 'Amount', category: 'Category', whoPaid: 'Who paid?', splitBetween: 'Who shares this expense?', all: 'Everyone', none: 'No one', includeTip: 'Include tip / service for this expense', cancel: 'Cancel', save: 'Save', delete: 'Delete expense', amountError: 'Enter an amount greater than 0.', payerError: 'Choose who paid.', splitError: 'Choose at least one person to split this expense.',
-      calendarTitle: 'Saved events', previousMonth: 'Previous month', nextMonth: 'Next month', today: 'Today', monthDays: 'Days of the month', loading: 'Loading…', loadingEvents: 'Loading events…', noEventsToday: 'No saved events on this day.',
+      calendarTitle: 'Saved events', previousMonth: 'Previous month', nextMonth: 'Next month', today: 'Today', monthDays: 'Days of the month', loading: 'Loading…', loadingEvents: 'Loading events…', noEventsToday: 'No saved events on this day.', calendarAttendees: 'Attendees', calendarOpenEvent: 'Open event',
       options: 'Options', currencyHint: 'Changing currency rescales amounts; it does not apply an exchange rate.', clearNew: 'Clear and start a new event', confirmNew: 'Clear the entered data and start a new event? The current event will remain in history.', loadExample: 'Load example', resetAll: 'Clear all', confirmReset: 'This deletes people and expenses from this event. Continue?', close: 'Close',
       accountTitle: 'Account / Cloud', authIntro: 'Sign in to continue. When creating an account, enter your name and email to see events you participate in.', authName: 'Name (for new accounts)', namePlaceholder: 'Your name', authEmail: 'Email', emailPlaceholder: 'you@example.com', authPassword: 'Password', passwordPlaceholder: 'at least 6 characters', expensePlaceholder: 'Pizza, drinks, taxi…', enter: 'Sign in', createAccount: 'Create account', connectedAs: 'Signed in as', cloudSave: 'Save this event to the cloud', myEvents: 'Events I participate in', cloudNew: 'New event (clear)', joinLabel: 'Open an event with a code', join: 'Open', signOut: 'Sign out',
       nameRequired: 'Enter your name to create an account.', credentialsRequired: 'Enter your email and password.', passwordLength: 'Password must be at least 6 characters.', creatingAccount: 'Creating account…', signingIn: 'Signing in…', accountCreated: '✓ Account created!', confirmEmail: 'Account created. Confirm it by email, or turn off “Confirm email” in Supabase to sign in now.', sessionStarted: 'Signed in.', activityError: 'Signed in, but activity was not recorded. Apply the Supabase SQL migration.',
@@ -127,6 +127,11 @@
   var calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   var calendarSelectedDate = localDate(new Date());
   var calendarEvents = [];
+  var calendarDetailId = null;
+  var calendarDetail = null;
+  var calendarDetailLoading = false;
+  var calendarDetailError = '';
+  var calendarDetailRequest = 0;
   var localHistory = [];
   var calendarLoading = false;
   var calendarMessage = '';
@@ -306,6 +311,15 @@
         style: 'currency', currency: c.code,
         minimumFractionDigits: c.decimals, maximumFractionDigits: c.decimals
       }).format((minor || 0) / factor());
+    } catch (e) { return c.sign + (minor || 0); }
+  }
+  function fmtForCurrency(minor, currency) {
+    var c = CURRENCIES[currency] || CURRENCIES.BRL;
+    try {
+      return new Intl.NumberFormat(locale(), {
+        style: 'currency', currency: c.code,
+        minimumFractionDigits: c.decimals, maximumFractionDigits: c.decimals
+      }).format((minor || 0) / Math.pow(10, c.decimals));
     } catch (e) { return c.sign + (minor || 0); }
   }
   function parseAmount(str) {
@@ -961,6 +975,7 @@
             }).catch(function (e) { list.innerHTML = '<div class="err-msg">' + esc(t('generalError', { error: e.message })) + '</div>'; });
   }
   function changeCalendarMonth(offset) {
+    clearCalendarEventDetail();
     calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + offset, 1);
     var selected = new Date(calendarSelectedDate + 'T00:00:00');
     var maxDay = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
@@ -1032,22 +1047,133 @@
     var selected = new Date(calendarSelectedDate + 'T00:00:00');
     $('calendarSelectedTitle').textContent = selected.toLocaleDateString(locale(), { weekday: 'long', day: 'numeric', month: 'long' });
     var box = $('calendarEvents');
-    if (calendarLoading) { box.innerHTML = '<div class="hint">' + t('loadingEvents') + '</div>'; return; }
+    if (calendarLoading) { box.innerHTML = '<div class="hint">' + t('loadingEvents') + '</div>'; renderCalendarDetail(); return; }
     var notice = calendarMessage ? '<div class="hint">' + esc(calendarMessage) + '</div>' : '';
     var loginButton = calendarMessage === t('loginForCloud') ? '<button type="button" class="btn btn-primary btn-block" data-calendar-login>' + t('loginButton') + '</button>' : '';
     var selectedEvents = entries.filter(function (event) { return event.fecha === calendarSelectedDate; });
     if (!selectedEvents.length) {
       box.innerHTML = notice + loginButton + '<div class="hint">' + t('noEventsToday') + '</div>';
+      renderCalendarDetail();
       return;
     }
     box.innerHTML = notice + loginButton + selectedEvents.map(function (event) {
-      var openAttr = event.historyId ? 'data-history-id="' + esc(event.historyId) + '"' : 'data-open="' + esc(event.id) + '"';
       var detail = event.codigo ? esc(t('dateCode', { code: event.codigo })) : t('dateSavedLocal');
-      return '<button type="button" class="exp-card calendar-event" ' + openAttr + '>' +
+      var cloudId = event.cloudId || (event.historyId ? '' : event.id);
+      return '<button type="button" class="exp-card calendar-event" data-calendar-detail="true" data-history-id="' + esc(event.historyId || '') + '" data-cloud-id="' + esc(cloudId) + '">' +
         '<span class="exp-icon">📅</span><span class="exp-main"><span class="exp-top"><span class="exp-desc">' + esc(event.nombre || t('shareEvent')) + '</span>' +
         '<span class="exp-amt" style="font-size:.78rem;color:var(--muted)">' + esc(event.moneda || '') + '</span></span>' +
         '<span class="exp-sub">' + detail + '</span></span></button>';
     }).join('');
+    renderCalendarDetail();
+  }
+  function clearCalendarEventDetail() {
+    calendarDetailRequest++;
+    calendarDetailId = null; calendarDetail = null; calendarDetailLoading = false; calendarDetailError = '';
+    renderCalendarDetail();
+  }
+  function showCalendarEventDetails(historyId, cloudId) {
+    var request = ++calendarDetailRequest;
+    var localRecord = historyId && localHistory.filter(function (item) { return item.historyId === historyId; })[0];
+    calendarDetailId = historyId || cloudId;
+    calendarDetail = null; calendarDetailError = ''; calendarDetailLoading = false;
+    if (cloudId && cloudReady() && currentSession) {
+      calendarDetailLoading = true; renderCalendarDetail();
+      window.Cloud.loadEvent(cloudId).then(function (res) {
+        if (request !== calendarDetailRequest) return;
+        calendarDetailLoading = false;
+        if (res.error) {
+          if (localRecord) calendarDetail = localRecord;
+          else calendarDetailError = t('eventLoadFailed', { error: res.error.message });
+        } else {
+          var data = res.data;
+          var event = data.evento;
+          calendarDetail = {
+            eventName: event.nombre, eventDate: event.fecha, currency: event.moneda,
+            codigo: event.codigo, tipPercent: Number(event.tip_percent) || 0, historyId: historyId || null, cloudId: cloudId,
+            participants: (data.participantes || []).map(function (person) {
+              return { id: person.id, name: person.nombre, color: person.color };
+            }),
+            expenses: (data.gastos || []).map(function (expense) {
+              return {
+                id: expense.id, description: expense.descripcion || '', amount: Number(expense.monto) || 0,
+                category: expense.categoria || 'otros', paidBy: expense.pagado_por, tip: expense.aplica_propina !== false,
+                participants: (data.gasto_participante || []).filter(function (split) { return split.gasto_id === expense.id; })
+                  .map(function (split) { return split.participante_id; })
+              };
+            })
+          };
+        }
+        renderCalendarDetail();
+      }).catch(function (error) {
+        if (request !== calendarDetailRequest) return;
+        calendarDetailLoading = false;
+        if (localRecord) calendarDetail = localRecord;
+        else calendarDetailError = t('eventLoadFailed', { error: error.message });
+        renderCalendarDetail();
+      });
+    } else if (localRecord) {
+      calendarDetail = localRecord;
+      renderCalendarDetail();
+    } else {
+      calendarDetailError = t('loginForCloud');
+      renderCalendarDetail();
+    }
+  }
+  function renderCalendarDetail() {
+    var box = $('calendarEventDetail');
+    if (!box) return;
+    if (!calendarDetailId) { box.hidden = true; box.innerHTML = ''; return; }
+    box.hidden = false;
+    if (calendarDetailLoading) { box.innerHTML = '<div class="hint">' + t('loading') + '</div>'; return; }
+    if (calendarDetailError) { box.innerHTML = '<div class="hint">' + esc(calendarDetailError) + '</div>'; return; }
+    if (!calendarDetail) { box.innerHTML = ''; return; }
+
+    var event = calendarDetail;
+    var participants = Array.isArray(event.participants) ? event.participants : [];
+    var expenses = Array.isArray(event.expenses) ? event.expenses : [];
+    var currency = CURRENCIES[event.currency] ? event.currency : 'BRL';
+    var tip = Number(event.tipPercent) || 0;
+    var totals = R.eventTotals(expenses, tip);
+    var balances = R.computeBalances(participants, expenses, { tipPercent: tip });
+    var nameOfDetail = function (id) {
+      var person = participants.filter(function (item) { return item.id === id; })[0];
+      return person ? person.name : '—';
+    };
+    var date = validDate(event.eventDate) ? new Date(event.eventDate + 'T00:00:00').toLocaleDateString(locale(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '';
+    var html = '<div class="calendar-detail-head"><div><h3>' + esc(event.eventName || t('shareEvent')) + '</h3><div class="hint">' + esc(date) + (event.codigo ? ' · ' + esc(t('dateCode', { code: event.codigo })) : '') + '</div></div>' +
+      '<button type="button" class="icon-btn" data-calendar-detail-close aria-label="' + esc(t('close')) + '" title="' + esc(t('close')) + '">×</button></div>';
+    html += '<div class="total-card calendar-detail-total"><div class="lbl">' + t('totalTitle') + '</div><div class="amt">' + esc(fmtForCurrency(totals.total, currency)) + '</div>' +
+      '<div class="meta">' + t('expenseCount', { count: expenses.length }) + ' · ' + t('peopleCount', { count: participants.length }) + '</div>' +
+      (tip > 0 ? '<div class="sub">' + t('subtotal') + ' ' + esc(fmtForCurrency(totals.subtotal, currency)) + ' + ' + t('tip') + ' ' + esc(fmtForCurrency(totals.tip, currency)) + ' (' + tip + '%)</div>' : '') + '</div>';
+    html += '<div class="section-title calendar-detail-title">' + t('calendarAttendees') + '</div>';
+    html += participants.length ? '<div class="chips calendar-detail-people">' + participants.map(function (person, index) {
+      var color = person.color || AVATAR_COLORS[index % AVATAR_COLORS.length];
+      return '<span class="chip"><span class="av" style="background:' + esc(color) + '">' + esc(initials(person.name)) + '</span>' + esc(person.name) + '</span>';
+    }).join('') + '</div>' : '<div class="hint">' + esc(t('peopleEmptyTitle')) + '</div>';
+    html += '<div class="section-title calendar-detail-title">' + t('expensesHeading') + '</div>';
+    html += expenses.length ? expenses.map(function (expense) {
+      var names = (expense.participants || []).map(nameOfDetail);
+      var noTip = tip > 0 && expense.tip === false ? ' · ' + t('noTipSuffix') : '';
+      var subtitle = t('expensePaidBy', { name: esc(nameOfDetail(expense.paidBy)), count: names.length, people: esc(names.join(', ')), noTip: noTip });
+      return '<div class="exp-card calendar-detail-expense"><span class="exp-icon">' + catOf(expense.category).icon + '</span><span class="exp-main"><span class="exp-top"><span class="exp-desc">' + esc(expense.description || catLabel(catOf(expense.category))) + '</span><span class="exp-amt">' + esc(fmtForCurrency(expense.amount, currency)) + '</span></span><span class="exp-sub">' + subtitle + '</span></span></div>';
+    }).join('') : '<div class="hint">' + esc(t('expensesEmptyTitle')) + '</div>';
+    html += '<div class="section-title calendar-detail-title">' + t('balances') + '</div>';
+    html += balances.slice().sort(function (a, b) { return b.balance - a.balance; }).map(function (balance, index) {
+      var person = participants.filter(function (item) { return item.id === balance.id; })[0];
+      var color = person && person.color || AVATAR_COLORS[index % AVATAR_COLORS.length];
+      var amount = balance.balance > 0 ? '+' + fmtForCurrency(balance.balance, currency) : balance.balance < 0 ? '−' + fmtForCurrency(-balance.balance, currency) : fmtForCurrency(0, currency);
+      var label = balance.balance > 0 ? t('receives') : balance.balance < 0 ? t('owesVerb') : t('upToDate');
+      var pill = balance.balance > 0 ? 'pill-pos' : balance.balance < 0 ? 'pill-neg' : 'pill-zero';
+      return '<div class="person-card"><div class="avatar" style="background:' + esc(color) + '">' + esc(initials(balance.name)) + '</div><div class="pc-main"><div class="pc-name">' + esc(balance.name) + '</div><div class="pc-sub">' + t('paid') + ' ' + esc(fmtForCurrency(balance.paid, currency)) + ' · ' + t('owes') + ' ' + esc(fmtForCurrency(balance.owes, currency)) + '</div></div><div class="pill ' + pill + '">' + esc(amount) + '<small>' + label + '</small></div></div>';
+    }).join('');
+    var transfers = R.simplifyDebts(balances);
+    html += '<div class="section-title calendar-detail-title">' + t('settle') + '</div>';
+    html += transfers.length ? '<div class="settle-card">' + transfers.map(function (transfer) {
+      return '<div class="transfer"><span class="t-name">' + esc(transfer.fromName) + '</span><span class="t-mid">→ <span class="t-amt">' + esc(fmtForCurrency(transfer.amount, currency)) + '</span> →</span><span class="t-name">' + esc(transfer.toName) + '</span></div>';
+    }).join('') + '</div>' : '<div class="settle-card" style="text-align:center;color:var(--muted)">' + t('allSettled') + '</div>';
+    var openAttrs = event.cloudId ? 'data-calendar-open-cloud="' + esc(event.cloudId) + '"' : 'data-calendar-open-history="' + esc(event.historyId || '') + '"';
+    html += '<button type="button" class="btn btn-primary btn-block calendar-detail-open" ' + openAttrs + '>' + t('calendarOpenEvent') + '</button>';
+    box.innerHTML = html;
   }
   function closeEventsList() { $('eventsOverlay').classList.remove('open'); }
   function applyLocalHistoryEvent(event) {
@@ -1193,20 +1319,34 @@
     $('calendarPrev').addEventListener('click', function () { changeCalendarMonth(-1); });
     $('calendarNext').addEventListener('click', function () { changeCalendarMonth(1); });
     $('calendarToday').addEventListener('click', function () {
+      clearCalendarEventDetail();
       var today = new Date(); calendarMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       calendarSelectedDate = localDate(today); renderCalendar();
     });
     $('calendarGrid').addEventListener('click', function (e) {
       var day = e.target.closest('[data-day]');
-      if (day) { calendarSelectedDate = day.dataset.day; renderCalendar(); }
+      if (day) { clearCalendarEventDetail(); calendarSelectedDate = day.dataset.day; renderCalendar(); }
     });
     $('calendarEvents').addEventListener('click', function (e) {
-      var event = e.target.closest('[data-open]');
-      if (event) openCloudEvent(event.dataset.open);
-      var localEvent = e.target.closest('[data-history-id]');
-      if (localEvent) openLocalHistoryEvent(localEvent.dataset.historyId);
+      var event = e.target.closest('[data-calendar-detail]');
+      if (event) { showCalendarEventDetails(event.dataset.historyId, event.dataset.cloudId); return; }
       var login = e.target.closest('[data-calendar-login]');
       if (login) openAuth();
+    });
+    $('calendarEventDetail').addEventListener('click', function (e) {
+      var closeDetails = e.target.closest('[data-calendar-detail-close]');
+      if (closeDetails) { clearCalendarEventDetail(); return; }
+      var openCloud = e.target.closest('[data-calendar-open-cloud]');
+      if (openCloud) {
+        clearCalendarEventDetail();
+        openCloudEvent(openCloud.dataset.calendarOpenCloud, openCloud.dataset.calendarOpenHistory || null);
+        return;
+      }
+      var openHistory = e.target.closest('[data-calendar-open-history]');
+      if (openHistory) {
+        clearCalendarEventDetail();
+        openLocalHistoryEvent(openHistory.dataset.calendarOpenHistory);
+      }
     });
 
     [['expOverlay', closeExpense], ['menuOverlay', closeMenu]].forEach(function (pair) {

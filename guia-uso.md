@@ -63,6 +63,10 @@ locales siguen disponibles sin conexión; para consultar eventos de la nube,
 necesitas conexión e iniciar sesión. Un evento local solo se comparte con otras
 personas después de guardarlo en la nube.
 
+Al tocar un evento del calendario se muestra su detalle: asistentes, gastos,
+quién pagó y quiénes comparten cada gasto, saldos y transferencias sugeridas. Usa
+**Abrir evento** en esa ficha para volver a la salida y continuar editándola.
+
 También puedes abrir eventos anteriores desde **Menú** → **Cuenta / Nube** →
 **Mis eventos (historial)**.
 

@@ -279,6 +279,23 @@
     .calendar-day.blank { pointer-events: none; }
     .calendar-events { display: flex; flex-direction: column; gap: 8px; }
     .calendar-event { width: 100%; text-align: left; }
+    .calendar-event-detail { margin: 18px 0 12px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .calendar-detail-head { display: flex; align-items: flex-start; gap: 12px; justify-content: space-between; margin-bottom: 12px; }
+    .calendar-detail-head h3 { margin: 2px 0 4px; font-size: 1.05rem; }
+    .calendar-detail-title { margin-top: 18px; }
+    .calendar-detail-people { gap: 6px; }
+    .calendar-detail-expense { cursor: default; align-items: flex-start; }
+    .calendar-detail-expense .exp-top { flex-wrap: wrap; }
+    .calendar-detail-expense .exp-desc { flex: 1 1 80px; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+    .calendar-detail-expense .exp-amt { white-space: normal; overflow-wrap: anywhere; }
+    .calendar-detail-expense .exp-sub { white-space: normal; overflow-wrap: anywhere; }
+    .calendar-detail .person-card { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 8px 12px; }
+    .calendar-detail .person-card .avatar { grid-row: span 2; }
+    .calendar-detail .person-card .pill { grid-column: 2; justify-self: start; max-width: 100%; white-space: normal; text-align: left; }
+    .calendar-detail .transfer { flex-wrap: wrap; }
+    .calendar-detail .t-mid { flex: 1 1 auto; min-width: 100px; }
+    .calendar-detail-total { margin: 12px 0; }
+    .calendar-detail-open { margin-top: 14px; }
 
     /* ---------- Modal / sheet ---------- */
     .overlay {
@@ -389,6 +406,7 @@
         <div class="calendar-grid" id="calendarGrid" role="group" aria-label="Días del mes" data-i18n-title="monthDays"></div>
         <div class="section-title" id="calendarSelectedTitle" style="margin-top:22px"></div>
         <div class="calendar-events" id="calendarEvents" aria-live="polite"></div>
+        <div class="calendar-event-detail" id="calendarEventDetail" aria-live="polite" hidden></div>
       </section>
     </main>
 
@@ -536,10 +554,10 @@
     </div>
   </div>
 
-  <script src="calc.js?v=15"></script>
-  <script src="config.js?v=15"></script>
+  <script src="calc.js?v=16"></script>
+  <script src="config.js?v=16"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="cloud.js?v=15"></script>
-  <script src="app.js?v=15"></script>
+  <script src="cloud.js?v=16"></script>
+  <script src="app.js?v=16"></script>
 </body>
 </html>
