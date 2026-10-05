@@ -29,14 +29,21 @@
     client: client,
 
     // --- Autenticación por correo + contraseña (no requiere SMTP) ---
-    signUp: function (email, password) {
-      return client.auth.signUp({ email: email, password: password });
+    signUp: function (email, password, name) {
+      return client.auth.signUp({
+        email: email,
+        password: password,
+        options: { data: { full_name: name } }
+      });
     },
     signIn: function (email, password) {
       return client.auth.signInWithPassword({ email: email, password: password });
     },
     signOut: function () { return client.auth.signOut(); },
     getSession: function () { return client.auth.getSession(); },
+    logActivity: function (action, eventId) {
+      return client.rpc('registrar_actividad_usuario', { _accion: action, _evento_id: eventId || null });
+    },
     onAuth: function (cb) {
       return client.auth.onAuthStateChange(function (_event, session) { cb(session); });
     },

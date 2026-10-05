@@ -100,8 +100,11 @@
       padding: max(10px, env(safe-area-inset-top)) 14px 10px;
     }
     .head-row { display: flex; align-items: center; gap: 8px; }
-    .brand { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 1rem; letter-spacing: -.02em; white-space: nowrap; }
+    .brand { display: flex; align-items: center; gap: 7px; border: 0; padding: 0; background: transparent; color: var(--text); font: inherit; font-weight: 800; font-size: 1rem; white-space: nowrap; cursor: pointer; }
+    .brand:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 5px; }
     .brand .logo { width: 25px; height: 25px; border-radius: 7px; display: block; flex-shrink: 0; }
+    .app-description { margin: 8px 0 0; color: var(--muted); font-size: .8rem; }
+    #appDescription[hidden] { display: none; }
     .head-spacer { flex: 1; }
     .cur-pill {
       -webkit-appearance: none; appearance: none; border: none; cursor: pointer;
@@ -321,12 +324,13 @@
   <div class="app">
     <header>
       <div class="head-row">
-        <span class="brand"><img class="logo" src="icon.svg" alt="" />Paga aí po!</span>
+        <button class="brand" id="brandInfoBtn" type="button" aria-expanded="false" aria-controls="appDescription"><img class="logo" src="icon.svg" alt="" />Paga aí po!</button>
         <span class="head-spacer"></span>
         <select class="cur-pill" id="currencyHeader" aria-label="Moneda" title="Moneda"></select>
         <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema" title="Tema">🌙</button>
         <button class="icon-btn" id="menuBtn" aria-label="Menú" title="Menú">⋯</button>
       </div>
+      <p class="app-description" id="appDescription" hidden>Divide cuentas entre amigos por ítem y calcula cuánto debe pagar cada persona.</p>
       <input class="event-input" id="eventName" placeholder="Nombre de la salida…" autocomplete="off" maxlength="60" />
       <label class="event-date-row" for="eventDate">Fecha del evento <input class="event-date" id="eventDate" type="date" /></label>
       <div class="sync-status" id="syncStatus" role="status" aria-live="polite" hidden>
@@ -438,6 +442,7 @@
       <h2>Opciones</h2>
       <div class="menu-row" id="menuAccount"><span class="mi">☁️</span><span id="accountLabel">Entrar a la nube</span></div>
       <p class="hint">La moneda se cambia desde la barra de arriba. Al cambiarla, los montos se reescalan (no usa tipo de cambio).</p>
+      <div class="menu-row" id="menuNewEvent"><span class="mi">🆕</span>Limpiar y crear salida</div>
       <div class="menu-row" id="menuExample"><span class="mi">✨</span>Cargar ejemplo</div>
       <div class="menu-row danger" id="menuReset"><span class="mi">🗑️</span>Vaciar todo</div>
       <div class="sheet-actions">
@@ -451,7 +456,11 @@
     <div class="sheet" role="dialog" aria-modal="true">
       <h2>☁️ Cuenta / Nube</h2>
       <div id="authLoggedOut">
-        <p class="hint">Entra con tu correo y una contraseña para guardar tus eventos en la nube y compartirlos.</p>
+        <p class="hint">Inicia sesión para continuar. Al crear una cuenta, registra tu nombre y correo para ver los eventos donde participas.</p>
+        <div class="field">
+          <label for="authName">Nombre (para crear cuenta)</label>
+          <input class="text-input" id="authName" type="text" autocomplete="name" maxlength="80" placeholder="Tu nombre" />
+        </div>
         <div class="field">
           <label for="authEmail">Correo</label>
           <input class="text-input" id="authEmail" type="email" inputmode="email" placeholder="tu@correo.com" autocomplete="email" />
@@ -471,7 +480,7 @@
         <p class="hint">Conectado como <strong id="authEmailShown"></strong>.</p>
         <button type="button" class="btn btn-primary btn-block" id="cloudSave">☁️ Guardar este evento en la nube</button>
         <div class="hint" id="cloudSavedInfo" hidden></div>
-        <div class="menu-row" id="cloudList"><span class="mi">📂</span>Mis eventos (historial)</div>
+        <div class="menu-row" id="cloudList"><span class="mi">📂</span>Eventos en los que participo</div>
         <div class="menu-row" id="cloudNew"><span class="mi">➕</span>Nuevo evento (vaciar)</div>
         <div class="field" style="margin-top:12px">
           <label for="joinCode">Abrir un evento con código</label>

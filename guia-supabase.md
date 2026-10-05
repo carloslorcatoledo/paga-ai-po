@@ -24,12 +24,12 @@ Tiempo estimado: ~15 minutos. No se necesita tarjeta de crédito.
 1. En el menú izquierdo: **SQL Editor** → **New query**.
 2. Abre el archivo `esquema-supabase.sql` de este proyecto, copia **todo** y pégalo.
 3. Presiona **Run** (o Ctrl/Cmd + Enter).
-4. Debe decir *Success*. Esto crea las 4 tablas del plan + `evento_miembro`, la seguridad (RLS), el realtime y la función para unirse por código.
+4. Debe decir *Success*. Esto crea las tablas de eventos, perfiles y actividad, las políticas RLS, el realtime y las funciones para guardar y compartir eventos.
 
-Si el proyecto Supabase ya estaba creado, vuelve a ejecutar el esquema actualizado antes de publicar la nueva app. La migración agrega `evento.version` y la función `guardar_evento_snapshot`, que hace el guardado en una transacción y rechaza snapshots basados en una versión antigua.
+Si el proyecto Supabase ya estaba creado, vuelve a ejecutar el esquema actualizado antes de publicar la nueva app. El script es idempotente: agrega el perfil con nombre y correo, crea el log de actividad y completa perfiles de usuarios existentes. También configura el registro automático de altas, inicios y cierres de sesión, y eventos a los que se une o pertenece el usuario.
 
 ## Paso 3 — Verificar
-1. **Table Editor**: deberías ver `evento`, `evento_miembro`, `participante`, `gasto`, `gasto_participante`.
+1. **Table Editor**: deberías ver `evento`, `evento_miembro`, `participante`, `gasto`, `gasto_participante`, `perfil_usuario` y `registro_actividad`.
 2. **Authentication** → **Providers**: confirma que **Email** está habilitado (viene por defecto).
    - Para probar rápido, en **Authentication → Providers → Email**, puedes desactivar "Confirm email" (así no tienes que confirmar el correo al registrarte en pruebas). En producción, déjalo activado.
 
@@ -42,8 +42,10 @@ Si el proyecto Supabase ya estaba creado, vuelve a ejecutar el esquema actualiza
 
 ## Paso 5 — Avísame
 Pásame la **Project URL** y la **anon key** (o pégalas en un archivo `config.js`) y cableo la app:
-- Login por correo (magic link).
+- Inicio obligatorio con correo y contraseña; el nombre se solicita al crear la cuenta.
 - Guardar/leer eventos, participantes y gastos en la nube.
+- Ver eventos propios y compartidos donde la cuenta es miembro.
+- Auditar altas, accesos, cierres de sesión y membresías en `registro_actividad`.
 - **Realtime**: cuando un amigo agrega un gasto, aparece en tu pantalla al instante.
 - Compartir evento por **código** (función `unirse_a_evento` ya creada).
 

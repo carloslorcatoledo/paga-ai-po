@@ -30,18 +30,21 @@
   ];
   var AVATAR_COLORS = ['#ef4444','#f97316','#f59e0b','#10b981','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#ec4899','#14b8a6'];
   var STORAGE_KEY = 'pagaaipo_v1';
+  var HISTORY_KEY = 'pagaaipo_history_v1';
+  var MAX_HISTORY_ITEMS = 100;
 
   // ---------- State ----------
   var state = {
     eventName: '', eventDate: localDate(new Date()), currency: 'CLP', theme: 'system', tab: 'personas',
     tipPercent: 0, participants: [], expenses: [],
-    cloudId: null, cloudVersion: null, cloudBaseline: null, codigo: null
+    cloudId: null, cloudVersion: null, cloudBaseline: null, codigo: null, historyId: null
   };
   var TIP_PRESETS = [0, 5, 10, 15];
   var editingId = null;
   var calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   var calendarSelectedDate = localDate(new Date());
   var calendarEvents = [];
+  var localHistory = [];
   var calendarLoading = false;
   var calendarMessage = '';
   var calendarRequest = 0;
@@ -49,8 +52,45 @@
   var liveRefreshTimer = null;
   var cloudSaveInProgress = false;
   var remoteConflict = false;
+  var authRequired = false;
 
-  function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} }
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+    saveLocalHistorySnapshot();
+  }
+  function loadLocalHistory() {
+    try {
+      var raw = localStorage.getItem(HISTORY_KEY);
+      var rows = raw ? JSON.parse(raw) : [];
+      localHistory = Array.isArray(rows) ? rows.filter(function (row) {
+        return row && typeof row.historyId === 'string' && validDate(row.eventDate);
+      }) : [];
+    } catch (e) { localHistory = []; }
+  }
+  function saveLocalHistorySnapshot() {
+    if (!state.historyId) state.historyId = uid();
+    if (!state.eventName.trim() && !state.participants.length && !state.expenses.length) return;
+    var snapshot;
+    try { snapshot = JSON.parse(eventSnapshot()); } catch (e) { return; }
+    var record = Object.assign(snapshot, {
+      historyId: state.historyId,
+      cloudId: state.cloudId,
+      cloudVersion: state.cloudVersion,
+      cloudBaseline: state.cloudBaseline,
+      codigo: state.codigo,
+      updatedAt: new Date().toISOString()
+    });
+    var existing = localHistory.findIndex(function (item) {
+      return item.historyId === record.historyId || (record.cloudId && item.cloudId === record.cloudId);
+    });
+    if (existing !== -1) {
+      record.historyId = localHistory[existing].historyId;
+      localHistory.splice(existing, 1);
+    }
+    localHistory.unshift(record);
+    localHistory = localHistory.slice(0, MAX_HISTORY_ITEMS);
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(localHistory)); } catch (e) {}
+  }
   function load() {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
@@ -68,8 +108,10 @@
         state.cloudVersion = Number.isInteger(s.cloudVersion) ? s.cloudVersion : null;
         state.cloudBaseline = typeof s.cloudBaseline === 'string' ? s.cloudBaseline : null;
         state.codigo = s.codigo || null;
+        state.historyId = typeof s.historyId === 'string' ? s.historyId : uid();
       }
     } catch (e) {}
+    if (!state.historyId) state.historyId = uid();
   }
 
   // ---------- Helpers ----------
@@ -460,6 +502,7 @@
   // ---------- Example ----------
   function loadExample() {
     stopCloudSync();
+    state.historyId = uid();
     state.eventName = 'Asado del viernes';
     state.currency = 'CLP';
     state.tipPercent = 0;
@@ -485,6 +528,7 @@
     if (!confirm('Esto borra personas y gastos de esta salida. ¿Continuar?')) return;
     stopCloudSync();
     state.eventName = ''; state.tipPercent = 0; state.participants = []; state.expenses = []; state.tab = 'personas';
+    state.eventDate = localDate(new Date()); state.historyId = uid();
     state.cloudId = null; state.codigo = null;
     state.cloudVersion = null;
     state.cloudBaseline = null;
@@ -516,10 +560,11 @@
     var user = session && session.user;
     var email = user ? user.email : null;
     if (email) {
-      $('accountLabel').textContent = 'Nube: ' + email;
+      var name = user.user_metadata && user.user_metadata.full_name;
+      $('accountLabel').textContent = name ? name : email;
       $('authLoggedOut').hidden = true;
       $('authLoggedIn').hidden = false;
-      $('authEmailShown').textContent = email;
+      $('authEmailShown').textContent = (name ? name + ' · ' : '') + email;
       var info = $('cloudSavedInfo');
       if (state.cloudId && state.codigo) {
         info.hidden = false;
@@ -531,13 +576,18 @@
       $('authLoggedIn').hidden = true;
     }
   }
-  function openAuth() {
+  function openAuth(required) {
     closeMenu();
+    if (required) authRequired = true;
     $('authMsg').textContent = '';
+    $('authCancel').hidden = authRequired;
     if (!cloudReady()) $('authMsg').textContent = 'La nube no está disponible (revisa tu conexión a internet).';
     $('authOverlay').classList.add('open');
   }
-  function closeAuth() { $('authOverlay').classList.remove('open'); }
+  function closeAuth() {
+    if (authRequired) return;
+    $('authOverlay').classList.remove('open');
+  }
   function authCreds() { return { email: $('authEmail').value.trim(), pass: $('authPass').value }; }
   function authSignIn() {
     if (!cloudReady()) return;
@@ -546,19 +596,30 @@
     $('authMsg').textContent = 'Entrando…';
     window.Cloud.signIn(c.email, c.pass).then(function (res) {
       if (res.error) { $('authMsg').textContent = 'No se pudo entrar: ' + res.error.message; return; }
-      $('authMsg').textContent = '✓ ¡Entraste!';
+      authRequired = false;
+      $('authCancel').hidden = false;
+      $('cloudMsg').textContent = 'Sesión iniciada.';
+      window.Cloud.logActivity('inicio_sesion').then(function (log) {
+        if (log.error) $('cloudMsg').textContent = 'Sesión iniciada, pero no se registró la actividad. Aplica la migración SQL de Supabase.';
+      }).catch(function () {
+        $('cloudMsg').textContent = 'Sesión iniciada, pero no se registró la actividad. Aplica la migración SQL de Supabase.';
+      });
       $('authPass').value = ''; // onAuth refresca la UI
     }).catch(function (e) { $('authMsg').textContent = 'Error: ' + e.message; });
   }
   function authSignUp() {
     if (!cloudReady()) return;
     var c = authCreds();
+    var name = $('authName').value.trim();
     if (!c.email || !c.pass) { $('authMsg').textContent = 'Escribe correo y contraseña.'; return; }
+    if (!name) { $('authMsg').textContent = 'Escribe tu nombre para crear la cuenta.'; return; }
     if (c.pass.length < 6) { $('authMsg').textContent = 'La contraseña debe tener al menos 6 caracteres.'; return; }
     $('authMsg').textContent = 'Creando cuenta…';
-    window.Cloud.signUp(c.email, c.pass).then(function (res) {
+    window.Cloud.signUp(c.email, c.pass, name).then(function (res) {
       if (res.error) { $('authMsg').textContent = 'No se pudo crear: ' + res.error.message; return; }
       if (res.data && res.data.session) {
+        authRequired = false;
+        $('authCancel').hidden = false;
         $('authMsg').textContent = '✓ ¡Cuenta creada!';
         $('authPass').value = '';
       } else {
@@ -566,7 +627,12 @@
       }
     }).catch(function (e) { $('authMsg').textContent = 'Error: ' + e.message; });
   }
-  function authSignOut() { if (cloudReady()) window.Cloud.signOut(); }
+  function authSignOut() {
+    if (!cloudReady()) return;
+    window.Cloud.logActivity('cierre_sesion').then(function () {
+      return window.Cloud.signOut();
+    }).catch(function () { return window.Cloud.signOut(); });
+  }
 
   // ---------- Nube: datos (guardar / historial / compartir) ----------
   function assignColors(parts) {
@@ -575,9 +641,11 @@
   }
   function applyLoadedEvent(d) {
     var ev = d.evento;
+    var localRecord = localHistory.filter(function (item) { return item.cloudId === ev.id; })[0];
     state.cloudId = ev.id;
     state.cloudVersion = Number(ev.version) || 0;
     state.codigo = ev.codigo;
+    state.historyId = localRecord ? localRecord.historyId : 'cloud-' + ev.id;
     state.eventName = ev.nombre || '';
     state.eventDate = validDate(ev.fecha) ? ev.fecha : localDate(new Date());
     state.currency = CURRENCIES[ev.moneda] ? ev.moneda : 'CLP';
@@ -645,7 +713,7 @@
     window.Cloud.listEvents().then(function (res) {
       if (res.error) { list.innerHTML = '<div class="err-msg">Error: ' + esc(res.error.message) + '</div>'; return; }
       var rows = res.data || [];
-      if (!rows.length) { list.innerHTML = emptyHTML('📂', 'Sin eventos guardados', 'Guarda uno con “Guardar en la nube”.'); return; }
+      if (!rows.length) { list.innerHTML = emptyHTML('📂', 'Aún no participas en eventos', 'Guarda una salida o ábrela con su código para que aparezca aquí.'); return; }
       list.innerHTML = rows.map(function (ev) {
         return '<div class="exp-card" data-open="' + esc(ev.id) + '">' +
           '<div class="exp-icon">📅</div>' +
@@ -666,11 +734,15 @@
     var request = ++calendarRequest;
     calendarLoading = true; calendarMessage = ''; renderCalendar();
     if (!cloudReady()) {
-      calendarLoading = false; calendarMessage = 'La nube no está disponible en este dispositivo.'; renderCalendar(); return;
+      calendarLoading = false; calendarEvents = [];
+      calendarMessage = 'La nube no está disponible. Se muestran los eventos guardados en este dispositivo.';
+      renderCalendar(); return;
     }
     window.Cloud.getSession().then(function (res) {
       if (!(res && res.data && res.data.session)) {
-        calendarEvents = []; calendarMessage = 'Inicia sesión para ver y guardar eventos en el calendario.'; return null;
+        calendarEvents = [];
+        calendarMessage = 'Inicia sesión para ver también los eventos de la nube. Los eventos locales seguirán visibles.';
+        return null;
       }
       return window.Cloud.listEvents();
     }).then(function (res) {
@@ -690,8 +762,22 @@
     var year = calendarMonth.getFullYear();
     var month = calendarMonth.getMonth();
     $('calendarMonth').textContent = calendarMonth.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
-    var eventCounts = {};
+    var entries = localHistory.map(function (event) {
+      return {
+        id: event.cloudId || event.historyId,
+        historyId: event.historyId,
+        cloudId: event.cloudId,
+        nombre: event.eventName,
+        fecha: event.eventDate,
+        moneda: event.currency,
+        codigo: event.codigo
+      };
+    });
     calendarEvents.forEach(function (event) {
+      if (!localHistory.some(function (localEvent) { return localEvent.cloudId === event.id; })) entries.push(event);
+    });
+    var eventCounts = {};
+    entries.forEach(function (event) {
       if (validDate(event.fecha)) eventCounts[event.fecha] = (eventCounts[event.fecha] || 0) + 1;
     });
     var offset = (new Date(year, month, 1).getDay() + 6) % 7;
@@ -710,31 +796,74 @@
     $('calendarSelectedTitle').textContent = selected.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' });
     var box = $('calendarEvents');
     if (calendarLoading) { box.innerHTML = '<div class="hint">Cargando eventos…</div>'; return; }
-    if (calendarMessage) {
-      box.innerHTML = '<div class="hint">' + esc(calendarMessage) + '</div>' + (calendarMessage.indexOf('Inicia sesión') === 0 ? '<button type="button" class="btn btn-primary btn-block" data-calendar-login>Entrar a la nube</button>' : '');
+    var notice = calendarMessage ? '<div class="hint">' + esc(calendarMessage) + '</div>' : '';
+    var loginButton = calendarMessage.indexOf('Inicia sesión') === 0 ? '<button type="button" class="btn btn-primary btn-block" data-calendar-login>Entrar a la nube</button>' : '';
+    var selectedEvents = entries.filter(function (event) { return event.fecha === calendarSelectedDate; });
+    if (!selectedEvents.length) {
+      box.innerHTML = notice + loginButton + '<div class="hint">No hay eventos guardados para este día.</div>';
       return;
     }
-    var selectedEvents = calendarEvents.filter(function (event) { return event.fecha === calendarSelectedDate; });
-    if (!selectedEvents.length) { box.innerHTML = '<div class="hint">No hay eventos guardados para este día.</div>'; return; }
-    box.innerHTML = selectedEvents.map(function (event) {
-      return '<button type="button" class="exp-card calendar-event" data-open="' + esc(event.id) + '">' +
+    box.innerHTML = notice + loginButton + selectedEvents.map(function (event) {
+      var openAttr = event.historyId ? 'data-history-id="' + esc(event.historyId) + '"' : 'data-open="' + esc(event.id) + '"';
+      var detail = event.codigo ? 'Código ' + esc(event.codigo) : 'Guardado en este dispositivo';
+      return '<button type="button" class="exp-card calendar-event" ' + openAttr + '>' +
         '<span class="exp-icon">📅</span><span class="exp-main"><span class="exp-top"><span class="exp-desc">' + esc(event.nombre || 'Salida') + '</span>' +
         '<span class="exp-amt" style="font-size:.78rem;color:var(--muted)">' + esc(event.moneda || '') + '</span></span>' +
-        '<span class="exp-sub">Código ' + esc(event.codigo || '') + '</span></span></button>';
+        '<span class="exp-sub">' + detail + '</span></span></button>';
     }).join('');
   }
   function closeEventsList() { $('eventsOverlay').classList.remove('open'); }
-  function openCloudEvent(id) {
-    if (!cloudReady()) return;
+  function applyLocalHistoryEvent(event) {
+    stopCloudSync();
+    state.historyId = event.historyId;
+    state.cloudId = event.cloudId || null;
+    state.cloudVersion = Number.isInteger(event.cloudVersion) ? event.cloudVersion : null;
+    state.cloudBaseline = event.cloudBaseline || null;
+    state.codigo = event.codigo || null;
+    state.eventName = event.eventName || '';
+    state.eventDate = validDate(event.eventDate) ? event.eventDate : localDate(new Date());
+    state.currency = CURRENCIES[event.currency] ? event.currency : 'CLP';
+    state.tipPercent = Number(event.tipPercent) || 0;
+    state.participants = JSON.parse(JSON.stringify(event.participants || []));
+    state.expenses = JSON.parse(JSON.stringify(event.expenses || []));
+    state.tab = 'personas';
+    syncBaseline = state.cloudBaseline;
+    remoteConflict = !!state.cloudId && (!syncBaseline || eventSnapshot() !== syncBaseline);
+    save(); render(); closeEventsList();
+    if (state.cloudId && !remoteConflict) subscribeCurrentEvent();
+    if (remoteConflict) setSyncStatus('Este evento tiene cambios locales sin sincronizar.', true, true);
+  }
+  function openLocalHistoryEvent(id) {
+    var event = localHistory.filter(function (item) { return item.historyId === id; })[0];
+    if (!event) return;
+    if (event.cloudId && cloudReady()) { openCloudEvent(event.cloudId, event.historyId); return; }
+    applyLocalHistoryEvent(event);
+  }
+  function openCloudEvent(id, fallbackHistoryId) {
+    if (!cloudReady()) {
+      if (fallbackHistoryId) openLocalHistoryEventOffline(fallbackHistoryId);
+      return;
+    }
     window.Cloud.loadEvent(id).then(function (res) {
-      if (res.error) { alert('No se pudo abrir: ' + res.error.message); return; }
+      if (res.error) {
+        if (fallbackHistoryId) { openLocalHistoryEventOffline(fallbackHistoryId); return; }
+        alert('No se pudo abrir: ' + res.error.message); return;
+      }
       applyLoadedEvent(res.data);
       closeEventsList();
-    }).catch(function (e) { alert('Error: ' + e.message); });
+    }).catch(function (e) {
+      if (fallbackHistoryId) { openLocalHistoryEventOffline(fallbackHistoryId); return; }
+      alert('Error: ' + e.message);
+    });
+  }
+  function openLocalHistoryEventOffline(id) {
+    var event = localHistory.filter(function (item) { return item.historyId === id; })[0];
+    if (event) applyLocalHistoryEvent(event);
   }
   function newCloudEvent() {
     stopCloudSync();
     state.eventName = ''; state.eventDate = localDate(new Date()); state.tipPercent = 0; state.participants = []; state.expenses = [];
+    state.historyId = uid();
     state.cloudId = null; state.cloudVersion = null; state.cloudBaseline = null; state.codigo = null; state.tab = 'personas';
     $('cloudSavedInfo').hidden = true;
     save(); render(); closeAuth();
@@ -759,6 +888,11 @@
     el.classList.add('active');
   }
   function bind() {
+    $('brandInfoBtn').addEventListener('click', function () {
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', String(!expanded));
+      $('appDescription').hidden = expanded;
+    });
     document.querySelectorAll('.tab').forEach(function (t) {
       t.addEventListener('click', function () {
         state.tab = t.dataset.tab; save(); render();
@@ -785,6 +919,10 @@
 
     $('menuBtn').addEventListener('click', openMenu);
     $('menuClose').addEventListener('click', closeMenu);
+    $('menuNewEvent').addEventListener('click', function () {
+      closeMenu();
+      if (confirm('¿Limpiar los datos ingresados y crear una nueva salida? La salida actual se conservará en el historial.')) newCloudEvent();
+    });
     $('menuExample').addEventListener('click', function () { closeMenu(); loadExample(); });
     $('menuReset').addEventListener('click', function () { closeMenu(); resetAll(); });
     $('themeBtn').addEventListener('click', cycleTheme);
@@ -819,6 +957,8 @@
     $('calendarEvents').addEventListener('click', function (e) {
       var event = e.target.closest('[data-open]');
       if (event) openCloudEvent(event.dataset.open);
+      var localEvent = e.target.closest('[data-history-id]');
+      if (localEvent) openLocalHistoryEvent(localEvent.dataset.historyId);
       var login = e.target.closest('[data-calendar-login]');
       if (login) openAuth();
     });
@@ -839,6 +979,8 @@
 
   // ---------- Init ----------
   load();
+  loadLocalHistory();
+  save();
   initCurrencySelect();
   applyTheme();
   bind();
@@ -847,15 +989,29 @@
   // Nube: estado de sesión (si está configurada)
   if (cloudReady()) {
     window.Cloud.getSession().then(function (res) {
-      refreshAccountUI(res && res.data ? res.data.session : null);
+      var session = res && res.data ? res.data.session : null;
+      refreshAccountUI(session);
+      if (!session) openAuth(true);
       if (state.tab === 'calendario') loadCalendarEvents();
-      if (state.cloudId && res && res.data && res.data.session) startCloudSync();
-    }).catch(function () {});
+      if (state.cloudId && session) startCloudSync();
+    }).catch(function () {
+      authRequired = true;
+      openAuth(true);
+      $('authMsg').textContent = 'No se pudo verificar la sesión. Revisa tu conexión e inténtalo de nuevo.';
+    });
     window.Cloud.onAuth(function (session) {
       refreshAccountUI(session);
+      if (session && authRequired) {
+        authRequired = false;
+        $('authCancel').hidden = false;
+        closeAuth();
+      }
       if (state.tab === 'calendario') loadCalendarEvents();
       if (session && state.cloudId) startCloudSync();
-      else if (!session) stopCloudSync();
+      else if (!session) {
+        stopCloudSync();
+        openAuth(true);
+      }
     });
   } else {
     refreshAccountUI(null);

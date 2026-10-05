@@ -66,6 +66,69 @@ create index if not exists idx_gasto_evento  on gasto(evento_id);
 create index if not exists idx_gp_part       on gasto_participante(participante_id);
 create index if not exists idx_miembro_user  on evento_miembro(user_id);
 
+-- Perfil visible solo para el dueño; la contraseña nunca sale de Supabase Auth.
+create table if not exists perfil_usuario (
+  user_id    uuid primary key references auth.users(id) on delete cascade,
+  nombre     text not null,
+  correo     text not null,
+  updated_at timestamptz not null default now()
+);
+
+-- Auditoría de altas, accesos, cierres de sesión y eventos compartidos.
+create table if not exists registro_actividad (
+  id         bigint generated always as identity primary key,
+  user_id    uuid not null references auth.users(id) on delete cascade,
+  nombre     text not null,
+  correo     text not null,
+  accion     text not null check (accion in ('registro', 'inicio_sesion', 'cierre_sesion', 'unirse_evento')),
+  evento_id  uuid references evento(id) on delete set null,
+  created_at timestamptz not null default now()
+);
+create index if not exists idx_actividad_usuario_fecha on registro_actividad(user_id, created_at desc);
+
+-- Crea el perfil y registra las cuentas nuevas desde el trigger confiable de Auth.
+create or replace function public.sincronizar_perfil_usuario()
+returns trigger language plpgsql security definer set search_path = public, auth as $$
+declare
+  v_nombre text;
+begin
+  v_nombre := left(nullif(btrim(new.raw_user_meta_data->>'full_name'), ''), 80);
+  if v_nombre is null then
+    v_nombre := split_part(coalesce(new.email, 'usuario'), '@', 1);
+  end if;
+
+  insert into perfil_usuario (user_id, nombre, correo, updated_at)
+  values (new.id, v_nombre, coalesce(new.email, ''), now())
+  on conflict (user_id) do update set
+    nombre = excluded.nombre,
+    correo = excluded.correo,
+    updated_at = now();
+
+  if tg_op = 'INSERT' then
+    insert into registro_actividad (user_id, nombre, correo, accion)
+    values (new.id, v_nombre, coalesce(new.email, ''), 'registro');
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_profile on auth.users;
+create trigger on_auth_user_profile
+  after insert or update of email, raw_user_meta_data on auth.users
+  for each row execute function public.sincronizar_perfil_usuario();
+
+-- Completa perfiles de cuentas creadas antes de esta migración, sin inventar eventos de registro.
+insert into perfil_usuario (user_id, nombre, correo)
+select
+  id,
+  coalesce(nullif(left(btrim(raw_user_meta_data->>'full_name'), 80), ''), split_part(coalesce(email, 'usuario'), '@', 1)),
+  coalesce(email, '')
+from auth.users
+on conflict (user_id) do update set
+  correo = excluded.correo,
+  nombre = coalesce(nullif(left(btrim((select u.raw_user_meta_data->>'full_name' from auth.users u where u.id = excluded.user_id)), 80), ''), perfil_usuario.nombre),
+  updated_at = now();
+
 -- ----------------------------------------------------------------------------
 -- 2) FUNCIONES DE APOYO (SECURITY DEFINER = evitan recursión en las políticas)
 -- ----------------------------------------------------------------------------
@@ -104,6 +167,9 @@ begin
   insert into evento_miembro (evento_id, user_id, rol)
   values (new.id, new.owner, 'owner')
   on conflict do nothing;
+  insert into registro_actividad (user_id, nombre, correo, accion, evento_id)
+  select p.user_id, p.nombre, p.correo, 'unirse_evento', new.id
+  from perfil_usuario p where p.user_id = new.owner;
   return new;
 end;
 $$;
@@ -125,7 +191,39 @@ begin
   insert into evento_miembro (evento_id, user_id, rol)
   values (_id, auth.uid(), 'editor')
   on conflict do nothing;
+  if found then
+    insert into registro_actividad (user_id, nombre, correo, accion, evento_id)
+    select p.user_id, p.nombre, p.correo, 'unirse_evento', _id
+    from perfil_usuario p where p.user_id = auth.uid();
+  end if;
   return _id;
+end;
+$$;
+
+-- La app no escribe directamente en el log; el RPC toma la identidad desde auth.uid().
+create or replace function public.registrar_actividad_usuario(_accion text, _evento_id uuid default null)
+returns void language plpgsql security definer set search_path = public, auth as $$
+declare
+  v_user_id uuid := auth.uid();
+begin
+  if v_user_id is null then
+    raise exception 'Se requiere una sesión';
+  end if;
+  if _accion not in ('inicio_sesion', 'cierre_sesion', 'unirse_evento') then
+    raise exception 'Acción no permitida';
+  end if;
+  if _evento_id is not null and not exists (
+    select 1 from evento_miembro where evento_id = _evento_id and user_id = v_user_id
+  ) then
+    raise exception 'El usuario no pertenece a este evento';
+  end if;
+
+  insert into registro_actividad (user_id, nombre, correo, accion, evento_id)
+  select p.user_id, p.nombre, p.correo, _accion, _evento_id
+  from perfil_usuario p where p.user_id = v_user_id;
+  if not found then
+    raise exception 'No se encontró el perfil del usuario';
+  end if;
 end;
 $$;
 
@@ -138,6 +236,17 @@ alter table evento_miembro     enable row level security;
 alter table participante       enable row level security;
 alter table gasto              enable row level security;
 alter table gasto_participante enable row level security;
+alter table perfil_usuario     enable row level security;
+alter table registro_actividad enable row level security;
+
+drop policy if exists perfil_select_own on perfil_usuario;
+create policy perfil_select_own on perfil_usuario for select using (user_id = auth.uid());
+drop policy if exists actividad_select_own on registro_actividad;
+create policy actividad_select_own on registro_actividad for select using (user_id = auth.uid());
+revoke all on perfil_usuario, registro_actividad from anon, authenticated;
+grant select on perfil_usuario, registro_actividad to authenticated;
+revoke all on function public.registrar_actividad_usuario(text, uuid) from public;
+grant execute on function public.registrar_actividad_usuario(text, uuid) to authenticated;
 
 -- evento
 drop policy if exists evento_select on evento;

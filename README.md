@@ -19,6 +19,7 @@ celular, de noche, en 3 toques.
 | `plan-app-dividir-cuentas.md` | El plan de producto completo. |
 | `esquema-supabase.sql` | Tablas, RLS, Realtime y guardado atómico con control de versión. |
 | `guia-supabase.md` | Guía paso a paso para montar Supabase. |
+| `guia-uso.md` | Instrucciones para crear salidas, calcular saldos y compartir eventos. |
 
 ## Monedas
 
@@ -78,7 +79,12 @@ Decisiones tomadas para que la app sea segura por defecto:
 - **Datos locales y nube:** el borrador se conserva en `localStorage`. Un evento se
   guarda en Supabase solo cuando eliges "Guardar este evento en la nube"; sus
   miembros pueden abrirlo con el código y recibir cambios guardados en tiempo real.
-  RLS limita el acceso a los miembros del evento.
+  RLS limita el acceso a los miembros del evento. Con Supabase configurado, la app
+  solicita iniciar sesión con correo; el registro pide nombre y la lista de cuenta
+  muestra los eventos propios y compartidos donde participa el usuario.
+- **Auditoría de cuenta:** `perfil_usuario` conserva nombre y correo, y
+  `registro_actividad` registra altas, inicios/cierres de sesión y membresías. El
+  esquema SQL debe aplicarse en Supabase para activar estas funciones.
 - **Enlaces externos seguros:** la ventana de WhatsApp se abre con `noopener` y la
   página no filtra su dirección (`referrer: no-referrer`).
 - **Validación de entrada:** montos siempre ≥ 0; límites de largo en nombres y
