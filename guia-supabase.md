@@ -35,15 +35,19 @@ Si el proyecto Supabase ya estaba creado, vuelve a ejecutar el esquema actualiza
 3. Una persona puede probar la app sin sesión; sus salidas quedan locales. Para las funciones de nube debe entrar con su cuenta. Después del login, la app crea o repara su propio perfil; una dirección de correo por sí sola no concede acceso.
 4. En **Authentication → URL Configuration**, agrega a **Redirect URLs** la URL publicada `https://carloslorcatoledo.github.io/paga-ai-po/`. Para desarrollo local, agrega también `http://localhost:8123/**`. El enlace de recuperación vuelve a esa URL para permitir elegir la contraseña nueva.
 
-## Paso 4 — Copiar tus llaves
+## Paso 4 — Copiar la configuración de API
 1. **Project Settings** (engranaje) → **API**.
 2. Copia estos dos valores:
    - **Project URL** → algo como `https://xxxxxxxx.supabase.co`
-   - **anon public** (Project API Keys) → una cadena larga que empieza con `eyJ...`
-3. Estas dos **sí** van en el código del cliente. La **anon key es pública a propósito**; la seguridad la hace la RLS. (La llave **`service_role` es secreta: NO la uses en el front.**)
+   - **Publishable key** (Project API Keys) → una clave pública que suele comenzar
+     con `sb_publishable_`. En proyectos antiguos también puede aparecer como `anon`.
+3. Estos valores se configuran en `config.js` como `url` y `publishableKey`. La
+   clave publishable/anon está diseñada para uso en el cliente; la seguridad la
+   aplican las políticas RLS. Nunca uses una clave secreta (`sb_secret_` o
+   `service_role`) en el front ni la publiques en el repositorio.
 
 ## Paso 5 — Configurar y verificar la app
-Guarda la **Project URL** y la **publishable/anon key** en `config.js` localmente. No compartas la llave `service_role` ni la incluyas en el cliente. La app permite:
+Guarda la **Project URL** y la **publishable key** en `config.js` localmente. No compartas claves secretas ni las incluyas en el cliente. La app permite:
 - Probar cálculos, historial local y compartir resúmenes sin iniciar sesión.
 - Entrar con correo y contraseña para usar funciones de nube; el nombre se solicita al crear la cuenta.
 - Crear o reparar el perfil propio después de autenticar, mediante `asegurar_perfil_usuario()`.

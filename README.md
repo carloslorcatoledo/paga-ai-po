@@ -18,6 +18,7 @@ celular, de noche, en 3 toques.
 | `manifest.json`, `sw.js`, `icon.svg` | Para instalarla como app y usarla sin internet. |
 | `plan-app-dividir-cuentas.md` | El plan de producto completo. |
 | `esquema-supabase.sql` | Tablas, RLS, Realtime y guardado atómico con control de versión. |
+| `stack-tecnologico.md` | Tecnologías, servicios y herramientas de prueba del proyecto. |
 | `guia-supabase.md` | Guía paso a paso para montar Supabase. |
 | `guia-uso.md` | Instrucciones para crear salidas, calcular saldos y compartir eventos. |
 
@@ -130,8 +131,11 @@ Decisiones tomadas para que la app sea segura por defecto:
 ## Publicar gratis (cuando quieras)
 
 La app está publicada en [GitHub Pages](https://carloslorcatoledo.github.io/paga-ai-po/).
-Para cambios futuros, haz commit y push a `main`. Antes de usar el guardado concurrente,
-ejecuta el esquema actualizado de [Supabase](guia-supabase.md) en el proyecto.
+Los cambios de este repositorio se publican al hacer push a `main`; consulta la
+[guía de GitHub Pages](guia-github-pages.md) para más detalles. El stack vigente
+está descrito en [stack-tecnologico.md](stack-tecnologico.md). Antes de usar el
+guardado concurrente, ejecuta el esquema actualizado de [Supabase](guia-supabase.md)
+en el proyecto.
 
 ## Decisiones técnicas del prototipo
 
