@@ -111,6 +111,7 @@
       background: var(--surface-2); color: var(--text); font-weight: 800; font-size: .82rem;
       border-radius: 11px; height: 38px; padding: 0 10px; font-family: inherit;
     }
+    .language-pill { width: 58px; padding-left: 8px; padding-right: 7px; }
     .icon-btn {
       width: 38px; height: 38px; border: none; border-radius: 11px;
       background: var(--surface-2); color: var(--text);
@@ -153,7 +154,7 @@
     /* ---------- Personas ---------- */
     .add-row { display: flex; gap: 8px; margin-bottom: 16px; }
     .text-input {
-      flex: 1; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      flex: 1; min-width: 0; border: 1px solid var(--border); background: var(--surface); color: var(--text);
       border-radius: 12px; padding: 13px 14px; font-size: 1rem; font-family: inherit;
     }
     .text-input:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
@@ -220,6 +221,17 @@
     .t-mid { color: var(--muted); display: flex; align-items: center; gap: 6px; flex: 1; justify-content: center; }
     .t-amt { color: var(--primary); font-weight: 800; }
     .share-row { display: flex; gap: 8px; margin-top: 16px; }
+    .share-row .btn { min-width: 0; }
+    @media (max-width: 360px) {
+      .head-row { gap: 4px; }
+      .brand { gap: 4px; font-size: .9rem; }
+      .brand .logo { width: 22px; height: 22px; }
+      .cur-pill { padding-left: 7px; padding-right: 7px; font-size: .76rem; }
+      .language-pill { width: 48px; flex-shrink: 0; }
+      .icon-btn { width: 32px; height: 34px; }
+      .share-row { flex-direction: column; }
+      .sheet-actions .btn { min-width: 0; padding-left: 8px; padding-right: 8px; font-size: .88rem; }
+    }
 
     /* ---------- Empty states ---------- */
     .empty { text-align: center; color: var(--muted); padding: 36px 20px; }
@@ -326,33 +338,34 @@
       <div class="head-row">
         <button class="brand" id="brandInfoBtn" type="button" aria-expanded="false" aria-controls="appDescription"><img class="logo" src="icon.svg" alt="" />Paga aí po!</button>
         <span class="head-spacer"></span>
-        <select class="cur-pill" id="currencyHeader" aria-label="Moneda" title="Moneda"></select>
-        <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema" title="Tema">🌙</button>
-        <button class="icon-btn" id="menuBtn" aria-label="Menú" title="Menú">⋯</button>
+        <select class="cur-pill" id="currencyHeader" aria-label="Moneda" title="Moneda" data-i18n-title="currencyLabel"></select>
+        <select class="cur-pill language-pill" id="languageHeader" aria-label="Idioma" title="Idioma" data-i18n-title="languageLabel"></select>
+        <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema" title="Tema" data-i18n-title="themeToggle">🌙</button>
+        <button class="icon-btn" id="menuBtn" aria-label="Menú" title="Menú" data-i18n-title="menuLabel">⋯</button>
       </div>
-      <p class="app-description" id="appDescription" hidden>Divide cuentas entre amigos por ítem y calcula cuánto debe pagar cada persona.</p>
-      <input class="event-input" id="eventName" placeholder="Nombre de la salida…" autocomplete="off" maxlength="60" />
-      <label class="event-date-row" for="eventDate">Fecha del evento <input class="event-date" id="eventDate" type="date" /></label>
+      <p class="app-description" id="appDescription" data-i18n="appDescription" hidden>Divide cuentas entre amigos por ítem y calcula cuánto debe pagar cada persona.</p>
+      <input class="event-input" id="eventName" placeholder="Nombre de la salida…" data-i18n-placeholder="eventNamePlaceholder" autocomplete="off" maxlength="60" />
+      <label class="event-date-row" for="eventDate"><span data-i18n="eventDate">Fecha del evento</span> <input class="event-date" id="eventDate" type="date" /></label>
       <div class="sync-status" id="syncStatus" role="status" aria-live="polite" hidden>
         <span id="syncStatusText"></span>
-        <button class="mini-link" id="syncReload" type="button" hidden>Recargar</button>
+        <button class="mini-link" id="syncReload" type="button" data-i18n="reload" hidden>Recargar</button>
       </div>
     </header>
 
     <main>
       <!-- PERSONAS -->
       <section class="view" id="view-personas">
-        <div class="section-title">¿Quiénes son?</div>
+        <div class="section-title" data-i18n="peopleHeading">¿Quiénes son?</div>
         <form class="add-row" id="addPersonForm">
-          <input class="text-input" id="personName" placeholder="Nombre…" autocomplete="off" maxlength="40" />
-          <button class="btn btn-primary btn-sm" type="submit">Agregar</button>
+          <input class="text-input" id="personName" placeholder="Nombre…" data-i18n-placeholder="personPlaceholder" autocomplete="off" maxlength="40" />
+          <button class="btn btn-primary btn-sm" type="submit" data-i18n="addPerson">Agregar</button>
         </form>
         <div class="people-list" id="peopleList"></div>
       </section>
 
       <!-- GASTOS -->
       <section class="view" id="view-gastos">
-        <div class="section-title">Gastos</div>
+        <div class="section-title" data-i18n="expensesHeading">Gastos</div>
         <div class="exp-list" id="expList"></div>
       </section>
 
@@ -363,75 +376,75 @@
 
       <!-- CALENDARIO -->
       <section class="view" id="view-calendario">
-        <div class="section-title">Eventos guardados</div>
+        <div class="section-title" data-i18n="calendarTitle">Eventos guardados</div>
         <div class="calendar-toolbar">
-          <button class="icon-btn" id="calendarPrev" type="button" aria-label="Mes anterior" title="Mes anterior">‹</button>
+          <button class="icon-btn" id="calendarPrev" type="button" aria-label="Mes anterior" title="Mes anterior" data-i18n-title="previousMonth">‹</button>
           <h2 id="calendarMonth"></h2>
-          <button class="icon-btn" id="calendarNext" type="button" aria-label="Mes siguiente" title="Mes siguiente">›</button>
-          <button class="mini-link calendar-today" id="calendarToday" type="button">Hoy</button>
+          <button class="icon-btn" id="calendarNext" type="button" aria-label="Próximo mes" title="Mes siguiente" data-i18n-title="nextMonth">›</button>
+          <button class="mini-link calendar-today" id="calendarToday" type="button" data-i18n="today">Hoy</button>
         </div>
         <div class="calendar-weekdays" aria-hidden="true">
-          <span class="calendar-weekday">L</span><span class="calendar-weekday">M</span><span class="calendar-weekday">X</span><span class="calendar-weekday">J</span><span class="calendar-weekday">V</span><span class="calendar-weekday">S</span><span class="calendar-weekday">D</span>
+          <span class="calendar-weekday" data-i18n="weekdayMon">L</span><span class="calendar-weekday" data-i18n="weekdayTue">M</span><span class="calendar-weekday" data-i18n="weekdayWed">X</span><span class="calendar-weekday" data-i18n="weekdayThu">J</span><span class="calendar-weekday" data-i18n="weekdayFri">V</span><span class="calendar-weekday" data-i18n="weekdaySat">S</span><span class="calendar-weekday" data-i18n="weekdaySun">D</span>
         </div>
-        <div class="calendar-grid" id="calendarGrid" role="group" aria-label="Días del mes"></div>
+        <div class="calendar-grid" id="calendarGrid" role="group" aria-label="Días del mes" data-i18n-title="monthDays"></div>
         <div class="section-title" id="calendarSelectedTitle" style="margin-top:22px"></div>
         <div class="calendar-events" id="calendarEvents" aria-live="polite"></div>
       </section>
     </main>
 
-    <button class="fab" id="fab">＋ Gasto</button>
+    <button class="fab" id="fab"><span aria-hidden="true">＋</span> <span data-i18n="fabExpense">Gasto</span></button>
 
     <nav>
-      <button class="tab" data-tab="personas"><span class="ico">👥</span>Personas<span class="badge" id="badgePeople">0</span></button>
-      <button class="tab" data-tab="gastos"><span class="ico">🧾</span>Gastos<span class="badge" id="badgeExp">0</span></button>
-      <button class="tab" data-tab="resumen"><span class="ico">📊</span>Resumen</button>
-      <button class="tab" data-tab="calendario"><span class="ico">📅</span>Calendario</button>
+      <button class="tab" data-tab="personas"><span class="ico">👥</span><span data-i18n="peopleTab">Personas</span><span class="badge" id="badgePeople">0</span></button>
+      <button class="tab" data-tab="gastos"><span class="ico">🧾</span><span data-i18n="expensesTab">Gastos</span><span class="badge" id="badgeExp">0</span></button>
+      <button class="tab" data-tab="resumen"><span class="ico">📊</span><span data-i18n="summaryTab">Resumen</span></button>
+      <button class="tab" data-tab="calendario"><span class="ico">📅</span><span data-i18n="calendarTab">Calendario</span></button>
     </nav>
   </div>
 
   <!-- MODAL GASTO -->
   <div class="overlay" id="expOverlay">
     <div class="sheet" role="dialog" aria-modal="true">
-      <h2 id="expTitle">Nuevo gasto</h2>
+      <h2 id="expTitle" data-i18n="newExpense">Nuevo gasto</h2>
       <form id="expForm">
         <div class="field">
-          <label for="expDesc">¿Qué fue?</label>
-          <input class="text-input" id="expDesc" placeholder="Pizza, cervezas, taxi…" autocomplete="off" maxlength="60" />
+          <label for="expDesc" data-i18n="whatWasIt">¿Qué fue?</label>
+          <input class="text-input" id="expDesc" placeholder="Pizza, cervezas, taxi…" data-i18n-placeholder="expensePlaceholder" autocomplete="off" maxlength="60" />
         </div>
         <div class="field">
-          <label for="expAmount">Monto</label>
+          <label for="expAmount"><span data-i18n="amount">Monto</span></label>
           <div class="amount-wrap">
             <span class="cursign" id="curSign">$</span>
             <input class="text-input" id="expAmount" type="number" inputmode="decimal" min="0" placeholder="0" />
           </div>
         </div>
         <div class="field">
-          <label>Categoría</label>
+          <label data-i18n="category">Categoría</label>
           <div class="chips" id="catChips"></div>
         </div>
         <div class="field">
-          <label>¿Quién pagó?</label>
+          <label data-i18n="whoPaid">¿Quién pagó?</label>
           <div class="chips" id="payerChips"></div>
         </div>
         <div class="field">
           <div class="chips-head">
-            <label style="margin:0">¿Entre quiénes se divide?</label>
+            <label style="margin:0" data-i18n="splitBetween">¿Entre quiénes se divide?</label>
             <div>
-              <button type="button" class="mini-link" id="selAll">Todos</button>
-              <button type="button" class="mini-link" id="selNone">Ninguno</button>
+              <button type="button" class="mini-link" id="selAll" data-i18n="all">Todos</button>
+              <button type="button" class="mini-link" id="selNone" data-i18n="none">Ninguno</button>
             </div>
           </div>
           <div class="chips" id="splitChips"></div>
         </div>
         <div class="field">
-          <label class="switch-row"><input type="checkbox" id="expTip" checked /> <span>Incluir propina / servicio en este gasto</span></label>
+          <label class="switch-row"><input type="checkbox" id="expTip" checked /> <span data-i18n="includeTip">Incluir propina / servicio en este gasto</span></label>
         </div>
         <div class="err-msg" id="expErr"></div>
         <div class="sheet-actions">
-          <button type="button" class="btn btn-ghost" id="expCancel" style="flex:1">Cancelar</button>
-          <button type="submit" class="btn btn-primary" style="flex:2">Guardar</button>
+          <button type="button" class="btn btn-ghost" id="expCancel" style="flex:1" data-i18n="cancel">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="flex:2" data-i18n="save">Guardar</button>
         </div>
-        <button type="button" class="danger-link" id="expDelete" hidden>Eliminar gasto</button>
+        <button type="button" class="danger-link" id="expDelete" data-i18n="delete" hidden>Eliminar gasto</button>
       </form>
     </div>
   </div>
@@ -439,14 +452,14 @@
   <!-- MENU -->
   <div class="overlay" id="menuOverlay">
     <div class="sheet" role="dialog" aria-modal="true">
-      <h2>Opciones</h2>
+      <h2 data-i18n="options">Opciones</h2>
       <div class="menu-row" id="menuAccount"><span class="mi">☁️</span><span id="accountLabel">Entrar a la nube</span></div>
-      <p class="hint">La moneda se cambia desde la barra de arriba. Al cambiarla, los montos se reescalan (no usa tipo de cambio).</p>
-      <div class="menu-row" id="menuNewEvent"><span class="mi">🆕</span>Limpiar y crear salida</div>
-      <div class="menu-row" id="menuExample"><span class="mi">✨</span>Cargar ejemplo</div>
-      <div class="menu-row danger" id="menuReset"><span class="mi">🗑️</span>Vaciar todo</div>
+      <p class="hint" data-i18n="currencyHint">Al cambiar la moneda, los montos se reescalan; no se aplica tipo de cambio.</p>
+      <div class="menu-row" id="menuNewEvent"><span class="mi">🆕</span><span data-i18n="clearNew">Limpiar y crear salida</span></div>
+      <div class="menu-row" id="menuExample"><span class="mi">✨</span><span data-i18n="loadExample">Cargar ejemplo</span></div>
+      <div class="menu-row danger" id="menuReset"><span class="mi">🗑️</span><span data-i18n="resetAll">Vaciar todo</span></div>
       <div class="sheet-actions">
-        <button type="button" class="btn btn-ghost btn-block" id="menuClose">Cerrar</button>
+        <button type="button" class="btn btn-ghost btn-block" id="menuClose" data-i18n="close">Cerrar</button>
       </div>
     </div>
   </div>
@@ -454,45 +467,45 @@
   <!-- SHEET: CUENTA / NUBE -->
   <div class="overlay" id="authOverlay">
     <div class="sheet" role="dialog" aria-modal="true">
-      <h2>☁️ Cuenta / Nube</h2>
+      <h2>☁️ <span data-i18n="accountTitle">Cuenta / Nube</span></h2>
       <div id="authLoggedOut">
-        <p class="hint">Inicia sesión para continuar. Al crear una cuenta, registra tu nombre y correo para ver los eventos donde participas.</p>
+        <p class="hint" data-i18n="authIntro">Inicia sesión para continuar. Al crear una cuenta, registra tu nombre y correo para ver los eventos donde participas.</p>
         <div class="field">
-          <label for="authName">Nombre (para crear cuenta)</label>
-          <input class="text-input" id="authName" type="text" autocomplete="name" maxlength="80" placeholder="Tu nombre" />
+          <label for="authName" data-i18n="authName">Nombre (para crear cuenta)</label>
+          <input class="text-input" id="authName" type="text" autocomplete="name" maxlength="80" placeholder="Tu nombre" data-i18n-placeholder="namePlaceholder" />
         </div>
         <div class="field">
-          <label for="authEmail">Correo</label>
-          <input class="text-input" id="authEmail" type="email" inputmode="email" placeholder="tu@correo.com" autocomplete="email" />
+          <label for="authEmail" data-i18n="authEmail">Correo</label>
+          <input class="text-input" id="authEmail" type="email" inputmode="email" placeholder="tu@correo.com" data-i18n-placeholder="emailPlaceholder" autocomplete="email" />
         </div>
         <div class="field">
-          <label for="authPass">Contraseña</label>
-          <input class="text-input" id="authPass" type="password" placeholder="mínimo 6 caracteres" autocomplete="current-password" />
+          <label for="authPass" data-i18n="authPassword">Contraseña</label>
+          <input class="text-input" id="authPass" type="password" placeholder="mínimo 6 caracteres" data-i18n-placeholder="passwordPlaceholder" autocomplete="current-password" />
         </div>
         <div class="err-msg" id="authMsg"></div>
         <div class="sheet-actions">
-          <button type="button" class="btn btn-ghost" id="authCancel" style="flex:1">Cerrar</button>
-          <button type="button" class="btn btn-primary" id="authSignIn" style="flex:1.4">Entrar</button>
-          <button type="button" class="btn btn-ghost" id="authSignUp" style="flex:1.4">Crear cuenta</button>
+          <button type="button" class="btn btn-ghost" id="authCancel" style="flex:1" data-i18n="close">Cerrar</button>
+          <button type="button" class="btn btn-primary" id="authSignIn" style="flex:1.4" data-i18n="enter">Entrar</button>
+          <button type="button" class="btn btn-ghost" id="authSignUp" style="flex:1.4" data-i18n="createAccount">Crear cuenta</button>
         </div>
       </div>
       <div id="authLoggedIn" hidden>
-        <p class="hint">Conectado como <strong id="authEmailShown"></strong>.</p>
-        <button type="button" class="btn btn-primary btn-block" id="cloudSave">☁️ Guardar este evento en la nube</button>
+        <p class="hint"><span data-i18n="connectedAs">Conectado como</span> <strong id="authEmailShown"></strong>.</p>
+        <button type="button" class="btn btn-primary btn-block" id="cloudSave">☁️ <span data-i18n="cloudSave">Guardar este evento en la nube</span></button>
         <div class="hint" id="cloudSavedInfo" hidden></div>
-        <div class="menu-row" id="cloudList"><span class="mi">📂</span>Eventos en los que participo</div>
-        <div class="menu-row" id="cloudNew"><span class="mi">➕</span>Nuevo evento (vaciar)</div>
+        <div class="menu-row" id="cloudList"><span class="mi">📂</span><span data-i18n="myEvents">Eventos en los que participo</span></div>
+        <div class="menu-row" id="cloudNew"><span class="mi">➕</span><span data-i18n="cloudNew">Nuevo evento (vaciar)</span></div>
         <div class="field" style="margin-top:12px">
-          <label for="joinCode">Abrir un evento con código</label>
+          <label for="joinCode" data-i18n="joinLabel">Abrir un evento con código</label>
           <div style="display:flex; gap:8px">
             <input class="text-input" id="joinCode" placeholder="ABC123" maxlength="6" autocomplete="off" style="flex:1; text-transform:uppercase" />
-            <button type="button" class="btn btn-ghost" id="joinBtn">Abrir</button>
+            <button type="button" class="btn btn-ghost" id="joinBtn" data-i18n="join">Abrir</button>
           </div>
         </div>
         <div class="err-msg" id="cloudMsg"></div>
         <div class="sheet-actions">
-          <button type="button" class="btn btn-ghost" id="authClose2" style="flex:1">Cerrar</button>
-          <button type="button" class="btn btn-ghost" id="authSignOut" style="flex:1">Cerrar sesión</button>
+          <button type="button" class="btn btn-ghost" id="authClose2" style="flex:1" data-i18n="close">Cerrar</button>
+          <button type="button" class="btn btn-ghost" id="authSignOut" style="flex:1" data-i18n="signOut">Cerrar sesión</button>
         </div>
       </div>
     </div>
@@ -501,18 +514,18 @@
   <!-- SHEET: MIS EVENTOS (historial) -->
   <div class="overlay" id="eventsOverlay">
     <div class="sheet" role="dialog" aria-modal="true">
-      <h2>📂 Mis eventos</h2>
+      <h2>📂 <span data-i18n="myEvents">Mis eventos</span></h2>
       <div id="eventsList"></div>
       <div class="sheet-actions">
-        <button type="button" class="btn btn-ghost btn-block" id="eventsClose">Cerrar</button>
+        <button type="button" class="btn btn-ghost btn-block" id="eventsClose" data-i18n="close">Cerrar</button>
       </div>
     </div>
   </div>
 
-  <script src="calc.js?v=12"></script>
-  <script src="config.js?v=12"></script>
+  <script src="calc.js?v=13"></script>
+  <script src="config.js?v=13"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="cloud.js?v=12"></script>
-  <script src="app.js?v=12"></script>
+  <script src="cloud.js?v=13"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>

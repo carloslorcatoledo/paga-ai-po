@@ -21,12 +21,83 @@
     USD: { code: 'USD', decimals: 2, locale: 'en-US', label: 'USD', name: 'Dólar', sign: 'US$' },
     BRL: { code: 'BRL', decimals: 2, locale: 'pt-BR', label: 'BRL', name: 'Real brasileño', sign: 'R$' }
   };
+  var TEXT = {
+    es: {
+      languageLabel: 'Idioma', currencyLabel: 'Moneda', appDescription: 'Divide cuentas entre amigos por ítem y calcula cuánto debe pagar cada persona.', eventNamePlaceholder: 'Nombre de la salida…', eventDate: 'Fecha del evento',
+      peopleTab: 'Personas', expensesTab: 'Gastos', summaryTab: 'Resumen', calendarTab: 'Calendario', fabExpense: 'Gasto', peopleHeading: '¿Quiénes son?', personPlaceholder: 'Nombre…', addPerson: 'Agregar', removePerson: 'Quitar', peopleEmptyTitle: 'Agrega a quienes salieron', peopleEmptyBody: 'Escribe un nombre arriba. Luego podrás crear gastos.',
+      expensesHeading: 'Gastos', expensesEmptyTitle: 'Aún no hay gastos', addFirstExpense: 'Toca “＋ Gasto” para agregar el primero.', addPeopleFirst: 'Primero agrega personas, luego gastos.', summaryEmptyTitle: 'Nada que calcular todavía', summaryEmptyBody: 'Agrega gastos para ver quién debe a quién.', totalTitle: 'Total de la salida', expenseCount: '{count} gasto(s)', peopleCount: '{count} persona(s)', subtotal: 'Subtotal', tip: 'Propina / servicio', noTip: 'Sin propina', otherTip: 'Otro %', balances: 'Saldo de cada uno', paid: 'Pagó', owes: 'le toca', receives: 'le deben', owesVerb: 'debe', upToDate: 'al día', settle: 'Cómo saldar (menos transferencias)', allSettled: 'Todos están al día ✓',
+      shareWhatsApp: 'Compartir por WhatsApp', copy: 'Copiar', copied: '¡Copiado!', copyFailed: 'No se pudo copiar', shareHeading: 'Paga aí po! · Resumen', shareEvent: 'Salida', sharePeople: '{people} personas · {expenses} gastos', shareTotal: 'Total', shareTip: 'Incluye propina ({percent}%): {amount}', shareBalances: 'Saldo por persona', receive: 'Recibe', oweShare: 'Debe', shareTransfers: 'Transferencias sugeridas', paysTo: 'paga {amount} a', allSettledText: 'Todos están al día.', calculatedWith: 'Calculado con Paga aí po!',
+      newExpense: 'Nuevo gasto', editExpense: 'Editar gasto', whatWasIt: '¿Qué fue?', amount: 'Monto', category: 'Categoría', whoPaid: '¿Quién pagó?', splitBetween: '¿Entre quiénes se divide?', all: 'Todos', none: 'Ninguno', includeTip: 'Incluir propina / servicio en este gasto', cancel: 'Cancelar', save: 'Guardar', delete: 'Eliminar gasto', amountError: 'Ingresa un monto mayor a 0.', payerError: 'Elige quién pagó.', splitError: 'Elige al menos una persona para dividir.',
+      calendarTitle: 'Eventos guardados', previousMonth: 'Mes anterior', nextMonth: 'Mes siguiente', today: 'Hoy', monthDays: 'Días del mes', loading: 'Cargando…', loadingEvents: 'Cargando eventos…', noEventsToday: 'No hay eventos guardados para este día.',
+      options: 'Opciones', currencyHint: 'Al cambiar la moneda, los montos se reescalan; no se aplica tipo de cambio.', clearNew: 'Limpiar y crear salida', confirmNew: '¿Limpiar los datos ingresados y crear una nueva salida? La salida actual se conservará en el historial.', loadExample: 'Cargar ejemplo', resetAll: 'Vaciar todo', confirmReset: 'Esto borra personas y gastos de esta salida. ¿Continuar?', close: 'Cerrar',
+      accountTitle: 'Cuenta / Nube', authIntro: 'Inicia sesión para continuar. Al crear una cuenta, registra tu nombre y correo para ver los eventos donde participas.', authName: 'Nombre (para crear cuenta)', namePlaceholder: 'Tu nombre', authEmail: 'Correo', emailPlaceholder: 'tu@correo.com', authPassword: 'Contraseña', passwordPlaceholder: 'mínimo 6 caracteres', expensePlaceholder: 'Pizza, cervezas, taxi…', enter: 'Entrar', createAccount: 'Crear cuenta', connectedAs: 'Conectado como', cloudSave: 'Guardar este evento en la nube', myEvents: 'Eventos en los que participo', cloudNew: 'Nuevo evento (vaciar)', joinLabel: 'Abrir un evento con código', join: 'Abrir', signOut: 'Cerrar sesión',
+      nameRequired: 'Escribe tu nombre para crear la cuenta.', credentialsRequired: 'Escribe correo y contraseña.', passwordLength: 'La contraseña debe tener al menos 6 caracteres.', creatingAccount: 'Creando cuenta…', signingIn: 'Entrando…', accountCreated: '✓ ¡Cuenta creada!', confirmEmail: 'Cuenta creada. Confírmala desde tu correo, o apaga “Confirm email” en Supabase para entrar al instante.', sessionStarted: 'Sesión iniciada.', activityError: 'Sesión iniciada, pero no se registró la actividad. Aplica la migración SQL de Supabase.',
+      categoryFood: 'Comida', categoryAlcohol: 'Alcohol', categoryDrinks: 'Bebidas', categoryTransport: 'Transporte', categoryOther: 'Otros',
+      syncLocal: 'Hay cambios locales sin guardar. Recarga el evento para sincronizarlo.', syncConnected: 'Conectado en vivo', syncInterrupted: 'Conexión en vivo interrumpida', cloudUnavailable: 'La nube no está disponible. Se muestran los eventos guardados en este dispositivo.', loginForCloud: 'Inicia sesión para ver también los eventos de la nube. Los eventos locales seguirán visibles.', loginButton: 'Entrar a la nube', noCloudEvents: 'Aún no participas en eventos', noCloudEventsHint: 'Guarda una salida o ábrela con su código para que aparezca aquí.', codeInvalid: 'Escribe un código.',
+      eventCountAria: '{count} eventos', calendarLoginHint: 'Inicia sesión para ver y guardar eventos en el calendario.', reload: 'Recargar', weekdayMon: 'L', weekdayTue: 'M', weekdayWed: 'X', weekdayThu: 'J', weekdayFri: 'V', weekdaySat: 'S', weekdaySun: 'D',
+      exampleEvent: 'Asado del viernes', exampleFood: 'Carne y pan', exampleBeer: 'Cervezas', exampleDrinks: 'Bebidas', themeToggle: 'Cambiar tema', menuLabel: 'Menú',
+      among: 'entre', noTipSuffix: 'sin propina', expensePaidBy: 'Pagó {name} · entre {count}: {people}{noTip}',
+      syncRemote: 'Hay cambios remotos; tus cambios sin guardar están protegidos.', syncChangedDuring: 'Cambiaste datos durante la sincronización; revisa antes de guardar.', syncReloadConfirm: '¿Descartar los cambios locales sin guardar y cargar la versión de la nube?', syncLoadFailed: 'No se pudo cargar la versión de la nube.', syncLoaded: 'Actualizado desde la nube',
+      authUnavailable: 'La nube no está disponible (revisa tu conexión a internet).', authVerifyFailed: 'No se pudo verificar la sesión. Revisa tu conexión e inténtalo de nuevo.', signInFailed: 'No se pudo entrar: {error}', createFailed: 'No se pudo crear: {error}', generalError: 'Error: {error}',
+      savedInCloud: 'Evento en la nube · código', saveCloudButton: 'Guardando…', savedCloud: 'Guardado y conectado en vivo', saveConflict: 'Hay cambios de otra persona. Recarga la versión de la nube antes de guardar.',
+      noCode: 'Escribe un código.', searchingCode: 'Buscando…', codeSearchFailed: 'No se pudo: {error}', openFailed: 'No se pudo abrir: {error}',
+      monthCount: '{count} eventos', dateSavedLocal: 'Guardado en este dispositivo', dateCode: 'Código {code}',
+      removePersonConfirm: '¿Quitar a esta persona? También se eliminarán sus gastos asociados.', confirmDelete: '¿Eliminar este gasto?', newCloudConfirm: '¿Vaciar la pantalla para empezar un evento nuevo? Lo guardado en la nube no se borra.', calendarLoadFailed: 'No se pudo cargar el calendario: {error}', eventLoadFailed: 'No se pudo abrir: {error}', saveFailed: 'No se pudo guardar: {error}',
+      categoryFood: 'Comida', categoryAlcohol: 'Alcohol', categoryDrinks: 'Bebidas', categoryTransport: 'Transporte', categoryOther: 'Otros'
+    },
+    pt: {
+      languageLabel: 'Idioma', currencyLabel: 'Moeda', appDescription: 'Divida a conta entre amigos por item e calcule quanto cada pessoa deve pagar.', eventNamePlaceholder: 'Nome do evento…', eventDate: 'Data do evento',
+      peopleTab: 'Pessoas', expensesTab: 'Despesas', summaryTab: 'Resumo', calendarTab: 'Calendário', fabExpense: 'Despesa', peopleHeading: 'Quem participou?', personPlaceholder: 'Nome…', addPerson: 'Adicionar', removePerson: 'Remover', peopleEmptyTitle: 'Adicione quem saiu', peopleEmptyBody: 'Digite um nome acima. Depois, você poderá criar despesas.',
+      expensesHeading: 'Despesas', expensesEmptyTitle: 'Ainda não há despesas', addFirstExpense: 'Toque em “＋ Despesa” para adicionar a primeira.', addPeopleFirst: 'Adicione pessoas primeiro e depois as despesas.', summaryEmptyTitle: 'Nada para calcular ainda', summaryEmptyBody: 'Adicione despesas para ver quem deve a quem.', totalTitle: 'Total do evento', expenseCount: '{count} despesa(s)', peopleCount: '{count} pessoa(s)', subtotal: 'Subtotal', tip: 'Gorjeta / serviço', noTip: 'Sem gorjeta', otherTip: 'Outra %', balances: 'Saldo de cada pessoa', paid: 'Pagou', owes: 'deve pagar', receives: 'tem a receber', owesVerb: 'deve', upToDate: 'em dia', settle: 'Como acertar (menos transferências)', allSettled: 'Todos estão em dia ✓',
+      shareWhatsApp: 'Compartilhar no WhatsApp', copy: 'Copiar', copied: 'Copiado!', copyFailed: 'Não foi possível copiar', shareHeading: 'Paga aí po! · Resumo', shareEvent: 'Evento', sharePeople: '{people} pessoas · {expenses} despesas', shareTotal: 'Total', shareTip: 'Inclui gorjeta ({percent}%): {amount}', shareBalances: 'Saldo por pessoa', receive: 'Recebe', oweShare: 'Deve', shareTransfers: 'Transferências sugeridas', paysTo: 'paga {amount} para', allSettledText: 'Todos estão em dia.', calculatedWith: 'Calculado com Paga aí po!',
+      newExpense: 'Nova despesa', editExpense: 'Editar despesa', whatWasIt: 'O que foi?', amount: 'Valor', category: 'Categoria', whoPaid: 'Quem pagou?', splitBetween: 'Entre quem será dividido?', all: 'Todos', none: 'Ninguém', includeTip: 'Incluir gorjeta / serviço nesta despesa', cancel: 'Cancelar', save: 'Salvar', delete: 'Excluir despesa', amountError: 'Digite um valor maior que 0.', payerError: 'Escolha quem pagou.', splitError: 'Escolha pelo menos uma pessoa para dividir.',
+      calendarTitle: 'Eventos salvos', previousMonth: 'Mês anterior', nextMonth: 'Próximo mês', today: 'Hoje', monthDays: 'Dias do mês', loading: 'Carregando…', loadingEvents: 'Carregando eventos…', noEventsToday: 'Não há eventos salvos neste dia.',
+      options: 'Opções', currencyHint: 'Ao trocar a moeda, os valores são reescalados; não há conversão cambial.', clearNew: 'Limpar e criar evento', confirmNew: 'Limpar os dados e criar um novo evento? O evento atual ficará salvo no histórico.', loadExample: 'Carregar exemplo', resetAll: 'Limpar tudo', confirmReset: 'Isso apaga pessoas e despesas deste evento. Continuar?', close: 'Fechar',
+      accountTitle: 'Conta / Nuvem', authIntro: 'Entre para continuar. Ao criar uma conta, informe seu nome e e-mail para ver os eventos dos quais participa.', authName: 'Nome (para criar conta)', namePlaceholder: 'Seu nome', authEmail: 'E-mail', emailPlaceholder: 'voce@exemplo.com', authPassword: 'Senha', passwordPlaceholder: 'mínimo de 6 caracteres', expensePlaceholder: 'Pizza, cerveja, táxi…', enter: 'Entrar', createAccount: 'Criar conta', connectedAs: 'Conectado como', cloudSave: 'Salvar este evento na nuvem', myEvents: 'Eventos dos quais participo', cloudNew: 'Novo evento (limpar)', joinLabel: 'Abrir evento com código', join: 'Abrir', signOut: 'Sair da conta',
+      nameRequired: 'Digite seu nome para criar a conta.', credentialsRequired: 'Digite e-mail e senha.', passwordLength: 'A senha deve ter pelo menos 6 caracteres.', creatingAccount: 'Criando conta…', signingIn: 'Entrando…', accountCreated: '✓ Conta criada!', confirmEmail: 'Conta criada. Confirme pelo e-mail ou desative “Confirm email” no Supabase para entrar agora.', sessionStarted: 'Sessão iniciada.', activityError: 'Sessão iniciada, mas a atividade não foi registrada. Aplique a migração SQL do Supabase.',
+      categoryFood: 'Comida', categoryAlcohol: 'Álcool', categoryDrinks: 'Bebidas', categoryTransport: 'Transporte', categoryOther: 'Outros',
+      syncLocal: 'Há alterações locais não salvas. Recarregue o evento para sincronizar.', syncConnected: 'Conectado ao vivo', syncInterrupted: 'Conexão ao vivo interrompida', cloudUnavailable: 'A nuvem está indisponível. Mostrando eventos salvos neste dispositivo.', loginForCloud: 'Entre para ver também os eventos da nuvem. Os eventos locais continuarão visíveis.', loginButton: 'Entrar na nuvem', noCloudEvents: 'Você ainda não participa de eventos', noCloudEventsHint: 'Salve um evento ou abra pelo código para vê-lo aqui.', codeInvalid: 'Digite um código.',
+      eventCountAria: '{count} eventos', calendarLoginHint: 'Entre para ver e salvar eventos no calendário.', reload: 'Recarregar', weekdayMon: 'S', weekdayTue: 'T', weekdayWed: 'Q', weekdayThu: 'Q', weekdayFri: 'S', weekdaySat: 'S', weekdaySun: 'D',
+      exampleEvent: 'Churrasco de sexta', exampleFood: 'Carne e pão', exampleBeer: 'Cervejas', exampleDrinks: 'Bebidas', themeToggle: 'Trocar tema', menuLabel: 'Menu',
+      among: 'entre', noTipSuffix: 'sem gorjeta', expensePaidBy: 'Pagou {name} · entre {count}: {people}{noTip}',
+      syncRemote: 'Há alterações remotas; suas alterações não salvas estão protegidas.', syncChangedDuring: 'Você alterou dados durante a sincronização; revise antes de salvar.', syncReloadConfirm: 'Descartar as alterações locais não salvas e carregar a versão da nuvem?', syncLoadFailed: 'Não foi possível carregar a versão da nuvem.', syncLoaded: 'Atualizado pela nuvem',
+      authUnavailable: 'A nuvem está indisponível (verifique sua conexão com a internet).', authVerifyFailed: 'Não foi possível verificar a sessão. Verifique a conexão e tente novamente.', signInFailed: 'Não foi possível entrar: {error}', createFailed: 'Não foi possível criar: {error}', generalError: 'Erro: {error}',
+      savedInCloud: 'Evento na nuvem · código', saveCloudButton: 'Salvando…', savedCloud: 'Salvo e conectado ao vivo', saveConflict: 'Outra pessoa fez alterações. Recarregue a versão da nuvem antes de salvar.',
+      noCode: 'Digite um código.', searchingCode: 'Buscando…', codeSearchFailed: 'Não foi possível: {error}', openFailed: 'Não foi possível abrir: {error}',
+      monthCount: '{count} eventos', dateSavedLocal: 'Salvo neste dispositivo', dateCode: 'Código {code}',
+      removePersonConfirm: 'Remover esta pessoa? As despesas associadas a ela também serão removidas.', confirmDelete: 'Excluir esta despesa?', newCloudConfirm: 'Limpar a tela e começar um novo evento? O que está na nuvem não será apagado.', calendarLoadFailed: 'Não foi possível carregar o calendário: {error}', eventLoadFailed: 'Não foi possível abrir: {error}', saveFailed: 'Não foi possível salvar: {error}',
+      categoryFood: 'Comida', categoryAlcohol: 'Álcool', categoryDrinks: 'Bebidas', categoryTransport: 'Transporte', categoryOther: 'Outros'
+    },
+    en: {
+      languageLabel: 'Language', currencyLabel: 'Currency', appDescription: 'Split bills by item with friends and calculate how much each person owes.', eventNamePlaceholder: 'Event name…', eventDate: 'Event date',
+      peopleTab: 'People', expensesTab: 'Expenses', summaryTab: 'Summary', calendarTab: 'Calendar', fabExpense: 'Expense', peopleHeading: 'Who joined?', personPlaceholder: 'Name…', addPerson: 'Add', removePerson: 'Remove', peopleEmptyTitle: 'Add the people who joined', peopleEmptyBody: 'Enter a name above. Then you can add expenses.',
+      expensesHeading: 'Expenses', expensesEmptyTitle: 'No expenses yet', addFirstExpense: 'Tap “＋ Expense” to add the first one.', addPeopleFirst: 'Add people first, then add expenses.', summaryEmptyTitle: 'Nothing to calculate yet', summaryEmptyBody: 'Add expenses to see who owes whom.', totalTitle: 'Event total', expenseCount: '{count} expense(s)', peopleCount: '{count} person(s)', subtotal: 'Subtotal', tip: 'Tip / service', noTip: 'No tip', otherTip: 'Other %', balances: 'Balances', paid: 'Paid', owes: 'owes', receives: 'is owed', owesVerb: 'owes', upToDate: 'settled', settle: 'Suggested settlement', allSettled: 'Everyone is settled ✓',
+      shareWhatsApp: 'Share on WhatsApp', copy: 'Copy', copied: 'Copied!', copyFailed: 'Could not copy', shareHeading: 'Paga aí po! · Summary', shareEvent: 'Event', sharePeople: '{people} people · {expenses} expenses', shareTotal: 'Total', shareTip: 'Includes tip ({percent}%): {amount}', shareBalances: 'Balance by person', receive: 'Receives', oweShare: 'Owes', shareTransfers: 'Suggested transfers', paysTo: 'pays {amount} to', allSettledText: 'Everyone is settled.', calculatedWith: 'Calculated with Paga aí po!',
+      newExpense: 'New expense', editExpense: 'Edit expense', whatWasIt: 'What was it?', amount: 'Amount', category: 'Category', whoPaid: 'Who paid?', splitBetween: 'Who shares this expense?', all: 'Everyone', none: 'No one', includeTip: 'Include tip / service for this expense', cancel: 'Cancel', save: 'Save', delete: 'Delete expense', amountError: 'Enter an amount greater than 0.', payerError: 'Choose who paid.', splitError: 'Choose at least one person to split this expense.',
+      calendarTitle: 'Saved events', previousMonth: 'Previous month', nextMonth: 'Next month', today: 'Today', monthDays: 'Days of the month', loading: 'Loading…', loadingEvents: 'Loading events…', noEventsToday: 'No saved events on this day.',
+      options: 'Options', currencyHint: 'Changing currency rescales amounts; it does not apply an exchange rate.', clearNew: 'Clear and start a new event', confirmNew: 'Clear the entered data and start a new event? The current event will remain in history.', loadExample: 'Load example', resetAll: 'Clear all', confirmReset: 'This deletes people and expenses from this event. Continue?', close: 'Close',
+      accountTitle: 'Account / Cloud', authIntro: 'Sign in to continue. When creating an account, enter your name and email to see events you participate in.', authName: 'Name (for new accounts)', namePlaceholder: 'Your name', authEmail: 'Email', emailPlaceholder: 'you@example.com', authPassword: 'Password', passwordPlaceholder: 'at least 6 characters', expensePlaceholder: 'Pizza, drinks, taxi…', enter: 'Sign in', createAccount: 'Create account', connectedAs: 'Signed in as', cloudSave: 'Save this event to the cloud', myEvents: 'Events I participate in', cloudNew: 'New event (clear)', joinLabel: 'Open an event with a code', join: 'Open', signOut: 'Sign out',
+      nameRequired: 'Enter your name to create an account.', credentialsRequired: 'Enter your email and password.', passwordLength: 'Password must be at least 6 characters.', creatingAccount: 'Creating account…', signingIn: 'Signing in…', accountCreated: '✓ Account created!', confirmEmail: 'Account created. Confirm it by email, or turn off “Confirm email” in Supabase to sign in now.', sessionStarted: 'Signed in.', activityError: 'Signed in, but activity was not recorded. Apply the Supabase SQL migration.',
+      categoryFood: 'Food', categoryAlcohol: 'Alcohol', categoryDrinks: 'Drinks', categoryTransport: 'Transport', categoryOther: 'Other',
+      syncLocal: 'You have unsaved local changes. Reload the event to sync.', syncConnected: 'Live connection active', syncInterrupted: 'Live connection interrupted', cloudUnavailable: 'Cloud is unavailable. Showing events saved on this device.', loginForCloud: 'Sign in to also see cloud events. Local events will remain visible.', loginButton: 'Sign in to cloud', noCloudEvents: 'You are not in any events yet', noCloudEventsHint: 'Save an event or open it with a code to see it here.', codeInvalid: 'Enter a code.',
+      eventCountAria: '{count} events', calendarLoginHint: 'Sign in to view and save calendar events.', reload: 'Reload', weekdayMon: 'M', weekdayTue: 'T', weekdayWed: 'W', weekdayThu: 'T', weekdayFri: 'F', weekdaySat: 'S', weekdaySun: 'S',
+      exampleEvent: 'Friday barbecue', exampleFood: 'Meat and bread', exampleBeer: 'Beer', exampleDrinks: 'Drinks', themeToggle: 'Change theme', menuLabel: 'Menu',
+      among: 'among', noTipSuffix: 'no tip', expensePaidBy: 'Paid by {name} · split among {count}: {people}{noTip}',
+      syncRemote: 'There are remote changes; your unsaved changes are protected.', syncChangedDuring: 'You changed data during sync; review before saving.', syncReloadConfirm: 'Discard unsaved local changes and load the cloud version?', syncLoadFailed: 'Could not load the cloud version.', syncLoaded: 'Updated from cloud',
+      authUnavailable: 'Cloud is unavailable (check your internet connection).', authVerifyFailed: 'Could not verify the session. Check your connection and try again.', signInFailed: 'Could not sign in: {error}', createFailed: 'Could not create account: {error}', generalError: 'Error: {error}',
+      savedInCloud: 'Cloud event · code', saveCloudButton: 'Saving…', savedCloud: 'Saved and live connection active', saveConflict: 'Someone else made changes. Reload the cloud version before saving.',
+      noCode: 'Enter a code.', searchingCode: 'Searching…', codeSearchFailed: 'Could not join: {error}', openFailed: 'Could not open: {error}',
+      monthCount: '{count} events', dateSavedLocal: 'Saved on this device', dateCode: 'Code {code}',
+      removePersonConfirm: 'Remove this person? Their associated expenses will also be removed.', confirmDelete: 'Delete this expense?', newCloudConfirm: 'Clear the screen and start a new event? Saved cloud events will not be deleted.', calendarLoadFailed: 'Could not load calendar: {error}', eventLoadFailed: 'Could not open: {error}', saveFailed: 'Could not save: {error}',
+      categoryFood: 'Food', categoryAlcohol: 'Alcohol', categoryDrinks: 'Drinks', categoryTransport: 'Transport', categoryOther: 'Other'
+    }
+  };
   var CATEGORIES = [
-    { id: 'comida', label: 'Comida', icon: '🍕' },
-    { id: 'alcohol', label: 'Alcohol', icon: '🍺' },
-    { id: 'bebidas', label: 'Bebidas', icon: '🥤' },
-    { id: 'transporte', label: 'Transporte', icon: '🚕' },
-    { id: 'otros', label: 'Otros', icon: '🧾' }
+    { id: 'comida', label: 'Comida', key: 'categoryFood', icon: '🍕' },
+    { id: 'alcohol', label: 'Alcohol', key: 'categoryAlcohol', icon: '🍺' },
+    { id: 'bebidas', label: 'Bebidas', key: 'categoryDrinks', icon: '🥤' },
+    { id: 'transporte', label: 'Transporte', key: 'categoryTransport', icon: '🚕' },
+    { id: 'otros', label: 'Otros', key: 'categoryOther', icon: '🧾' }
   ];
   var AVATAR_COLORS = ['#ef4444','#f97316','#f59e0b','#10b981','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#ec4899','#14b8a6'];
   var STORAGE_KEY = 'pagaaipo_v1';
@@ -35,7 +106,7 @@
 
   // ---------- State ----------
   var state = {
-    eventName: '', eventDate: localDate(new Date()), currency: 'CLP', theme: 'system', tab: 'personas',
+    eventName: '', eventDate: localDate(new Date()), currency: 'BRL', language: 'es', theme: 'system', tab: 'personas',
     tipPercent: 0, participants: [], expenses: [],
     cloudId: null, cloudVersion: null, cloudBaseline: null, codigo: null, historyId: null
   };
@@ -98,7 +169,8 @@
         var s = JSON.parse(raw);
         state.eventName = typeof s.eventName === 'string' ? s.eventName : '';
         state.eventDate = validDate(s.eventDate) ? s.eventDate : localDate(new Date());
-        state.currency = CURRENCIES[s.currency] ? s.currency : 'CLP';
+        state.currency = CURRENCIES[s.currency] ? s.currency : 'BRL';
+        state.language = TEXT[s.language] ? s.language : 'es';
         state.theme = s.theme || 'system';
         state.tab = s.tab || 'personas';
         state.tipPercent = (typeof s.tipPercent === 'number' && s.tipPercent >= 0) ? s.tipPercent : 0;
@@ -116,10 +188,26 @@
 
   // ---------- Helpers ----------
   function $(id) { return document.getElementById(id); }
+  function t(key, values) {
+    var text = (TEXT[state.language] && TEXT[state.language][key]) || TEXT.es[key] || key;
+    return text.replace(/\{(\w+)\}/g, function (_, name) {
+      return values && values[name] != null ? values[name] : '';
+    });
+  }
+  function applyStaticTranslations() {
+    document.documentElement.lang = state.language;
+    document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function (el) { el.placeholder = t(el.dataset.i18nPlaceholder); });
+    document.querySelectorAll('[data-i18n-title]').forEach(function (el) {
+      el.title = t(el.dataset.i18nTitle);
+      if (el.hasAttribute('aria-label')) el.setAttribute('aria-label', t(el.dataset.i18nTitle));
+    });
+  }
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
   function localDate(date) {
     return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
   }
+  function locale() { return { es: 'es-CL', pt: 'pt-BR', en: 'en-US' }[state.language] || 'es-CL'; }
   function validDate(value) {
     if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
     var parts = value.split('-').map(Number);
@@ -149,7 +237,7 @@
     if (!state.cloudId) return;
     syncBaseline = state.cloudBaseline;
     remoteConflict = !syncBaseline || eventSnapshot() !== syncBaseline;
-    if (remoteConflict) setSyncStatus('Hay cambios locales sin guardar. Recarga el evento para sincronizarlo.', true, true);
+    if (remoteConflict) setSyncStatus(t('syncLocal'), true, true);
     subscribeCurrentEvent();
   }
   function subscribeCurrentEvent() {
@@ -159,8 +247,8 @@
       liveRefreshTimer = setTimeout(refreshFromCloud, 1200);
     }, function (status) {
       if (remoteConflict) return;
-      if (status === 'SUBSCRIBED') setSyncStatus('Conectado en vivo', false);
-      else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setSyncStatus('Conexión en vivo interrumpida', true, true);
+      if (status === 'SUBSCRIBED') setSyncStatus(t('syncConnected'), false);
+      else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setSyncStatus(t('syncInterrupted'), true, true);
     });
   }
   function refreshFromCloud() {
@@ -170,37 +258,37 @@
     var before = eventSnapshot();
     if (syncBaseline === null || before !== syncBaseline) {
       remoteConflict = true;
-      setSyncStatus('Hay cambios remotos; tus cambios sin guardar están protegidos.', true, true);
+      setSyncStatus(t('syncRemote'), true, true);
       return;
     }
     window.Cloud.loadEvent(id).then(function (res) {
       if (state.cloudId !== id) return;
       if (eventSnapshot() !== before) {
         remoteConflict = true;
-        setSyncStatus('Cambiaste datos durante la sincronización; revisa antes de guardar.', true, true);
+        setSyncStatus(t('syncChangedDuring'), true, true);
         return;
       }
-      if (res.error) { setSyncStatus('No se pudo actualizar desde la nube.', true, true); return; }
+      if (res.error) { setSyncStatus(t('syncLoadFailed'), true, true); return; }
       applyLoadedEvent(res.data);
-      setSyncStatus('Actualizado en vivo', false);
-    }).catch(function () { setSyncStatus('No se pudo actualizar desde la nube.', true, true); });
+      setSyncStatus(t('syncConnected'), false);
+    }).catch(function () { setSyncStatus(t('syncLoadFailed'), true, true); });
   }
   function reloadCurrentEvent() {
     if (!state.cloudId || !window.Cloud) return;
-    if (!confirm('¿Descartar los cambios locales sin guardar y cargar la versión de la nube?')) return;
+    if (!confirm(t('syncReloadConfirm'))) return;
     var id = state.cloudId;
     window.Cloud.loadEvent(id).then(function (res) {
-      if (res.error) { setSyncStatus('No se pudo cargar la versión de la nube.', true, true); return; }
+      if (res.error) { setSyncStatus(t('syncLoadFailed'), true, true); return; }
       applyLoadedEvent(res.data);
-      setSyncStatus('Actualizado desde la nube', false);
-    }).catch(function () { setSyncStatus('No se pudo cargar la versión de la nube.', true, true); });
+      setSyncStatus(t('syncLoaded'), false);
+    }).catch(function () { setSyncStatus(t('syncLoadFailed'), true, true); });
   }
-  function cur() { return CURRENCIES[state.currency] || CURRENCIES.CLP; }
+  function cur() { return CURRENCIES[state.currency] || CURRENCIES.BRL; }
   function factor() { return Math.pow(10, cur().decimals); }
   function fmt(minor) {
     var c = cur();
     try {
-      return new Intl.NumberFormat(c.locale, {
+      return new Intl.NumberFormat(locale(), {
         style: 'currency', currency: c.code,
         minimumFractionDigits: c.decimals, maximumFractionDigits: c.decimals
       }).format((minor || 0) / factor());
@@ -222,14 +310,17 @@
   function nameOf(id) { var p = pById(id); return p ? p.name : '—'; }
   function colorOf(id) { var p = pById(id); return p ? p.color : '#888'; }
   function catOf(id) { for (var i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].id === id) return CATEGORIES[i]; return CATEGORIES[4]; }
+  function catLabel(category) { return t(category.key); }
   // Anti-XSS: escapa texto antes de insertarlo como HTML.
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]; }); }
 
   // ---------- Render ----------
   function render() {
+    applyStaticTranslations();
     $('eventName').value = state.eventName;
     $('eventDate').value = state.eventDate || localDate(new Date());
     $('currencyHeader').value = state.currency;
+    $('languageHeader').value = state.language;
     $('badgePeople').textContent = state.participants.length;
     $('badgeExp').textContent = state.expenses.length;
     document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.tab === state.tab); });
@@ -245,7 +336,7 @@
   function renderPeople() {
     var box = $('peopleList');
     if (!state.participants.length) {
-      box.innerHTML = emptyHTML('👋', 'Agrega a quienes salieron', 'Escribe un nombre arriba. Luego podrás crear gastos.');
+      box.innerHTML = emptyHTML('👋', t('peopleEmptyTitle'), t('peopleEmptyBody'));
       return;
     }
     box.innerHTML = state.participants.map(function (p) {
@@ -260,18 +351,18 @@
   function renderExpenses() {
     var box = $('expList');
     if (!state.expenses.length) {
-      box.innerHTML = emptyHTML('🧾', 'Aún no hay gastos',
-        state.participants.length ? 'Toca “＋ Gasto” para agregar el primero.' : 'Primero agrega personas, luego gastos.');
+      box.innerHTML = emptyHTML('🧾', t('expensesEmptyTitle'),
+        state.participants.length ? t('addFirstExpense') : t('addPeopleFirst'));
       return;
     }
     box.innerHTML = state.expenses.map(function (e) {
       var names = e.participants.map(nameOf);
-      var noTip = (state.tipPercent > 0 && e.tip === false) ? ' · sin propina' : '';
-      var sub = 'Pagó ' + esc(nameOf(e.paidBy)) + ' · entre ' + e.participants.length + ': ' + esc(names.join(', ')) + noTip;
+      var noTip = (state.tipPercent > 0 && e.tip === false) ? ' · ' + t('noTipSuffix') : '';
+      var sub = t('expensePaidBy', { name: esc(nameOf(e.paidBy)), count: e.participants.length, people: esc(names.join(', ')), noTip: noTip });
       return '<div class="exp-card" data-edit="' + esc(e.id) + '">' +
         '<div class="exp-icon">' + catOf(e.category).icon + '</div>' +
         '<div class="exp-main">' +
-          '<div class="exp-top"><span class="exp-desc">' + esc(e.description || catOf(e.category).label) + '</span>' +
+          '<div class="exp-top"><span class="exp-desc">' + esc(e.description || catLabel(catOf(e.category))) + '</span>' +
           '<span class="exp-amt">' + esc(fmt(e.amount)) + '</span></div>' +
           '<div class="exp-sub">' + sub + '</div>' +
         '</div></div>';
@@ -286,7 +377,7 @@
   function renderSummary() {
     var box = $('summaryContent');
     if (!state.expenses.length) {
-      box.innerHTML = emptyHTML('📊', 'Nada que calcular todavía', 'Agrega gastos para ver quién debe a quién.');
+      box.innerHTML = emptyHTML('📊', t('summaryEmptyTitle'), t('summaryEmptyBody'));
       return;
     }
     var tip = state.tipPercent || 0;
@@ -295,39 +386,38 @@
     var sorted = balances.slice().sort(function (a, b) { return b.balance - a.balance; });
 
     var html = '';
-    html += '<div class="total-card"><div class="lbl">Total de la salida</div>' +
+    html += '<div class="total-card"><div class="lbl">' + t('totalTitle') + '</div>' +
       '<div class="amt">' + esc(fmt(totals.total)) + '</div>' +
-      '<div class="meta">' + state.expenses.length + ' gasto(s) · ' + state.participants.length + ' persona(s)</div>' +
-      (tip > 0 ? '<div class="sub">Subtotal ' + esc(fmt(totals.subtotal)) + '  +  propina ' + esc(fmt(totals.tip)) + ' (' + tip + '%)</div>' : '') +
+      '<div class="meta">' + t('expenseCount', { count: state.expenses.length }) + ' · ' + t('peopleCount', { count: state.participants.length }) + '</div>' +
+      (tip > 0 ? '<div class="sub">' + t('subtotal') + ' ' + esc(fmt(totals.subtotal)) + '  +  ' + t('tip') + ' ' + esc(fmt(totals.tip)) + ' (' + tip + '%)</div>' : '') +
       '</div>';
 
     // Propina / servicio
-    html += '<div class="tip-card"><div class="tip-head"><span class="lbl">Propina / servicio</span>' +
-      '<span class="amt">' + (tip > 0 ? esc(fmt(totals.tip)) : 'Sin propina') + '</span></div>' +
+    html += '<div class="tip-card"><div class="tip-head"><span class="lbl">' + t('tip') + '</span>' +
+      '<span class="amt">' + (tip > 0 ? esc(fmt(totals.tip)) : t('noTip')) + '</span></div>' +
       '<div class="chips" id="tipChips">' +
         TIP_PRESETS.map(function (p) {
-          return '<button type="button" class="chip' + (p === tip ? ' active' : '') + '" data-tip="' + p + '">' + (p === 0 ? 'Sin' : p + '%') + '</button>';
+          return '<button type="button" class="chip' + (p === tip ? ' active' : '') + '" data-tip="' + p + '">' + (p === 0 ? t('noTip') : p + '%') + '</button>';
         }).join('') +
-        '<input class="text-input tip-custom" id="tipCustom" type="number" inputmode="decimal" min="0" max="100" step="0.5" placeholder="Otro %" value="' + (TIP_PRESETS.indexOf(tip) === -1 ? tip : '') + '" />' +
+        '<input class="text-input tip-custom" id="tipCustom" type="number" inputmode="decimal" min="0" max="100" step="0.5" placeholder="' + t('otherTip') + '" value="' + (TIP_PRESETS.indexOf(tip) === -1 ? tip : '') + '" />' +
       '</div></div>';
 
-    html += '<div class="section-title">Saldo de cada uno</div>';
+    html += '<div class="section-title">' + t('balances') + '</div>';
     html += sorted.map(function (b) {
       var pill, label, amt;
-      if (b.balance > 0) { pill = 'pill-pos'; label = 'le deben'; amt = '+' + fmt(b.balance); }
-      else if (b.balance < 0) { pill = 'pill-neg'; label = 'debe'; amt = '−' + fmt(-b.balance); }
-      else { pill = 'pill-zero'; label = 'al día'; amt = fmt(0); }
+      if (b.balance > 0) { pill = 'pill-pos'; label = t('receives'); amt = '+' + fmt(b.balance); }
+      else if (b.balance < 0) { pill = 'pill-neg'; label = t('owesVerb'); amt = '−' + fmt(-b.balance); }
+      else { pill = 'pill-zero'; label = t('upToDate'); amt = fmt(0); }
       return '<div class="person-card">' +
         '<div class="avatar" style="background:' + esc(colorOf(b.id)) + '">' + esc(initials(b.name)) + '</div>' +
         '<div class="pc-main"><div class="pc-name">' + esc(b.name) + '</div>' +
-        '<div class="pc-sub">Pagó ' + esc(fmt(b.paid)) + ' · le toca ' + esc(fmt(b.owes)) + '</div></div>' +
+        '<div class="pc-sub">' + t('paid') + ' ' + esc(fmt(b.paid)) + ' · ' + t('owes') + ' ' + esc(fmt(b.owes)) + '</div></div>' +
         '<div class="pill ' + pill + '">' + esc(amt) + '<small>' + label + '</small></div></div>';
     }).join('');
 
     var transfers = R.simplifyDebts(balances);
-    html += '<div class="section-title" style="margin-top:18px">Cómo saldar (menos transferencias)</div>';
     if (!transfers.length) {
-      html += '<div class="settle-card" style="text-align:center;color:var(--muted)">Todos están al día ✓</div>';
+      html += '<div class="settle-card" style="text-align:center;color:var(--muted)">' + t('allSettled') + '</div>';
     } else {
       html += '<div class="settle-card">' + transfers.map(function (t) {
         return '<div class="transfer">' +
@@ -338,8 +428,8 @@
     }
 
     html += '<div class="share-row">' +
-      '<button class="btn btn-wa" id="shareWa" style="flex:2">📲 Compartir por WhatsApp</button>' +
-      '<button class="btn btn-ghost" id="copySum" style="flex:1">Copiar</button></div>';
+      '<button class="btn btn-wa" id="shareWa" style="flex:2">📲 ' + t('shareWhatsApp') + '</button>' +
+      '<button class="btn btn-ghost" id="copySum" style="flex:1">' + t('copy') + '</button></div>';
 
     box.innerHTML = html;
     $('tipChips').addEventListener('click', function (e) {
@@ -355,35 +445,52 @@
   }
 
   // ---------- Share ----------
+  function shareLabel(value) {
+    return String(value || '').replace(/[\r\n\t]+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+  }
   function buildShareText() {
     var tip = state.tipPercent || 0;
     var balances = R.computeBalances(state.participants, state.expenses, { tipPercent: tip });
     var totals = R.eventTotals(state.expenses, tip);
     var sorted = balances.slice().sort(function (a, b) { return b.balance - a.balance; });
     var L = [];
-    L.push('*' + (state.eventName || 'Cuenta') + '* 🧾');
-    L.push('Total: ' + fmt(totals.total));
-    if (tip > 0) L.push('(incluye propina ' + fmt(totals.tip) + ' · ' + tip + '%)');
+    L.push('*' + t('shareHeading') + '*');
+    L.push('🧾 ' + (shareLabel(state.eventName) || t('shareEvent')));
+    if (validDate(state.eventDate)) {
+      L.push('📅 ' + new Date(state.eventDate + 'T00:00:00').toLocaleDateString(locale(), {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      }));
+    }
+    L.push('👥 ' + t('sharePeople', { people: state.participants.length, expenses: state.expenses.length }));
     L.push('');
-    L.push('*Saldos*');
+    L.push('*' + t('shareTotal') + ': ' + fmt(totals.total) + '*');
+    if (tip > 0) L.push(t('shareTip', { percent: tip, amount: fmt(totals.tip) }));
+    L.push('');
+    L.push('*' + t('shareBalances') + '*');
     sorted.forEach(function (b) {
-      var s = b.balance > 0 ? ('le deben ' + fmt(b.balance)) : b.balance < 0 ? ('debe ' + fmt(-b.balance)) : 'al día';
-      L.push('• ' + b.name + ': ' + s);
+      var status = b.balance > 0 ? t('receive') + ' ' + fmt(b.balance) : b.balance < 0 ? t('oweShare') + ' ' + fmt(-b.balance) : t('upToDate');
+      L.push('• ' + shareLabel(b.name) + ' — ' + status);
     });
-    var t = R.simplifyDebts(balances);
-    if (t.length) {
+    var transfers = R.simplifyDebts(balances);
+    if (transfers.length) {
       L.push('');
-      L.push('*Para saldar*');
-      t.forEach(function (x) { L.push('• ' + x.fromName + ' → ' + fmt(x.amount) + ' → ' + x.toName); });
+      L.push('*' + t('shareTransfers') + '*');
+      transfers.forEach(function (x, i) {
+        L.push((i + 1) + '. ' + shareLabel(x.fromName) + ' ' + t('paysTo', { amount: fmt(x.amount) }) + ' ' + shareLabel(x.toName));
+      });
+    } else {
+      L.push('');
+      L.push(t('allSettledText'));
     }
     L.push('');
-    L.push('Hecho con Paga aí po!');
+    L.push(t('calculatedWith'));
     return L.join('\n');
   }
   function shareWhatsApp() {
     var text = buildShareText();
     if (navigator.share) {
-      navigator.share({ text: text }).catch(function () { openWa(text); });
+      navigator.share({ title: shareLabel(state.eventName) || t('shareEvent'), text: text })
+        .catch(function (error) { if (error.name !== 'AbortError') openWa(text); });
     } else { openWa(text); }
   }
   function openWa(text) {
@@ -393,14 +500,23 @@
   function copySummary() {
     var text = buildShareText();
     var btn = $('copySum');
-    function done() { if (btn) { var o = btn.textContent; btn.textContent = '¡Copiado!'; setTimeout(function () { btn.textContent = o; }, 1400); } }
+    function done(success) {
+      if (!btn) return;
+      var original = btn.textContent;
+      btn.textContent = success ? t('copied') : t('copyFailed');
+      setTimeout(function () { btn.textContent = original; }, 1800);
+    }
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done).catch(function () { legacyCopy(text); done(); });
-    } else { legacyCopy(text); done(); }
+      navigator.clipboard.writeText(text).then(function () { done(true); }).catch(function () { done(legacyCopy(text)); });
+    } else { done(legacyCopy(text)); }
   }
   function legacyCopy(text) {
     var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
-    ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta);
+    ta.select();
+    var copied = false;
+    try { copied = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    return copied;
   }
 
   // ---------- Participants ----------
@@ -425,7 +541,7 @@
     if (!state.participants.length) { state.tab = 'personas'; render(); return; }
     editingId = id || null;
     var e = id ? state.expenses.filter(function (x) { return x.id === id; })[0] : null;
-    $('expTitle').textContent = e ? 'Editar gasto' : 'Nuevo gasto';
+    $('expTitle').textContent = e ? t('editExpense') : t('newExpense');
     $('expDesc').value = e ? (e.description || '') : '';
     $('expAmount').value = e ? (e.amount / factor()) : '';
     $('expAmount').step = cur().decimals === 0 ? '1' : '0.01';
@@ -436,7 +552,7 @@
 
     var selectedCat = e ? e.category : 'comida';
     $('catChips').innerHTML = CATEGORIES.map(function (c) {
-      return '<button type="button" class="chip' + (c.id === selectedCat ? ' active' : '') + '" data-cat="' + c.id + '">' + c.icon + ' ' + c.label + '</button>';
+      return '<button type="button" class="chip' + (c.id === selectedCat ? ' active' : '') + '" data-cat="' + c.id + '">' + c.icon + ' ' + catLabel(c) + '</button>';
     }).join('');
 
     var payer = e ? e.paidBy : state.participants[0].id;
@@ -462,9 +578,9 @@
     var splitEls = document.querySelectorAll('#splitChips .chip.active');
     var err = $('expErr');
 
-    if (amount <= 0) { err.textContent = 'Ingresa un monto mayor a 0.'; return; }
-    if (!payerEl) { err.textContent = 'Elige quién pagó.'; return; }
-    if (!splitEls.length) { err.textContent = 'Elige al menos una persona para dividir.'; return; }
+    if (amount <= 0) { err.textContent = t('amountError'); return; }
+    if (!payerEl) { err.textContent = t('payerError'); return; }
+    if (!splitEls.length) { err.textContent = t('splitError'); return; }
 
     var obj = {
       id: editingId || uid(),
@@ -481,7 +597,7 @@
   }
   function deleteExpense() {
     if (!editingId) return;
-    if (!confirm('¿Eliminar este gasto?')) return;
+    if (!confirm(t('confirmDelete'))) return;
     state.expenses = state.expenses.filter(function (x) { return x.id !== editingId; });
     save(); closeExpense(); render();
   }
@@ -498,13 +614,28 @@
     state.currency = newCode;
     save(); render();
   }
+  function changeLanguage(language) {
+    if (!TEXT[language] || language === state.language) return;
+    var calendarMessageKey = ['loginForCloud', 'cloudUnavailable'].filter(function (key) {
+      return calendarMessage === t(key);
+    })[0];
+    state.language = language;
+    if (calendarMessageKey) calendarMessage = t(calendarMessageKey);
+    save(); render();
+    if ($('expOverlay').classList.contains('open')) {
+      document.querySelectorAll('#catChips [data-cat]').forEach(function (button) {
+        var category = catOf(button.dataset.cat);
+        button.textContent = category.icon + ' ' + catLabel(category);
+      });
+    }
+  }
 
   // ---------- Example ----------
   function loadExample() {
     stopCloudSync();
     state.historyId = uid();
-    state.eventName = 'Asado del viernes';
-    state.currency = 'CLP';
+    state.eventName = t('exampleEvent');
+    state.currency = 'BRL';
     state.tipPercent = 0;
     state.cloudId = null;
     state.cloudVersion = null;
@@ -517,17 +648,18 @@
       state.participants.push({ id: id, name: n, color: AVATAR_COLORS[i % AVATAR_COLORS.length] });
     });
     state.expenses = [
-      { id: uid(), description: 'Carne y pan', amount: 20000, category: 'comida', paidBy: ids.Ana, participants: [ids.Ana, ids.Beto, ids.Caro, ids.Dani, ids.Eli] },
-      { id: uid(), description: 'Cervezas', amount: 15000, category: 'alcohol', paidBy: ids.Beto, participants: [ids.Ana, ids.Beto, ids.Caro] },
-      { id: uid(), description: 'Bebidas', amount: 6000, category: 'bebidas', paidBy: ids.Dani, participants: [ids.Dani, ids.Eli] }
+      { id: uid(), description: t('exampleFood'), amount: 20000, category: 'comida', paidBy: ids.Ana, participants: [ids.Ana, ids.Beto, ids.Caro, ids.Dani, ids.Eli] },
+      { id: uid(), description: t('exampleBeer'), amount: 15000, category: 'alcohol', paidBy: ids.Beto, participants: [ids.Ana, ids.Beto, ids.Caro] },
+      { id: uid(), description: t('exampleDrinks'), amount: 6000, category: 'bebidas', paidBy: ids.Dani, participants: [ids.Dani, ids.Eli] }
     ];
     state.tab = 'resumen';
     save(); render();
   }
   function resetAll() {
-    if (!confirm('Esto borra personas y gastos de esta salida. ¿Continuar?')) return;
+    if (!confirm(t('confirmReset'))) return;
     stopCloudSync();
     state.eventName = ''; state.tipPercent = 0; state.participants = []; state.expenses = []; state.tab = 'personas';
+    state.currency = 'BRL';
     state.eventDate = localDate(new Date()); state.historyId = uid();
     state.cloudId = null; state.codigo = null;
     state.cloudVersion = null;
@@ -568,10 +700,10 @@
       var info = $('cloudSavedInfo');
       if (state.cloudId && state.codigo) {
         info.hidden = false;
-        info.innerHTML = 'Evento en la nube · código <strong>' + esc(state.codigo) + '</strong>';
+        info.innerHTML = t('savedInCloud') + ' <strong>' + esc(state.codigo) + '</strong>';
       } else { info.hidden = true; }
     } else {
-      $('accountLabel').textContent = cloudReady() ? 'Entrar a la nube' : 'Nube no disponible';
+      $('accountLabel').textContent = cloudReady() ? t('loginButton') : t('cloudUnavailable');
       $('authLoggedOut').hidden = false;
       $('authLoggedIn').hidden = true;
     }
@@ -581,7 +713,7 @@
     if (required) authRequired = true;
     $('authMsg').textContent = '';
     $('authCancel').hidden = authRequired;
-    if (!cloudReady()) $('authMsg').textContent = 'La nube no está disponible (revisa tu conexión a internet).';
+    if (!cloudReady()) $('authMsg').textContent = t('authUnavailable');
     $('authOverlay').classList.add('open');
   }
   function closeAuth() {
@@ -592,40 +724,40 @@
   function authSignIn() {
     if (!cloudReady()) return;
     var c = authCreds();
-    if (!c.email || !c.pass) { $('authMsg').textContent = 'Escribe correo y contraseña.'; return; }
-    $('authMsg').textContent = 'Entrando…';
+    if (!c.email || !c.pass) { $('authMsg').textContent = t('credentialsRequired'); return; }
+    $('authMsg').textContent = t('signingIn');
     window.Cloud.signIn(c.email, c.pass).then(function (res) {
-      if (res.error) { $('authMsg').textContent = 'No se pudo entrar: ' + res.error.message; return; }
+      if (res.error) { $('authMsg').textContent = t('signInFailed', { error: res.error.message }); return; }
       authRequired = false;
       $('authCancel').hidden = false;
-      $('cloudMsg').textContent = 'Sesión iniciada.';
+      $('cloudMsg').textContent = t('sessionStarted');
       window.Cloud.logActivity('inicio_sesion').then(function (log) {
-        if (log.error) $('cloudMsg').textContent = 'Sesión iniciada, pero no se registró la actividad. Aplica la migración SQL de Supabase.';
+        if (log.error) $('cloudMsg').textContent = t('activityError');
       }).catch(function () {
-        $('cloudMsg').textContent = 'Sesión iniciada, pero no se registró la actividad. Aplica la migración SQL de Supabase.';
+        $('cloudMsg').textContent = t('activityError');
       });
       $('authPass').value = ''; // onAuth refresca la UI
-    }).catch(function (e) { $('authMsg').textContent = 'Error: ' + e.message; });
+    }).catch(function (e) { $('authMsg').textContent = t('generalError', { error: e.message }); });
   }
   function authSignUp() {
     if (!cloudReady()) return;
     var c = authCreds();
     var name = $('authName').value.trim();
-    if (!c.email || !c.pass) { $('authMsg').textContent = 'Escribe correo y contraseña.'; return; }
-    if (!name) { $('authMsg').textContent = 'Escribe tu nombre para crear la cuenta.'; return; }
-    if (c.pass.length < 6) { $('authMsg').textContent = 'La contraseña debe tener al menos 6 caracteres.'; return; }
-    $('authMsg').textContent = 'Creando cuenta…';
+    if (!c.email || !c.pass) { $('authMsg').textContent = t('credentialsRequired'); return; }
+    if (!name) { $('authMsg').textContent = t('nameRequired'); return; }
+    if (c.pass.length < 6) { $('authMsg').textContent = t('passwordLength'); return; }
+    $('authMsg').textContent = t('creatingAccount');
     window.Cloud.signUp(c.email, c.pass, name).then(function (res) {
-      if (res.error) { $('authMsg').textContent = 'No se pudo crear: ' + res.error.message; return; }
+      if (res.error) { $('authMsg').textContent = t('createFailed', { error: res.error.message }); return; }
       if (res.data && res.data.session) {
         authRequired = false;
         $('authCancel').hidden = false;
-        $('authMsg').textContent = '✓ ¡Cuenta creada!';
+        $('authMsg').textContent = t('accountCreated');
         $('authPass').value = '';
       } else {
-        $('authMsg').textContent = 'Cuenta creada. Confírmala desde tu correo, o apaga "Confirm email" en Supabase para entrar al instante.';
+        $('authMsg').textContent = t('confirmEmail');
       }
-    }).catch(function (e) { $('authMsg').textContent = 'Error: ' + e.message; });
+    }).catch(function (e) { $('authMsg').textContent = t('generalError', { error: e.message }); });
   }
   function authSignOut() {
     if (!cloudReady()) return;
@@ -648,7 +780,7 @@
     state.historyId = localRecord ? localRecord.historyId : 'cloud-' + ev.id;
     state.eventName = ev.nombre || '';
     state.eventDate = validDate(ev.fecha) ? ev.fecha : localDate(new Date());
-    state.currency = CURRENCIES[ev.moneda] ? ev.moneda : 'CLP';
+    state.currency = CURRENCIES[ev.moneda] ? ev.moneda : 'BRL';
     state.tipPercent = Number(ev.tip_percent) || 0;
     state.participants = assignColors((d.participantes || []).map(function (p) {
       return { id: p.id, name: p.nombre, color: p.color };
@@ -674,12 +806,12 @@
   function cloudSave() {
     if (!cloudReady()) return;
     if (remoteConflict) {
-      $('cloudMsg').textContent = 'Hay cambios de otra persona. Recarga la versión de la nube antes de guardar.';
+      $('cloudMsg').textContent = t('saveConflict');
       return;
     }
     var btn = $('cloudSave');
     $('cloudMsg').textContent = '';
-    btn.disabled = true; cloudSaveInProgress = true; var orig = btn.textContent; btn.textContent = 'Guardando…';
+    btn.disabled = true; cloudSaveInProgress = true; var orig = btn.textContent; btn.textContent = t('saveCloudButton');
     window.Cloud.saveEvent({
       cloudId: state.cloudId, cloudVersion: state.cloudVersion, codigo: state.codigo,
       eventName: state.eventName, eventDate: state.eventDate, currency: state.currency, tipPercent: state.tipPercent,
@@ -690,38 +822,38 @@
       if (res.error) {
         if (res.error.message.indexOf('EVENT_CONFLICT') !== -1 || res.error.code === '40001') {
           remoteConflict = true;
-          setSyncStatus('Otra persona guardó primero. Recarga para continuar con la versión más reciente.', true, true);
-          $('cloudMsg').textContent = 'Conflicto: otra persona guardó cambios antes que tú. Recarga la versión de la nube antes de volver a guardar.';
-        } else { $('cloudMsg').textContent = 'No se pudo guardar: ' + res.error.message; }
+          setSyncStatus(t('saveConflict'), true, true);
+          $('cloudMsg').textContent = t('saveConflict');
+        } else { $('cloudMsg').textContent = t('saveFailed', { error: res.error.message }); }
         return;
       }
       state.cloudId = res.data.id; state.cloudVersion = Number(res.data.version) || 0; state.codigo = res.data.codigo;
       syncBaseline = eventSnapshot(); state.cloudBaseline = syncBaseline; remoteConflict = false; save(); subscribeCurrentEvent();
-      setSyncStatus('Guardado y conectado en vivo', false);
+      setSyncStatus(t('savedCloud'), false);
       if (state.tab === 'calendario') loadCalendarEvents();
       var info = $('cloudSavedInfo');
       info.hidden = false;
-      info.innerHTML = 'Guardado ✓ · Código para compartir: <strong>' + esc(state.codigo || '') + '</strong>';
-    }).catch(function (e) { cloudSaveInProgress = false; btn.disabled = false; btn.textContent = orig; $('cloudMsg').textContent = 'Error: ' + e.message; });
+      info.innerHTML = t('savedCloud') + ' · <strong>' + esc(state.codigo || '') + '</strong>';
+    }).catch(function (e) { cloudSaveInProgress = false; btn.disabled = false; btn.textContent = orig; $('cloudMsg').textContent = t('generalError', { error: e.message }); });
   }
   function openEventsList() {
     if (!cloudReady()) return;
     closeAuth();
     var list = $('eventsList');
-    list.innerHTML = '<div class="hint">Cargando…</div>';
+    list.innerHTML = '<div class="hint">' + t('loading') + '</div>';
     $('eventsOverlay').classList.add('open');
     window.Cloud.listEvents().then(function (res) {
-      if (res.error) { list.innerHTML = '<div class="err-msg">Error: ' + esc(res.error.message) + '</div>'; return; }
+      if (res.error) { list.innerHTML = '<div class="err-msg">' + esc(t('generalError', { error: res.error.message })) + '</div>'; return; }
       var rows = res.data || [];
-      if (!rows.length) { list.innerHTML = emptyHTML('📂', 'Aún no participas en eventos', 'Guarda una salida o ábrela con su código para que aparezca aquí.'); return; }
+      if (!rows.length) { list.innerHTML = emptyHTML('📂', t('noCloudEvents'), t('noCloudEventsHint')); return; }
       list.innerHTML = rows.map(function (ev) {
         return '<div class="exp-card" data-open="' + esc(ev.id) + '">' +
           '<div class="exp-icon">📅</div>' +
-          '<div class="exp-main"><div class="exp-top"><span class="exp-desc">' + esc(ev.nombre || 'Salida') + '</span>' +
+          '<div class="exp-main"><div class="exp-top"><span class="exp-desc">' + esc(ev.nombre || t('shareEvent')) + '</span>' +
           '<span class="exp-amt" style="font-size:.78rem;color:var(--muted)">' + esc(ev.moneda || '') + '</span></div>' +
-          '<div class="exp-sub">' + esc(ev.fecha || '') + ' · código ' + esc(ev.codigo || '') + '</div></div></div>';
+              '<div class="exp-sub">' + esc(validDate(ev.fecha) ? new Date(ev.fecha + 'T00:00:00').toLocaleDateString(locale()) : (ev.fecha || '')) + ' · ' + esc(t('dateCode', { code: ev.codigo || '' })) + '</div></div></div>';
       }).join('');
-    }).catch(function (e) { list.innerHTML = '<div class="err-msg">Error: ' + esc(e.message) + '</div>'; });
+            }).catch(function (e) { list.innerHTML = '<div class="err-msg">' + esc(t('generalError', { error: e.message })) + '</div>'; });
   }
   function changeCalendarMonth(offset) {
     calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + offset, 1);
@@ -735,13 +867,13 @@
     calendarLoading = true; calendarMessage = ''; renderCalendar();
     if (!cloudReady()) {
       calendarLoading = false; calendarEvents = [];
-      calendarMessage = 'La nube no está disponible. Se muestran los eventos guardados en este dispositivo.';
+      calendarMessage = t('cloudUnavailable');
       renderCalendar(); return;
     }
     window.Cloud.getSession().then(function (res) {
       if (!(res && res.data && res.data.session)) {
         calendarEvents = [];
-        calendarMessage = 'Inicia sesión para ver también los eventos de la nube. Los eventos locales seguirán visibles.';
+        calendarMessage = t('loginForCloud');
         return null;
       }
       return window.Cloud.listEvents();
@@ -749,19 +881,19 @@
       if (request !== calendarRequest) return;
       calendarLoading = false;
       if (!res) { renderCalendar(); return; }
-      if (res.error) { calendarEvents = []; calendarMessage = 'No se pudo cargar el calendario: ' + res.error.message; }
+      if (res.error) { calendarEvents = []; calendarMessage = t('calendarLoadFailed', { error: res.error.message }); }
       else { calendarEvents = res.data || []; calendarMessage = ''; }
       renderCalendar();
     }).catch(function (error) {
       if (request !== calendarRequest) return;
       calendarLoading = false; calendarEvents = [];
-      calendarMessage = 'No se pudo cargar el calendario: ' + error.message; renderCalendar();
+      calendarMessage = t('calendarLoadFailed', { error: error.message }); renderCalendar();
     });
   }
   function renderCalendar() {
     var year = calendarMonth.getFullYear();
     var month = calendarMonth.getMonth();
-    $('calendarMonth').textContent = calendarMonth.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
+    $('calendarMonth').textContent = calendarMonth.toLocaleDateString(locale(), { month: 'long', year: 'numeric' });
     var entries = localHistory.map(function (event) {
       return {
         id: event.cloudId || event.historyId,
@@ -788,26 +920,26 @@
     for (var day = 1; day <= days; day++) {
       var date = localDate(new Date(year, month, day));
       var classes = 'calendar-day' + (date === today ? ' today' : '') + (date === calendarSelectedDate ? ' selected' : '') + (eventCounts[date] ? ' has-events' : '');
-      var label = new Date(year, month, day).toLocaleDateString('es-CL', { day: 'numeric', month: 'long' });
-      html += '<button type="button" class="' + classes + '" data-day="' + date + '" aria-label="' + esc(label + (eventCounts[date] ? ', ' + eventCounts[date] + ' eventos' : '')) + '" aria-pressed="' + (date === calendarSelectedDate) + '">' + day + '</button>';
+      var label = new Date(year, month, day).toLocaleDateString(locale(), { day: 'numeric', month: 'long' });
+      html += '<button type="button" class="' + classes + '" data-day="' + date + '" aria-label="' + esc(label + (eventCounts[date] ? ', ' + t('monthCount', { count: eventCounts[date] }) : '')) + '" aria-pressed="' + (date === calendarSelectedDate) + '">' + day + '</button>';
     }
     $('calendarGrid').innerHTML = html;
     var selected = new Date(calendarSelectedDate + 'T00:00:00');
-    $('calendarSelectedTitle').textContent = selected.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' });
+    $('calendarSelectedTitle').textContent = selected.toLocaleDateString(locale(), { weekday: 'long', day: 'numeric', month: 'long' });
     var box = $('calendarEvents');
-    if (calendarLoading) { box.innerHTML = '<div class="hint">Cargando eventos…</div>'; return; }
+    if (calendarLoading) { box.innerHTML = '<div class="hint">' + t('loadingEvents') + '</div>'; return; }
     var notice = calendarMessage ? '<div class="hint">' + esc(calendarMessage) + '</div>' : '';
-    var loginButton = calendarMessage.indexOf('Inicia sesión') === 0 ? '<button type="button" class="btn btn-primary btn-block" data-calendar-login>Entrar a la nube</button>' : '';
+    var loginButton = calendarMessage === t('loginForCloud') ? '<button type="button" class="btn btn-primary btn-block" data-calendar-login>' + t('loginButton') + '</button>' : '';
     var selectedEvents = entries.filter(function (event) { return event.fecha === calendarSelectedDate; });
     if (!selectedEvents.length) {
-      box.innerHTML = notice + loginButton + '<div class="hint">No hay eventos guardados para este día.</div>';
+      box.innerHTML = notice + loginButton + '<div class="hint">' + t('noEventsToday') + '</div>';
       return;
     }
     box.innerHTML = notice + loginButton + selectedEvents.map(function (event) {
       var openAttr = event.historyId ? 'data-history-id="' + esc(event.historyId) + '"' : 'data-open="' + esc(event.id) + '"';
-      var detail = event.codigo ? 'Código ' + esc(event.codigo) : 'Guardado en este dispositivo';
+      var detail = event.codigo ? esc(t('dateCode', { code: event.codigo })) : t('dateSavedLocal');
       return '<button type="button" class="exp-card calendar-event" ' + openAttr + '>' +
-        '<span class="exp-icon">📅</span><span class="exp-main"><span class="exp-top"><span class="exp-desc">' + esc(event.nombre || 'Salida') + '</span>' +
+        '<span class="exp-icon">📅</span><span class="exp-main"><span class="exp-top"><span class="exp-desc">' + esc(event.nombre || t('shareEvent')) + '</span>' +
         '<span class="exp-amt" style="font-size:.78rem;color:var(--muted)">' + esc(event.moneda || '') + '</span></span>' +
         '<span class="exp-sub">' + detail + '</span></span></button>';
     }).join('');
@@ -822,7 +954,7 @@
     state.codigo = event.codigo || null;
     state.eventName = event.eventName || '';
     state.eventDate = validDate(event.eventDate) ? event.eventDate : localDate(new Date());
-    state.currency = CURRENCIES[event.currency] ? event.currency : 'CLP';
+    state.currency = CURRENCIES[event.currency] ? event.currency : 'BRL';
     state.tipPercent = Number(event.tipPercent) || 0;
     state.participants = JSON.parse(JSON.stringify(event.participants || []));
     state.expenses = JSON.parse(JSON.stringify(event.expenses || []));
@@ -831,7 +963,7 @@
     remoteConflict = !!state.cloudId && (!syncBaseline || eventSnapshot() !== syncBaseline);
     save(); render(); closeEventsList();
     if (state.cloudId && !remoteConflict) subscribeCurrentEvent();
-    if (remoteConflict) setSyncStatus('Este evento tiene cambios locales sin sincronizar.', true, true);
+    if (remoteConflict) setSyncStatus(t('syncLocal'), true, true);
   }
   function openLocalHistoryEvent(id) {
     var event = localHistory.filter(function (item) { return item.historyId === id; })[0];
@@ -847,13 +979,13 @@
     window.Cloud.loadEvent(id).then(function (res) {
       if (res.error) {
         if (fallbackHistoryId) { openLocalHistoryEventOffline(fallbackHistoryId); return; }
-        alert('No se pudo abrir: ' + res.error.message); return;
+        alert(t('eventLoadFailed', { error: res.error.message })); return;
       }
       applyLoadedEvent(res.data);
       closeEventsList();
     }).catch(function (e) {
       if (fallbackHistoryId) { openLocalHistoryEventOffline(fallbackHistoryId); return; }
-      alert('Error: ' + e.message);
+      alert(t('generalError', { error: e.message }));
     });
   }
   function openLocalHistoryEventOffline(id) {
@@ -863,6 +995,7 @@
   function newCloudEvent() {
     stopCloudSync();
     state.eventName = ''; state.eventDate = localDate(new Date()); state.tipPercent = 0; state.participants = []; state.expenses = [];
+    state.currency = 'BRL';
     state.historyId = uid();
     state.cloudId = null; state.cloudVersion = null; state.cloudBaseline = null; state.codigo = null; state.tab = 'personas';
     $('cloudSavedInfo').hidden = true;
@@ -871,15 +1004,15 @@
   function joinByCodeUI() {
     if (!cloudReady()) return;
     var code = $('joinCode').value.trim().toUpperCase();
-    if (!code) { $('cloudMsg').textContent = 'Escribe un código.'; return; }
-    $('cloudMsg').textContent = 'Buscando…';
+    if (!code) { $('cloudMsg').textContent = t('noCode'); return; }
+    $('cloudMsg').textContent = t('searchingCode');
     window.Cloud.joinByCode(code).then(function (res) {
-      if (res.error) { $('cloudMsg').textContent = 'No se pudo: ' + res.error.message; return; }
+      if (res.error) { $('cloudMsg').textContent = t('codeSearchFailed', { error: res.error.message }); return; }
       $('cloudMsg').textContent = '';
       $('joinCode').value = '';
       openCloudEvent(res.data);
       closeAuth();
-    }).catch(function (e) { $('cloudMsg').textContent = 'Error: ' + e.message; });
+    }).catch(function (e) { $('cloudMsg').textContent = t('generalError', { error: e.message }); });
   }
 
   // ---------- Events ----------
@@ -903,6 +1036,7 @@
     $('eventDate').addEventListener('change', function () { if (validDate(this.value)) { state.eventDate = this.value; save(); } });
     $('syncReload').addEventListener('click', reloadCurrentEvent);
     $('currencyHeader').addEventListener('change', function () { changeCurrency(this.value); });
+    $('languageHeader').addEventListener('change', function () { changeLanguage(this.value); });
     $('addPersonForm').addEventListener('submit', function (e) { e.preventDefault(); addPerson($('personName').value); $('personName').value = ''; $('personName').focus(); });
     $('peopleList').addEventListener('click', function (e) { var b = e.target.closest('[data-remove]'); if (b) removePerson(b.dataset.remove); });
     $('expList').addEventListener('click', function (e) { var c = e.target.closest('[data-edit]'); if (c) openExpense(c.dataset.edit); });
@@ -921,7 +1055,7 @@
     $('menuClose').addEventListener('click', closeMenu);
     $('menuNewEvent').addEventListener('click', function () {
       closeMenu();
-      if (confirm('¿Limpiar los datos ingresados y crear una nueva salida? La salida actual se conservará en el historial.')) newCloudEvent();
+      if (confirm(t('confirmNew'))) newCloudEvent();
     });
     $('menuExample').addEventListener('click', function () { closeMenu(); loadExample(); });
     $('menuReset').addEventListener('click', function () { closeMenu(); resetAll(); });
@@ -939,7 +1073,7 @@
     // nube: datos
     $('cloudSave').addEventListener('click', cloudSave);
     $('cloudList').addEventListener('click', openEventsList);
-    $('cloudNew').addEventListener('click', function () { if (confirm('¿Vaciar la pantalla para empezar un evento nuevo? Lo guardado en la nube no se borra.')) newCloudEvent(); });
+    $('cloudNew').addEventListener('click', function () { if (confirm(t('newCloudConfirm'))) newCloudEvent(); });
     $('joinBtn').addEventListener('click', joinByCodeUI);
     $('eventsClose').addEventListener('click', closeEventsList);
     $('eventsList').addEventListener('click', function (e) { var c = e.target.closest('[data-open]'); if (c) openCloudEvent(c.dataset.open); });
@@ -976,12 +1110,16 @@
       return '<option value="' + k + '">' + CURRENCIES[k].label + '</option>';
     }).join('');
   }
+  function initLanguageSelect() {
+    $('languageHeader').innerHTML = '<option value="es">ES</option><option value="pt">PT</option><option value="en">EN</option>';
+  }
 
   // ---------- Init ----------
   load();
   loadLocalHistory();
   save();
   initCurrencySelect();
+  initLanguageSelect();
   applyTheme();
   bind();
   render();
@@ -997,7 +1135,7 @@
     }).catch(function () {
       authRequired = true;
       openAuth(true);
-      $('authMsg').textContent = 'No se pudo verificar la sesión. Revisa tu conexión e inténtalo de nuevo.';
+      $('authMsg').textContent = t('authVerifyFailed');
     });
     window.Cloud.onAuth(function (session) {
       refreshAccountUI(session);

@@ -24,9 +24,17 @@ celular, de noche, en 3 toques.
 ## Monedas
 
 Se cambian desde el **selector en la barra superior**: **CLP** (peso chileno, sin
-decimales), **USD** (dólar) y **BRL** (real brasileño). Al cambiar de moneda, los
-montos se **reescalan** manteniendo el número que escribiste (ej. `20.000` CLP →
-`20,000.00` USD); **no** es una conversión por tipo de cambio.
+decimales), **USD** (dólar) y **BRL** (real brasileño). Las salidas nuevas parten
+en BRL; las salidas existentes conservan su moneda. Al cambiar de moneda, los
+montos de la salida actual se **reescalan** manteniendo el número que escribiste
+(ej. `20.000` CLP → `20,000.00` USD); **no** es una conversión por tipo de cambio.
+
+## Idioma
+
+El selector junto a la moneda permite elegir **español (ES)**, **portugués (PT)**
+o **inglés (EN)**. La app parte en español y guarda el idioma elegido en el
+navegador. También adapta los formatos de fecha y número al idioma; esto no
+cambia la moneda ni los importes de la salida.
 
 ## Propina / servicio
 

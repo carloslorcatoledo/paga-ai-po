@@ -2,6 +2,14 @@
 
 Aplicación: [carloslorcatoledo.github.io/paga-ai-po](https://carloslorcatoledo.github.io/paga-ai-po/)
 
+## Idioma y moneda
+
+Usa los selectores de la barra superior para elegir **ES**, **PT** o **EN** y la
+moneda de la salida. La app inicia en español y las salidas nuevas usan **BRL**
+(real brasileño) por defecto. El idioma elegido se guarda en este navegador; cada
+salida conserva su moneda. Cambiar la moneda reescala los montos, pero no aplica
+una tasa de cambio.
+
 ## Crear una salida
 
 1. Escribe el nombre de la salida en la parte superior y elige su fecha.
@@ -32,9 +40,15 @@ Si aparece un aviso de conflicto, otra persona guardó primero. **Recargar** ree
 
 ## Calendario e historial
 
-La pestaña **Calendario** muestra los eventos guardados en la nube. Usa las flechas para cambiar de mes, **Hoy** para volver al actual y toca un día para ver sus eventos. Toca uno para abrirlo. El calendario requiere conexión a la nube e iniciar sesión; no muestra borradores locales sin guardar.
+La pestaña **Calendario** combina el historial guardado en este dispositivo con
+los eventos de la nube. Usa las flechas para cambiar de mes, **Hoy** para volver
+al actual y toca un día para ver sus eventos. Toca uno para abrirlo. Los eventos
+locales siguen disponibles sin conexión; para consultar eventos de la nube,
+necesitas conexión e iniciar sesión. Un evento local solo se comparte con otras
+personas después de guardarlo en la nube.
 
-También puedes abrir eventos anteriores desde **Menú** → **Cuenta / Nube** → **Mis eventos (historial)**.
+También puedes abrir eventos anteriores desde **Menú** → **Cuenta / Nube** →
+**Mis eventos (historial)**.
 
 ## Datos y dispositivo
 
