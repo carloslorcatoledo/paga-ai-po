@@ -872,7 +872,9 @@
     var status = $('trialStatus');
     if (!status) return;
     status.classList.remove('trial-active', 'trial-expired');
-    if (!currentSession || !profileReady) {
+    var email = currentSession && currentSession.user && currentSession.user.email;
+    var isAdmin = typeof email === 'string' && email.trim().toLowerCase() === 'lorcarlos@gmail.com';
+    if (isAdmin || !currentSession || !profileReady) {
       status.hidden = true;
     } else {
       status.hidden = false;
