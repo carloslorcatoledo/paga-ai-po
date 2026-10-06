@@ -164,7 +164,7 @@
 
   // ---------- State ----------
   var state = {
-    eventName: '', eventDate: localDate(new Date()), currency: 'BRL', language: 'es', theme: 'system', tab: 'personas',
+    eventName: '', eventDate: localDate(new Date()), currency: 'BRL', language: 'pt', theme: 'dark', tab: 'personas',
     tipPercent: 0, participants: [], expenses: [],
     cloudId: null, cloudVersion: null, cloudBaseline: null, cloudOwnerId: null, financialFingerprint: null,
     paymentSchemaAvailable: false, transferPayments: {}, codigo: null, historyId: null
@@ -239,8 +239,8 @@
         state.eventName = typeof s.eventName === 'string' ? s.eventName : '';
         state.eventDate = validDate(s.eventDate) ? s.eventDate : localDate(new Date());
         state.currency = CURRENCIES[s.currency] ? s.currency : 'BRL';
-        state.language = TEXT[s.language] ? s.language : 'es';
-        state.theme = s.theme || 'system';
+        state.language = TEXT[s.language] ? s.language : 'pt';
+        state.theme = ['system', 'light', 'dark'].indexOf(s.theme) !== -1 ? s.theme : 'dark';
         state.tab = s.tab || 'personas';
         state.tipPercent = (typeof s.tipPercent === 'number' && s.tipPercent >= 0) ? s.tipPercent : 0;
         state.participants = Array.isArray(s.participants) ? s.participants : [];
