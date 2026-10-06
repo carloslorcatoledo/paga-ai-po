@@ -940,7 +940,9 @@
     });
   }
   function refreshAccountUI(session) {
+    var headerEmail = $('headerAccountEmail');
     if (passwordRecoveryMode) {
+      headerEmail.hidden = true;
       $('authLoggedOut').hidden = true;
       $('authLoggedIn').hidden = true;
       $('authResetPassword').hidden = false;
@@ -950,6 +952,9 @@
     var user = profileReady && session && session.user;
     var email = user ? user.email : null;
     if (email) {
+      headerEmail.textContent = email;
+      headerEmail.title = email;
+      headerEmail.hidden = false;
       var name = user.user_metadata && user.user_metadata.full_name;
       $('accountLabel').textContent = name ? name : email;
       $('authLoggedOut').hidden = true;
@@ -961,6 +966,9 @@
         info.innerHTML = t('savedInCloud') + ' <strong>' + esc(state.codigo) + '</strong>';
       } else { info.hidden = true; }
     } else {
+      headerEmail.textContent = '';
+      headerEmail.removeAttribute('title');
+      headerEmail.hidden = true;
       $('accountLabel').textContent = cloudReady() ? t('loginButton') : t('cloudUnavailable');
       $('authLoggedOut').hidden = false;
       $('authLoggedIn').hidden = true;
