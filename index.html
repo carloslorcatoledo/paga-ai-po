@@ -100,7 +100,7 @@
       padding: max(10px, env(safe-area-inset-top)) 14px 10px;
     }
     .head-row { display: flex; align-items: center; gap: 8px; }
-    .header-account-email { margin: 3px 0 0; color: var(--muted); font-size: .68rem; line-height: 1.2; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .header-account-email { margin: 0; color: var(--muted); font-size: .68rem; line-height: 1.2; text-align: right; max-width: 140px; min-width: 0; flex: 0 1 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     #headerAccountEmail[hidden] { display: none; }
     .brand { display: flex; align-items: center; gap: 7px; border: 0; padding: 0; background: transparent; color: var(--text); font: inherit; font-weight: 800; font-size: 1rem; white-space: nowrap; cursor: pointer; }
     .brand:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 5px; }
@@ -362,6 +362,11 @@
     .menu-row:last-child { border-bottom: none; }
     .menu-row .mi { font-size: 1.2rem; width: 26px; text-align: center; }
     .menu-row.danger { color: var(--danger); }
+    .option-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 6px; border-bottom: 1px solid var(--border); font-size: .95rem; font-weight: 600; }
+    .option-row label { cursor: pointer; }
+    .option-row .cur-pill { min-width: 78px; }
+    .option-row .language-pill { width: 68px; }
+    .option-row .icon-btn { flex-shrink: 0; }
     .hint { color: var(--muted); font-size: .82rem; margin: 2px 2px 14px; }
   </style>
 </head>
@@ -371,12 +376,9 @@
       <div class="head-row">
         <button class="brand" id="brandInfoBtn" type="button" aria-expanded="false" aria-controls="appDescription"><img class="logo" src="icon.svg" alt="" />Paga aí po!</button>
         <span class="head-spacer"></span>
-        <select class="cur-pill" id="currencyHeader" aria-label="Moneda" title="Moneda" data-i18n-title="currencyLabel"></select>
-        <select class="cur-pill language-pill" id="languageHeader" aria-label="Idioma" title="Idioma" data-i18n-title="languageLabel"></select>
-        <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema" title="Tema" data-i18n-title="themeToggle">🌙</button>
-        <button class="icon-btn" id="menuBtn" aria-label="Menú" title="Menú" data-i18n-title="menuLabel">⋯</button>
+        <p class="header-account-email" id="headerAccountEmail" hidden></p>
+        <button class="icon-btn" id="menuBtn" aria-label="Opciones" title="Opciones" data-i18n-title="options">⋯</button>
       </div>
-      <p class="header-account-email" id="headerAccountEmail" hidden></p>
       <p class="app-description" id="appDescription" data-i18n="appDescription" hidden>Divide cuentas entre amigos por ítem y calcula cuánto debe pagar cada persona.</p>
       <input class="event-input" id="eventName" placeholder="Nombre del evento…" data-i18n-placeholder="eventNamePlaceholder" autocomplete="off" maxlength="60" />
       <label class="event-date-row" for="eventDate"><span data-i18n="eventDate">Fecha del evento</span> <input class="event-date" id="eventDate" type="date" /></label>
@@ -490,7 +492,19 @@
     <div class="sheet" role="dialog" aria-modal="true">
       <h2 data-i18n="options">Opciones</h2>
       <div class="menu-row" id="menuAccount"><span class="mi">☁️</span><span id="accountLabel">Entrar a la nube</span></div>
+      <div class="option-row">
+        <label for="currencyHeader" data-i18n="currencyLabel">Moneda</label>
+        <select class="cur-pill" id="currencyHeader" aria-label="Moneda" title="Moneda" data-i18n-title="currencyLabel"></select>
+      </div>
       <p class="hint" data-i18n="currencyHint">Al cambiar la moneda, los montos se reescalan; no se aplica tipo de cambio.</p>
+      <div class="option-row">
+        <label for="languageHeader" data-i18n="languageLabel">Idioma</label>
+        <select class="cur-pill language-pill" id="languageHeader" aria-label="Idioma" title="Idioma" data-i18n-title="languageLabel"></select>
+      </div>
+      <div class="option-row">
+        <span data-i18n="themeToggle">Cambiar tema</span>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar tema" title="Cambiar tema" data-i18n-title="themeToggle">🌙</button>
+      </div>
       <div class="menu-row" id="menuNewEvent"><span class="mi">🆕</span><span data-i18n="clearNew">Limpiar y crear evento</span></div>
       <div class="menu-row" id="menuExample"><span class="mi">✨</span><span data-i18n="loadExample">Cargar ejemplo</span></div>
       <div class="menu-row danger" id="menuReset"><span class="mi">🗑️</span><span data-i18n="resetAll">Vaciar todo</span></div>
@@ -572,10 +586,10 @@
     </div>
   </div>
 
-  <script src="calc.js?v=21"></script>
-  <script src="config.js?v=21"></script>
+  <script src="calc.js?v=24"></script>
+  <script src="config.js?v=24"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="cloud.js?v=21"></script>
-  <script src="app.js?v=22"></script>
+  <script src="cloud.js?v=24"></script>
+  <script src="app.js?v=24"></script>
 </body>
 </html>

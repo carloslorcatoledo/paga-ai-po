@@ -497,6 +497,16 @@
       !!state.cloudBaseline && eventSnapshot() === state.cloudBaseline;
   }
 
+  function calendarSaveText(key) {
+    var translations = {
+      es: { save: 'Guardar en calendario', progress: 'Guardando en calendario…', success: 'Evento guardado. Ya aparece en Calendario.' },
+      pt: { save: 'Salvar no calendário', progress: 'Salvando no calendário…', success: 'Evento salvo. Ele já aparece no Calendário.' },
+      en: { save: 'Save to calendar', progress: 'Saving to calendar…', success: 'Event saved. It now appears in Calendar.' }
+    };
+    var language = translations[state.language] ? state.language : 'es';
+    return translations[language][key];
+  }
+
   function renderSummary() {
     var box = $('summaryContent');
     if (!state.expenses.length) {
@@ -545,6 +555,9 @@
       html += '<div class="settle-card">' + transfers.map(renderTransferPayment).join('') + '</div>';
     }
     if (state.cloudId && !state.paymentSchemaAvailable) html += '<div class="hint payment-schema-hint">' + esc(t('paymentSchemaMissing')) + '</div>';
+
+    html += '<div class="summary-calendar-save"><button class="btn btn-primary btn-block" id="saveCalendar" type="button">' + calendarSaveText('save') + '</button>' +
+      '<div class="hint" id="calendarSaveFeedback" role="status" aria-live="polite" hidden></div></div>';
 
     html += '<div class="share-row">' +
       '<button class="btn btn-wa" id="shareWa" style="flex:2">📲 ' + t('shareWhatsApp') + '</button>' +
@@ -912,11 +925,13 @@
   function isTrialExpiredError(error) {
     return !!(error && String(error.message || '').indexOf('CLOUD_TRIAL_EXPIRED') !== -1);
   }
-  function requireCloudWriteAccess() {
+  function requireCloudWriteAccess(messageId) {
     if (!requireCloudSession()) return false;
     if (canWriteCloud()) return true;
-    $('cloudMsg').textContent = !cloudAccessReady ? t('trialVerifying') :
+    var targetId = messageId || 'cloudMsg';
+    $(targetId).textContent = !cloudAccessReady ? t('trialVerifying') :
       (cloudAccessError || !cloudAccess ? t('trialUnavailable') : t('trialExpired'));
+    if (targetId === 'calendarSaveFeedback') $(targetId).hidden = false;
     return false;
   }
   function isCloudOwner() {
@@ -1151,17 +1166,27 @@
     save(); render();
     subscribeCurrentEvent();
   }
-  function cloudSave() {
-    if (!cloudReady() || !requireCloudWriteAccess()) return;
+  function cloudSave(buttonId, messageId) {
+    buttonId = buttonId || 'cloudSave';
+    messageId = messageId || 'cloudMsg';
+    function setMessage(text) {
+      var message = $(messageId);
+      if (!message) return;
+      message.textContent = text;
+      if (messageId === 'calendarSaveFeedback') message.hidden = !text;
+    }
+    if (!cloudReady()) { setMessage(t('cloudUnavailable')); return; }
+    if (!requireCloudWriteAccess(messageId)) return;
     if (remoteConflict) {
-      $('cloudMsg').textContent = t('saveConflict');
+      setMessage(t('saveConflict'));
       return;
     }
-    var btn = $('cloudSave');
+    var btn = $(buttonId);
     var previousCloudId = state.cloudId;
     var previousFinancialFingerprint = state.financialFingerprint;
-    $('cloudMsg').textContent = '';
-    btn.disabled = true; cloudSaveInProgress = true; var orig = btn.textContent; btn.textContent = t('saveCloudButton');
+    setMessage('');
+    btn.disabled = true; cloudSaveInProgress = true; var orig = btn.textContent;
+    btn.textContent = buttonId === 'saveCalendar' ? calendarSaveText('progress') : t('saveCloudButton');
     window.Cloud.saveEvent({
       cloudId: state.cloudId, cloudVersion: state.cloudVersion, codigo: state.codigo,
       eventName: state.eventName, eventDate: state.eventDate, currency: state.currency, tipPercent: state.tipPercent,
@@ -1172,14 +1197,14 @@
       if (res.error) {
         if (isTrialExpiredError(res.error)) {
           showTrialExpired();
-          $('cloudMsg').textContent = t('trialExpired');
+          setMessage(t('trialExpired'));
           return;
         }
         if (res.error.message.indexOf('EVENT_CONFLICT') !== -1 || res.error.code === '40001') {
           remoteConflict = true;
           setSyncStatus(t('saveConflict'), true, true);
-          $('cloudMsg').textContent = t('saveConflict');
-        } else { $('cloudMsg').textContent = t('saveFailed', { error: res.error.message }); }
+          setMessage(t('saveConflict'));
+        } else { setMessage(t('saveFailed', { error: res.error.message })); }
         return;
       }
       state.cloudId = res.data.id; state.cloudVersion = Number(res.data.version) || 0; state.codigo = res.data.codigo;
@@ -1194,7 +1219,8 @@
       var info = $('cloudSavedInfo');
       info.hidden = false;
       info.innerHTML = t('savedCloud') + ' · <strong>' + esc(state.codigo || '') + '</strong>';
-    }).catch(function (e) { cloudSaveInProgress = false; btn.disabled = false; btn.textContent = orig; $('cloudMsg').textContent = t('generalError', { error: e.message }); });
+      if (messageId === 'calendarSaveFeedback') setMessage(calendarSaveText('success'));
+    }).catch(function (e) { cloudSaveInProgress = false; btn.disabled = false; btn.textContent = orig; setMessage(t('generalError', { error: e.message })); });
   }
   function openEventsList() {
     if (!cloudReady() || !requireCloudSession()) return;
@@ -1546,6 +1572,8 @@
 
     $('expForm').addEventListener('submit', saveExpense);
     $('summaryContent').addEventListener('click', function (e) {
+      var saveCalendarButton = e.target.closest('#saveCalendar');
+      if (saveCalendarButton) { cloudSave('saveCalendar', 'calendarSaveFeedback'); return; }
       var action = e.target.closest('[data-payment-action]');
       if (!action) return;
       var form = action.closest('[data-transfer-payment-form]');
@@ -1597,7 +1625,7 @@
     $('authOverlay').addEventListener('click', function (e) { if (e.target === this) closeAuth(); });
 
     // nube: datos
-    $('cloudSave').addEventListener('click', cloudSave);
+    $('cloudSave').addEventListener('click', function () { cloudSave(); });
     $('cloudList').addEventListener('click', openEventsList);
     $('cloudNew').addEventListener('click', function () { if (confirm(t('newCloudConfirm'))) newCloudEvent(); });
     $('joinBtn').addEventListener('click', joinByCodeUI);
