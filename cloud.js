@@ -49,6 +49,8 @@
     signOut: function () { return client.auth.signOut(); },
     getSession: function () { return client.auth.getSession(); },
     ensureProfile: function () { return client.rpc('asegurar_perfil_usuario'); },
+    getAdminStats: function () { return client.rpc('admin_estadisticas'); },
+    getCloudAccess: function () { return client.rpc('estado_acceso_cloud'); },
     logActivity: function (action, eventId) {
       return client.rpc('registrar_actividad_usuario', { _accion: action, _evento_id: eventId || null });
     },

@@ -145,6 +145,21 @@ create table if not exists registro_actividad (
 );
 create index if not exists idx_actividad_usuario_fecha on registro_actividad(user_id, created_at desc);
 
+-- Activación única del periodo de prueba. Reejecutar este esquema no reinicia el plazo.
+create table if not exists configuracion_trial (
+  singleton boolean primary key default true check (singleton),
+  activated_at timestamptz not null default now()
+);
+-- Extensiones de acceso confirmadas manualmente por el administrador desde SQL Editor.
+create table if not exists acceso_pagado (
+  user_id    uuid primary key references auth.users(id) on delete cascade,
+  paid_until timestamptz not null,
+  updated_at timestamptz not null default now()
+);
+alter table configuracion_trial enable row level security;
+alter table acceso_pagado enable row level security;
+revoke all on configuracion_trial, acceso_pagado from public, anon, authenticated;
+
 -- Crea el perfil y registra las cuentas nuevas desde el trigger confiable de Auth.
 create or replace function public.sincronizar_perfil_usuario()
 returns trigger language plpgsql security definer set search_path = public, auth as $$
@@ -193,7 +208,7 @@ create or replace function public.asegurar_perfil_usuario()
 returns void
 language plpgsql
 security definer
-set search_path = pg_catalog, public, auth
+set search_path = pg_catalog
 as $$
 declare
   v_user_id uuid := auth.uid();
@@ -248,6 +263,92 @@ returns boolean language sql security definer stable set search_path = public as
   );
 $$;
 
+-- Trial de 30 días por cuenta: las cuentas previas reciben 30 días desde la activación.
+create or replace function public.puede_escribir_cloud()
+returns boolean
+language plpgsql
+stable
+security definer
+set search_path = pg_catalog
+as $$
+declare
+  v_created_at timestamptz;
+  v_activated_at timestamptz;
+  v_paid_until timestamptz;
+begin
+  if auth.uid() is null then
+    return false;
+  end if;
+
+  select u.created_at, c.activated_at, p.paid_until
+  into v_created_at, v_activated_at, v_paid_until
+  from auth.users u
+  cross join public.configuracion_trial c
+  left join public.acceso_pagado p on p.user_id = u.id
+  where u.id = auth.uid() and c.singleton;
+
+  if not found then
+    return false;
+  end if;
+
+  return now() < greatest(v_created_at, v_activated_at) + interval '30 days'
+    or coalesce(v_paid_until > now(), false);
+end;
+$$;
+
+create or replace function public.estado_acceso_cloud()
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = pg_catalog
+as $$
+declare
+  v_created_at timestamptz;
+  v_activated_at timestamptz;
+  v_paid_until timestamptz;
+  v_trial_ends_at timestamptz;
+  v_status text;
+  v_access_until timestamptz;
+begin
+  if auth.uid() is null then
+    raise exception using errcode = '42501', message = 'Se requiere una sesión';
+  end if;
+
+  select u.created_at, c.activated_at, p.paid_until
+  into v_created_at, v_activated_at, v_paid_until
+  from auth.users u
+  cross join public.configuracion_trial c
+  left join public.acceso_pagado p on p.user_id = u.id
+  where u.id = auth.uid() and c.singleton;
+
+  if not found then
+    raise exception using errcode = '42501', message = 'No se encontró la cuenta';
+  end if;
+
+  v_trial_ends_at := greatest(v_created_at, v_activated_at) + interval '30 days';
+  v_access_until := greatest(v_trial_ends_at, coalesce(v_paid_until, '-infinity'::timestamptz));
+  v_status := case
+    when now() < v_trial_ends_at then 'trial'
+    when v_paid_until > now() then 'paid'
+    else 'expired'
+  end;
+
+  return jsonb_build_object(
+    'status', v_status,
+    'trial_ends_at', v_trial_ends_at,
+    'access_until', v_access_until,
+    'days_remaining', case when v_status = 'expired' then 0 else greatest(0, ceil(extract(epoch from (v_access_until - now())) / 86400)::integer) end,
+    'can_write', v_status <> 'expired'
+  );
+end;
+$$;
+
+revoke all on function public.puede_escribir_cloud() from public, anon;
+grant execute on function public.puede_escribir_cloud() to authenticated;
+revoke all on function public.estado_acceso_cloud() from public, anon;
+grant execute on function public.estado_acceso_cloud() to authenticated;
+
 -- ¿Es miembro del evento al que pertenece este gasto? (para gasto_participante)
 create or replace function public.es_miembro_gasto(_gasto uuid)
 returns boolean language sql security definer stable set search_path = public as $$
@@ -282,6 +383,12 @@ create or replace function public.unirse_a_evento(_codigo text)
 returns uuid language plpgsql security definer set search_path = public as $$
 declare _id uuid;
 begin
+  if auth.uid() is null then
+    raise exception using errcode = '42501', message = 'Se requiere una sesión';
+  end if;
+  if not public.puede_escribir_cloud() then
+    raise exception using errcode = 'P0001', message = 'CLOUD_TRIAL_EXPIRED';
+  end if;
   select id into _id from evento where codigo = upper(_codigo);
   if _id is null then
     raise exception 'Código inválido';
@@ -297,6 +404,8 @@ begin
   return _id;
 end;
 $$;
+revoke all on function public.unirse_a_evento(text) from public, anon;
+grant execute on function public.unirse_a_evento(text) to authenticated;
 
 -- La app no escribe directamente en el log; el RPC toma la identidad desde auth.uid().
 create or replace function public.registrar_actividad_usuario(_accion text, _evento_id uuid default null)
@@ -351,29 +460,54 @@ grant execute on function public.registrar_actividad_usuario(text, uuid) to auth
 drop policy if exists evento_select on evento;
 create policy evento_select on evento for select using (es_miembro(id));
 drop policy if exists evento_insert on evento;
-create policy evento_insert on evento for insert with check (owner = auth.uid());
+create policy evento_insert on evento for insert with check (owner = auth.uid() and puede_escribir_cloud());
 drop policy if exists evento_update on evento;
-create policy evento_update on evento for update using (es_miembro(id)) with check (es_miembro(id));
+create policy evento_update on evento for update using (es_miembro(id) and puede_escribir_cloud()) with check (es_miembro(id) and puede_escribir_cloud());
 drop policy if exists evento_delete on evento;
-create policy evento_delete on evento for delete using (es_dueno(id));
+create policy evento_delete on evento for delete using (es_dueno(id) and puede_escribir_cloud());
 
 -- evento_miembro (inserciones solo vía trigger / unirse_a_evento, que son SECURITY DEFINER)
 drop policy if exists miembro_select on evento_miembro;
 create policy miembro_select on evento_miembro for select using (es_miembro(evento_id));
 drop policy if exists miembro_delete on evento_miembro;
-create policy miembro_delete on evento_miembro for delete using (user_id = auth.uid() or es_dueno(evento_id));
+create policy miembro_delete on evento_miembro for delete using ((user_id = auth.uid() or es_dueno(evento_id)) and puede_escribir_cloud());
 
 -- participante
 drop policy if exists part_all on participante;
-create policy part_all on participante for all using (es_miembro(evento_id)) with check (es_miembro(evento_id));
+drop policy if exists part_select on participante;
+drop policy if exists part_insert on participante;
+drop policy if exists part_update on participante;
+drop policy if exists part_delete on participante;
+create policy part_select on participante for select using (es_miembro(evento_id));
+create policy part_insert on participante for insert with check (es_miembro(evento_id) and puede_escribir_cloud());
+create policy part_update on participante for update using (es_miembro(evento_id) and puede_escribir_cloud()) with check (es_miembro(evento_id) and puede_escribir_cloud());
+create policy part_delete on participante for delete using (es_miembro(evento_id) and puede_escribir_cloud());
 
 -- gasto
 drop policy if exists gasto_all on gasto;
-create policy gasto_all on gasto for all using (es_miembro(evento_id)) with check (es_miembro(evento_id));
+drop policy if exists gasto_select on gasto;
+drop policy if exists gasto_insert on gasto;
+drop policy if exists gasto_update on gasto;
+drop policy if exists gasto_delete on gasto;
+create policy gasto_select on gasto for select using (es_miembro(evento_id));
+create policy gasto_insert on gasto for insert with check (es_miembro(evento_id) and puede_escribir_cloud());
+create policy gasto_update on gasto for update using (es_miembro(evento_id) and puede_escribir_cloud()) with check (es_miembro(evento_id) and puede_escribir_cloud());
+create policy gasto_delete on gasto for delete using (es_miembro(evento_id) and puede_escribir_cloud());
 
 -- gasto_participante
 drop policy if exists gp_all on gasto_participante;
-create policy gp_all on gasto_participante for all using (es_miembro_gasto(gasto_id)) with check (es_miembro_gasto(gasto_id));
+drop policy if exists gp_select on gasto_participante;
+drop policy if exists gp_insert on gasto_participante;
+drop policy if exists gp_update on gasto_participante;
+drop policy if exists gp_delete on gasto_participante;
+create policy gp_select on gasto_participante for select using (es_miembro_gasto(gasto_id));
+create policy gp_insert on gasto_participante for insert with check (es_miembro_gasto(gasto_id) and puede_escribir_cloud());
+create policy gp_update on gasto_participante for update using (es_miembro_gasto(gasto_id) and puede_escribir_cloud()) with check (es_miembro_gasto(gasto_id) and puede_escribir_cloud());
+create policy gp_delete on gasto_participante for delete using (es_miembro_gasto(gasto_id) and puede_escribir_cloud());
+
+-- Todas las mutaciones de eventos pasan por RPCs protegidas, pero la lectura sigue directa.
+revoke all on public.evento, public.evento_miembro, public.participante, public.gasto, public.gasto_participante from public, anon, authenticated;
+grant select on public.evento, public.evento_miembro, public.participante, public.gasto, public.gasto_participante to authenticated;
 
 -- Los miembros pueden consultar el estado; solo las RPC SECURITY DEFINER lo editan.
 drop policy if exists transferencia_pago_select_member on transferencia_pago;
@@ -480,6 +614,9 @@ declare
 begin
   if auth.uid() is null then
     raise exception using errcode = '42501', message = 'Se requiere una sesión';
+  end if;
+  if not public.puede_escribir_cloud() then
+    raise exception using errcode = 'P0001', message = 'CLOUD_TRIAL_EXPIRED';
   end if;
   if _evento_id is not null and not es_miembro(_evento_id) then
     raise exception using errcode = '42501', message = 'EVENT_NOT_FOUND_OR_FORBIDDEN';
@@ -628,6 +765,9 @@ begin
   if auth.uid() is null then
     raise exception using errcode = '42501', message = 'Se requiere una sesión';
   end if;
+  if not public.puede_escribir_cloud() then
+    raise exception using errcode = 'P0001', message = 'CLOUD_TRIAL_EXPIRED';
+  end if;
 
   select e.owner, e.financial_fingerprint into v_owner, v_fingerprint
   from evento e where e.id = _evento_id for update;
@@ -686,5 +826,96 @@ begin
     end;
   end loop;
 end $$;
+
+-- ----------------------------------------------------------------------------
+-- 6) ESTADISTICAS ADMINISTRATIVAS (solo agregados; sin acceso global a tablas)
+-- ----------------------------------------------------------------------------
+
+create or replace function public.admin_estadisticas()
+returns jsonb
+language plpgsql
+security definer
+set search_path = pg_catalog
+as $$
+declare
+  v_email text;
+  v_email_confirmed_at timestamptz;
+  v_result jsonb;
+begin
+  if auth.uid() is null then
+    raise exception using errcode = '42501', message = 'Acceso administrativo denegado';
+  end if;
+
+  select lower(btrim(u.email)), u.email_confirmed_at
+  into v_email, v_email_confirmed_at
+  from auth.users u
+  where u.id = auth.uid();
+
+  if not found or v_email is distinct from 'lorcarlos@gmail.com' or v_email_confirmed_at is null then
+    raise exception using errcode = '42501', message = 'Acceso administrativo denegado';
+  end if;
+
+  with days as (
+    select (current_date - series.day_offset)::date as day
+    from generate_series(29, 0, -1) as series(day_offset)
+  ), registrations as (
+    select (a.created_at at time zone 'UTC')::date as day, count(*) as total
+    from public.registro_actividad a
+    where a.accion = 'registro'
+      and a.created_at >= (current_date - 29)::timestamp at time zone 'UTC'
+      and a.created_at < (current_date + 1)::timestamp at time zone 'UTC'
+    group by 1
+  ), event_creations as (
+    select (e.created_at at time zone 'UTC')::date as day, count(*) as total
+    from public.evento e
+    where e.created_at >= (current_date - 29)::timestamp at time zone 'UTC'
+      and e.created_at < (current_date + 1)::timestamp at time zone 'UTC'
+    group by 1
+  ), recorded_activity as (
+    select (a.created_at at time zone 'UTC')::date as day, count(distinct a.user_id) as total
+    from public.registro_actividad a
+    where a.created_at >= (current_date - 29)::timestamp at time zone 'UTC'
+      and a.created_at < (current_date + 1)::timestamp at time zone 'UTC'
+    group by 1
+  ), amount_totals as (
+    select e.moneda as currency, sum(g.monto) as amount
+    from public.gasto g
+    join public.evento e on e.id = g.evento_id
+    group by e.moneda
+  )
+  select jsonb_build_object(
+    'generated_at', now(),
+    'totals', jsonb_build_object(
+      'accounts', (select count(*) from auth.users),
+      'events', (select count(*) from public.evento),
+      'participants', (select count(*) from public.participante),
+      'expenses', (select count(*) from public.gasto),
+      'amounts_by_currency', coalesce((
+        select jsonb_agg(jsonb_build_object('currency', a.currency, 'amount', a.amount) order by a.currency)
+        from amount_totals a
+      ), '[]'::jsonb)
+    ),
+    'daily', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'date', to_char(d.day, 'YYYY-MM-DD'),
+        'registrations', coalesce(r.total, 0),
+        'events', coalesce(e.total, 0),
+        'active_accounts', coalesce(a.total, 0)
+      ) order by d.day)
+      from days d
+      left join registrations r on r.day = d.day
+      left join event_creations e on e.day = d.day
+      left join recorded_activity a on a.day = d.day
+    ), '[]'::jsonb)
+  ) into v_result;
+
+  return v_result;
+end;
+$$;
+
+revoke all on function public.admin_estadisticas() from public, anon;
+grant execute on function public.admin_estadisticas() to authenticated;
+
+insert into public.configuracion_trial (singleton) values (true) on conflict (singleton) do nothing;
 
 -- ✅ Listo. Las tablas aparecen en Table Editor y la seguridad ya está activa.

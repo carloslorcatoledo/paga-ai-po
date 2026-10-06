@@ -12,6 +12,7 @@ celular, de noche, en 3 toques.
 | `app.js` | La interfaz, calendario, estado local y sincronización en vivo. Script externo (ver Seguridad). |
 | `config.js` | URL + publishable key de Supabase (la publishable es pública). |
 | `cloud.js` | Login, guardado transaccional, historial, compartir por código y suscripciones Realtime. |
+| `admin.html` / `admin.js` | Panel privado de estadísticas agregadas de uso. |
 | `calc.js` | El "corazón": la lógica de cálculo, pura y sin dependencias. |
 | `calc.test.js` | Pruebas de la lógica para `node --test`. |
 | `test.html` | Las mismas pruebas corriendo en el navegador (sin instalar nada). |
@@ -113,6 +114,17 @@ Decisiones tomadas para que la app sea segura por defecto:
 - **Auditoría de cuenta:** `perfil_usuario` conserva nombre y correo, y
   `registro_actividad` registra altas, inicios/cierres de sesión y membresías. El
   esquema SQL debe aplicarse en Supabase para activar estas funciones.
+- **Panel privado:** `https://carloslorcatoledo.github.io/paga-ai-po/admin.html`
+  muestra cuentas, eventos, participantes, gastos y montos agrupados por moneda.
+  Solo la cuenta verificada `lorcarlos@gmail.com` puede consultar las estadísticas;
+  aplica el esquema SQL actualizado en Supabase antes de usarlo. Los totales de
+  eventos y gastos son el estado actual y la actividad solo incluye acciones
+  registradas, no un historial completo de ediciones.
+- **Prueba cloud:** cada cuenta nueva tiene 30 días desde su creación. Al volver a
+  aplicar el esquema actualizado, las cuentas existentes reciben 30 días de
+  transición desde esa activación. Después se conservan la lectura de eventos y
+  el uso local, pero no se puede guardar ni unirse a eventos en la nube. El precio
+  y la reactivación se coordinan manualmente; no hay cobro automático.
 - **Enlaces externos seguros:** la ventana de WhatsApp se abre con `noopener` y la
   página no filtra su dirección (`referrer: no-referrer`).
 - **Validación de entrada:** montos siempre ≥ 0; límites de largo en nombres y

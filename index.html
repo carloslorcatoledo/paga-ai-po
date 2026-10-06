@@ -130,6 +130,8 @@
     .event-date:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
     .sync-status { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 5px; color: var(--success); font-size: .75rem; }
     .sync-status.conflict { color: var(--danger); }
+    .sync-status.trial-active { color: var(--muted); }
+    .sync-status.trial-expired { color: var(--danger); }
     .sync-status button { flex-shrink: 0; }
 
     /* ---------- Main / views ---------- */
@@ -379,6 +381,7 @@
         <span id="syncStatusText"></span>
         <button class="mini-link" id="syncReload" type="button" data-i18n="reload" hidden>Recargar</button>
       </div>
+      <div class="sync-status" id="trialStatus" role="status" aria-live="polite" hidden></div>
     </header>
 
     <main>
@@ -566,10 +569,10 @@
     </div>
   </div>
 
-  <script src="calc.js?v=19"></script>
-  <script src="config.js?v=19"></script>
+  <script src="calc.js?v=21"></script>
+  <script src="config.js?v=21"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="cloud.js?v=19"></script>
-  <script src="app.js?v=19"></script>
+  <script src="cloud.js?v=21"></script>
+  <script src="app.js?v=21"></script>
 </body>
 </html>

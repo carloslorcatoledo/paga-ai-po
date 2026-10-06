@@ -111,8 +111,13 @@
     paymentAmountInvalid: 'El monto debe estar entre 0 y {amount}.',
     paymentSaveEventFirst: 'Guarda los cambios del evento antes de actualizar pagos.',
     paymentSaveFailed: 'No se pudo actualizar el pago: {error}',
-    paymentSchemaMissing: 'Aplica el esquema actualizado de Supabase para activar el seguimiento de pagos.',
-    paymentStale: 'Cambió el evento. Recarga su versión actual antes de modificar pagos.'
+      paymentSchemaMissing: 'Aplica el esquema actualizado de Supabase para activar el seguimiento de pagos.',
+    paymentStale: 'Cambió el evento. Recarga su versión actual antes de modificar pagos.',
+    trialActive: 'Prueba gratuita: {days} días restantes para guardar en la nube.',
+    trialPaid: 'Acceso cloud activo hasta {date}.',
+    trialExpired: 'Tu prueba terminó. Puedes seguir usando los datos locales y consultar eventos guardados. Contáctanos para conocer el precio y reactivar la nube.',
+    trialVerifying: 'Verificando tu acceso a la nube…',
+    trialUnavailable: 'No se pudo verificar tu acceso cloud. Aplica el esquema actualizado de Supabase.'
   });
   Object.assign(TEXT.pt, {
     peopleEmptyTitle: 'Adicione quem participou',
@@ -123,7 +128,12 @@
     paymentSaveEventFirst: 'Salve as alterações do evento antes de atualizar pagamentos.',
     paymentSaveFailed: 'Não foi possível atualizar o pagamento: {error}',
     paymentSchemaMissing: 'Aplique o esquema atualizado do Supabase para ativar o controle de pagamentos.',
-    paymentStale: 'O evento mudou. Recarregue a versão atual antes de alterar pagamentos.'
+    paymentStale: 'O evento mudou. Recarregue a versão atual antes de alterar pagamentos.',
+    trialActive: 'Período gratuito: faltam {days} dias para salvar na nuvem.',
+    trialPaid: 'Acesso à nuvem ativo até {date}.',
+    trialExpired: 'Seu período gratuito terminou. Você pode continuar usando os dados locais e consultar eventos salvos. Entre em contato para saber o preço e reativar a nuvem.',
+    trialVerifying: 'Verificando seu acesso à nuvem…',
+    trialUnavailable: 'Não foi possível verificar seu acesso à nuvem. Aplique o esquema atualizado do Supabase.'
   });
   Object.assign(TEXT.en, {
     paymentUnpaid: 'Unpaid', paymentPartial: 'Partially paid', paymentPaid: 'Paid',
@@ -133,7 +143,12 @@
     paymentSaveEventFirst: 'Save event changes before updating payments.',
     paymentSaveFailed: 'Could not update payment: {error}',
     paymentSchemaMissing: 'Apply the updated Supabase schema to enable payment tracking.',
-    paymentStale: 'The event changed. Reload its latest version before updating payments.'
+    paymentStale: 'The event changed. Reload its latest version before updating payments.',
+    trialActive: 'Free trial: {days} days left to save to the cloud.',
+    trialPaid: 'Cloud access is active until {date}.',
+    trialExpired: 'Your trial has ended. You can keep using local data and view saved events. Contact us for pricing and to restore cloud access.',
+    trialVerifying: 'Checking your cloud access…',
+    trialUnavailable: 'Could not verify cloud access. Apply the updated Supabase schema.'
   });
   var CATEGORIES = [
     { id: 'comida', label: 'Comida', key: 'categoryFood', icon: '🍕' },
@@ -174,6 +189,9 @@
   var remoteConflict = false;
   var currentSession = null;
   var profileReady = false;
+  var cloudAccess = null;
+  var cloudAccessReady = false;
+  var cloudAccessError = null;
   var passwordRecoveryMode = false;
 
   function save() {
@@ -396,6 +414,7 @@
     document.querySelectorAll('.view').forEach(function (v) { v.classList.toggle('active', v.id === 'view-' + state.tab); });
     $('fab').style.display = state.tab === 'gastos' ? 'inline-flex' : 'none';
     $('themeBtn').textContent = state.theme === 'dark' ? '☀️' : (state.theme === 'light' ? '🌙' : '🌓');
+    updateCloudTrialUI();
     renderPeople();
     renderExpenses();
     if (state.tab === 'resumen') renderSummary();
@@ -474,7 +493,7 @@
   }
 
   function paymentsEditable() {
-    return isCloudOwner() && state.paymentSchemaAvailable && !remoteConflict &&
+    return canWriteCloud() && isCloudOwner() && state.paymentSchemaAvailable && !remoteConflict &&
       !!state.cloudBaseline && eventSnapshot() === state.cloudBaseline;
   }
 
@@ -556,6 +575,12 @@
     }).then(function (res) {
       if (state.cloudId !== eventId || state.financialFingerprint !== fingerprint) return;
       if (res.error) {
+        if (isTrialExpiredError(res.error)) {
+          showTrialExpired();
+          feedback.textContent = t('trialExpired');
+          form.querySelectorAll('button, input').forEach(function (control) { control.disabled = false; });
+          return;
+        }
         if (res.error.message.indexOf('PAYMENT_EVENT_CHANGED') !== -1 || res.error.code === '40001') {
           setSyncStatus(t('paymentStale'), true, true);
           feedback.textContent = t('paymentStale');
@@ -827,6 +852,73 @@
 
   // ---------- Cuenta / Nube (Supabase) ----------
   function cloudReady() { return !!(window.Cloud && window.Cloud.available); }
+  function canWriteCloud() {
+    return !!(profileReady && cloudAccessReady && cloudAccess && cloudAccess.can_write === true);
+  }
+  function updateCloudTrialUI() {
+    var status = $('trialStatus');
+    if (!status) return;
+    status.classList.remove('trial-active', 'trial-expired');
+    if (!currentSession || !profileReady) {
+      status.hidden = true;
+    } else {
+      status.hidden = false;
+      if (!cloudAccessReady) {
+        status.textContent = t('trialVerifying');
+        status.classList.add('trial-active');
+      } else if (cloudAccessError || !cloudAccess) {
+        status.textContent = t('trialUnavailable');
+        status.classList.add('trial-expired');
+      } else if (!canWriteCloud()) {
+        status.textContent = t('trialExpired');
+        status.classList.add('trial-expired');
+      } else if (cloudAccess.status === 'paid') {
+        status.textContent = t('trialPaid', { date: new Date(cloudAccess.access_until).toLocaleDateString() });
+        status.classList.add('trial-active');
+      } else {
+        status.textContent = t('trialActive', { days: cloudAccess.days_remaining });
+        status.classList.add('trial-active');
+      }
+    }
+    $('cloudSave').disabled = !canWriteCloud();
+    $('joinCode').disabled = !canWriteCloud();
+    $('joinBtn').disabled = !canWriteCloud();
+  }
+  function refreshCloudAccess() {
+    cloudAccess = null;
+    cloudAccessReady = false;
+    cloudAccessError = null;
+    updateCloudTrialUI();
+    return window.Cloud.getCloudAccess().then(function (result) {
+      cloudAccessError = result.error || null;
+      cloudAccess = result.error ? null : result.data;
+      cloudAccessReady = true;
+      updateCloudTrialUI();
+      if (state.tab === 'resumen') renderSummary();
+    }).catch(function (error) {
+      cloudAccessError = error;
+      cloudAccess = null;
+      cloudAccessReady = true;
+      updateCloudTrialUI();
+    });
+  }
+  function showTrialExpired() {
+    cloudAccess = { status: 'expired', can_write: false, days_remaining: 0 };
+    cloudAccessReady = true;
+    cloudAccessError = null;
+    updateCloudTrialUI();
+    if (state.tab === 'resumen') renderSummary();
+  }
+  function isTrialExpiredError(error) {
+    return !!(error && String(error.message || '').indexOf('CLOUD_TRIAL_EXPIRED') !== -1);
+  }
+  function requireCloudWriteAccess() {
+    if (!requireCloudSession()) return false;
+    if (canWriteCloud()) return true;
+    $('cloudMsg').textContent = !cloudAccessReady ? t('trialVerifying') :
+      (cloudAccessError || !cloudAccess ? t('trialUnavailable') : t('trialExpired'));
+    return false;
+  }
   function isCloudOwner() {
     return !!(state.cloudId && state.paymentSchemaAvailable && currentSession && profileReady &&
       state.cloudOwnerId && currentSession.user && currentSession.user.id === state.cloudOwnerId);
@@ -841,8 +933,10 @@
     return window.Cloud.ensureProfile().then(function (res) {
       if (res.error) throw res.error;
       profileReady = true;
-      if (currentSession) refreshAccountUI(currentSession);
-      return res;
+      return refreshCloudAccess().then(function () {
+        if (currentSession) refreshAccountUI(currentSession);
+        return res;
+      });
     });
   }
   function refreshAccountUI(session) {
@@ -850,6 +944,7 @@
       $('authLoggedOut').hidden = true;
       $('authLoggedIn').hidden = true;
       $('authResetPassword').hidden = false;
+      updateCloudTrialUI();
       return;
     }
     var user = profileReady && session && session.user;
@@ -870,6 +965,7 @@
       $('authLoggedOut').hidden = false;
       $('authLoggedIn').hidden = true;
     }
+    updateCloudTrialUI();
   }
   function openAuth() {
     closeMenu();
@@ -1048,7 +1144,7 @@
     subscribeCurrentEvent();
   }
   function cloudSave() {
-    if (!cloudReady() || !requireCloudSession()) return;
+    if (!cloudReady() || !requireCloudWriteAccess()) return;
     if (remoteConflict) {
       $('cloudMsg').textContent = t('saveConflict');
       return;
@@ -1066,6 +1162,11 @@
       cloudSaveInProgress = false;
       btn.disabled = false; btn.textContent = orig;
       if (res.error) {
+        if (isTrialExpiredError(res.error)) {
+          showTrialExpired();
+          $('cloudMsg').textContent = t('trialExpired');
+          return;
+        }
         if (res.error.message.indexOf('EVENT_CONFLICT') !== -1 || res.error.code === '40001') {
           remoteConflict = true;
           setSyncStatus(t('saveConflict'), true, true);
@@ -1389,12 +1490,18 @@
     save(); render(); closeAuth();
   }
   function joinByCodeUI() {
-    if (!cloudReady() || !requireCloudSession()) return;
+    if (!cloudReady() || !requireCloudWriteAccess()) return;
     var code = $('joinCode').value.trim().toUpperCase();
     if (!code) { $('cloudMsg').textContent = t('noCode'); return; }
     $('cloudMsg').textContent = t('searchingCode');
     window.Cloud.joinByCode(code).then(function (res) {
-      if (res.error) { $('cloudMsg').textContent = t('codeSearchFailed', { error: res.error.message }); return; }
+      if (res.error) {
+        if (isTrialExpiredError(res.error)) {
+          showTrialExpired();
+          $('cloudMsg').textContent = t('trialExpired');
+        } else $('cloudMsg').textContent = t('codeSearchFailed', { error: res.error.message });
+        return;
+      }
       $('cloudMsg').textContent = '';
       $('joinCode').value = '';
       openCloudEvent(res.data);
@@ -1577,6 +1684,7 @@
         passwordRecoveryMode = true;
         currentSession = session || null;
         profileReady = false;
+        cloudAccess = null; cloudAccessReady = false; cloudAccessError = null;
         $('authResetMsg').textContent = '';
         refreshAccountUI(null);
         $('authOverlay').classList.add('open');
@@ -1584,6 +1692,7 @@
       }
       var hadSession = !!currentSession;
       var sameReadyUser = !!(profileReady && currentSession && session && currentSession.user && session.user && currentSession.user.id === session.user.id);
+      if (!sameReadyUser) { cloudAccess = null; cloudAccessReady = false; cloudAccessError = null; }
       currentSession = session || null;
       profileReady = sameReadyUser;
       refreshAccountUI(profileReady ? session : null);
@@ -1593,7 +1702,9 @@
       else if (session && !profileReady) stopCloudSync();
       else if (!session) {
         profileReady = false;
+        cloudAccess = null; cloudAccessReady = false; cloudAccessError = null;
         stopCloudSync();
+        updateCloudTrialUI();
         if (hadSession) closeAuth();
       }
     });

@@ -64,6 +64,43 @@ Guarda la **Project URL** y la **publishable key** en `config.js` localmente. No
 Antes de publicar una versión que use `asegurar_perfil_usuario()`, ejecuta el
 esquema actualizado en SQL Editor y confirma que terminó con *Success*.
 
+### Panel privado de uso
+
+El esquema actualizado también crea la RPC `admin_estadisticas()`. Vuelve a
+ejecutar `esquema-supabase.sql` en **SQL Editor** y confirma *Success* antes de
+publicar `admin.html`. El panel solo autoriza la cuenta autenticada
+`lorcarlos@gmail.com` cuando su correo está confirmado; otras cuentas no reciben
+estadísticas. La RPC devuelve agregados y no amplía las políticas RLS ni expone
+la clave `service_role`.
+
+El panel cuenta las cuentas, eventos, participantes y gastos actuales, agrupa
+los montos por moneda sin convertirlos y resume actividad registrada en los
+últimos 30 días. No conserva versiones de gastos o eventos borrados, ni registra
+todas las ediciones o sesiones restauradas.
+
+### Prueba cloud y reactivación manual
+
+Al ejecutar por primera vez el esquema actualizado se fija una fecha de
+activación. Las cuentas que ya existían tienen 30 días desde esa fecha; las
+cuentas nuevas tienen 30 días desde su creación en Supabase Auth. Reejecutar el
+esquema no reinicia la fecha. Al vencer, se bloquean las escrituras cloud y las
+nuevas uniones; leer eventos ya guardados y usar el modo local sigue permitido.
+
+Mientras no haya un precio ni proveedor de pago definido, la app muestra un
+aviso para consultar el valor. Tras verificar el pago, se puede habilitar la
+cuenta manualmente desde **SQL Editor**, usando el UUID de `auth.users`:
+
+```sql
+insert into public.acceso_pagado as acceso_actual (user_id, paid_until)
+values ('UUID-DEL-USUARIO', now() + interval '30 days')
+on conflict (user_id) do update set
+   paid_until = greatest(acceso_actual.paid_until, excluded.paid_until),
+   updated_at = now();
+```
+
+La fecha de activación y la tabla de acceso pagado no son accesibles desde el
+cliente. Nunca se debe incluir una clave `service_role` en la aplicación.
+
 ---
 
 ## Notas del plan gratis

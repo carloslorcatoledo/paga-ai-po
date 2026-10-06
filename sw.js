@@ -1,6 +1,6 @@
 /* Service worker mínimo: permite instalar la app y usarla sin internet. */
-const CACHE = 'pagaaipo-v19';
-const ASSETS = ['./', './index.html', './calc.js?v=19', './config.js?v=19', './cloud.js?v=19', './app.js?v=19', './manifest.json', './icon.svg'];
+const CACHE = 'pagaaipo-v21';
+const ASSETS = ['./', './index.html', './calc.js?v=21', './config.js?v=21', './cloud.js?v=21', './app.js?v=21', './admin.html', './admin.js?v=21', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
